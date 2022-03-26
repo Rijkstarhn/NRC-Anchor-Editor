@@ -1,14 +1,16 @@
 import './App.css';
+import Navbar from "./components/navbar";
+import TextArea from "./components/text_area";
+import AudioArea from "./components/audio_area";
+import OperationArea from "./components/operation_area";
 
 function App() {
   return (
     <div className="App">
-        <h1>Hello World</h1>
-        <h3>
-            Fancy display heading
-            <small className="text-muted">With faded secondary text</small>
-        </h3>
-        <button type="button" class="btn btn-primary" onClick = {() => {alert("Clicked!")}}>Click Me!</button>
+        <Navbar/>
+        <TextArea/>
+        <AudioArea/>
+        <OperationArea/>
     </div>
   );
 }
