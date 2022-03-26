@@ -1,9 +1,12 @@
 import react from 'react';
+import actions from "./actions";
+import {connect} from "react-redux";
 
-function OperationArea() {
+function OperationArea({loadText}) {
 
     const uploadTextFile = () => {
         console.log("upload file");
+        loadText();
     }
 
     return (
@@ -13,4 +16,11 @@ function OperationArea() {
     );
 }
 
-export default OperationArea;
+const dtpm = (dispatch) => {
+    return {
+        loadText: () => actions.loadText(dispatch),
+    }
+}
+
+
+export default connect(dtpm) (OperationArea);
