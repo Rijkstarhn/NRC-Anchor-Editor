@@ -11,8 +11,8 @@ function TextArea(shownText = "This is text placeholder...") {
 
     return (
         <div className="input-group">
-            <textarea className="form-control" aria-label="With textarea" style={ text_area_style } defaultValue ={ shownText }>
-
+            <textarea className="form-control" aria-label="With textarea" style={ text_area_style } >
+                {shownText}
             </textarea>
         </div>
     );
