@@ -2,7 +2,7 @@ const SERVER_URL = "https://localhost:5001/api"
 
 export const loadPlainText = () => {
     return (
-        fetch (`${SERVER_URL}/PlainText`, {mode: 'no-cors'}).then(response => console.log(response))
+        fetch (`${SERVER_URL}/PlainText`, {mode: 'no-cors', headers: {'Access-Control-Allow-Origin' : '*'}}).then(response => console.log(response))
     )
 }
 
