@@ -9,9 +9,6 @@ function TextArea({text}) {
         height: "500px",
         width: "300px",
     };
-    console.log("---sdfasfdf---")
-    console.log(text)
-    console.log("------")
 
     return (
         <div className="input-group">

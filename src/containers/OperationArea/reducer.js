@@ -12,7 +12,6 @@ const textareaReducer = (state = initialState, action) => {
                 ...state,
                 text: action.text,
             };
-            console.log("in reducer", text)
             return text;
         default:
             return state
