@@ -1,17 +1,29 @@
 import './App.css';
-import Navbar from "./components/navbar";
-import TextArea from "./components/text_area";
-import AudioArea from "./components/audio_area";
-import OperationArea from "./components/operation_area";
+import React from 'react'
+import NavBar from "./containers/Navbar";
+import TextArea from "./containers/TextArea";
+import OperationArea from "./containers/OperationArea";
+import AudioArea from "./containers/AudioArea";
+import {combineReducers, createStore} from "redux";
+import {Provider} from "react-redux";
+import textareaReducer from "./containers/OperationArea/reducer";
+
+const reducer = combineReducers({
+    textareaReducer : textareaReducer,
+})
+
+const store = createStore(reducer)
 
 function App() {
   return (
-    <div className="App">
-        <Navbar/>
-        <TextArea/>
-        <AudioArea/>
-        <OperationArea/>
-    </div>
+    <Provider store={store}>
+        <div className="App">
+            <NavBar/>
+            <TextArea/>
+            <AudioArea/>
+            <OperationArea/>
+        </div>
+    </Provider>
   );
 }
 
