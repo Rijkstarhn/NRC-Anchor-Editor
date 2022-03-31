@@ -8,19 +8,22 @@ export const loadPlainText = () => {
 
 export const uploadXMLFile = (xmlData) => {
     return (
-        fetch (`${SERVER_URL}/api/XMLFiles`), {
+        fetch (`${SERVER_URL}/XMLFiles`), {
             method: 'POST',
             body: xmlData,
-            mode: 'no-cors',
             headers: {
-                'Content-Type': 'application/xml',
+                'Content-Type': 'text/plain',
+                'Accept': '*/*',
             },
-        }).then(
-            res => res.json()
-        ).catch((error) => {
-            console.error('Error:', error);
-        }
-    )
+        })
+        // .then(
+        //     res => {
+        //         console.log(res);
+        //     }
+        // ).catch((error) => {
+        //     console.error('Error:', error);
+        // }
+    // )
 }
 
 const services = {

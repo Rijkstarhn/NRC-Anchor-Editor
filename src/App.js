@@ -9,7 +9,7 @@ import {Provider} from "react-redux";
 import textareaReducer from "./containers/OperationArea/reducer";
 
 const reducer = combineReducers({
-    textareaReducer,
+    textareaReducer : textareaReducer,
 })
 
 const store = createStore(reducer)
