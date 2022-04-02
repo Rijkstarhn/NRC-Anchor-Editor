@@ -17,11 +17,7 @@ function TextArea({text}) {
                       style={ text_area_style }
                       defaultValue = { text }
             >
-
             </textarea>
-            <div>
-                <h1>{ text }</h1>
-            </div>
         </div>
     );
 }

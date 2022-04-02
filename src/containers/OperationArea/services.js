@@ -7,15 +7,20 @@ export const loadPlainText = () => {
 }
 
 export const uploadXMLFile = (xmlData) => {
+    console.log("in service:\n", xmlData);
+    console.log("in service:\n", typeof(xmlData));
     return (
         fetch (`${SERVER_URL}/XMLFiles`), {
             method: 'POST',
             body: xmlData,
-            headers: {
-                'Content-Type': 'text/plain',
-                'Accept': '*/*',
+            header: {
+                'Content-Type': 'application/xml'
             },
-        })
+            // headers: {
+            //     'Content-Type': 'text/xml',
+            //     'Accept': 'application/xml',
+            // },
+        });
         // .then(
         //     res => {
         //         console.log(res);

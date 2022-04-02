@@ -2,7 +2,7 @@ import react from 'react';
 import actions, {uploadXML} from "./actions";
 import {connect} from "react-redux";
 
-function OperationArea({loadText}) {
+function OperationArea({loadText, uploadXML}) {
 
     const loadTextFromServer = () => {
         console.log("get text string");
@@ -48,7 +48,12 @@ function OperationArea({loadText}) {
     return (
         <div>
             <button type="button" className="btn btn-primary" onClick = {() => loadTextFromServer()}>Get Text</button>
-            <button type="button" className="btn btn-primary" onClick = {() => uploadXMLFile()}>Upload File</button>
+            <button type="button" className="btn btn-primary" onClick = {() => uploadXMLFile()}>Upload</button>
+            <div className="input-group">
+                <input type="file" className="form-control" id="inputGroupFile04"
+                       aria-describedby="inputGroupFileAddon04" aria-label="Upload"/>
+                    <button className="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" onClick={() => alert("zjdsg")}>Upload</button>
+            </div>
         </div>
     );
 }
@@ -56,7 +61,7 @@ function OperationArea({loadText}) {
 const dtpm = (dispatch) => {
     return {
         loadText: () => actions.loadText(dispatch),
-        uploadXML: () => actions.uploadXML(dispatch),
+        uploadXML: (xmlData) => actions.uploadXML(dispatch, xmlData),
     }
 }
 
