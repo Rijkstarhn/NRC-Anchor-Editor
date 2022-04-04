@@ -8,14 +8,12 @@ const initialState = {
 const textareaReducer = (state = initialState, action) => {
     switch (action.type) {
         case LOAD_TEXT:
-            let text = {
+            return {
                 ...state,
                 text: action.text,
             };
-            console.log("in reducer", text)
-            return text;
         default:
-            return state
+            return state;
     }
 }
 
