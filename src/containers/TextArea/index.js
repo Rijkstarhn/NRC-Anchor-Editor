@@ -18,6 +18,9 @@ function TextArea({text}) {
                       defaultValue = { text }
             >
             </textarea>
+            <h1>
+                {text}
+            </h1>
         </div>
     );
 }
