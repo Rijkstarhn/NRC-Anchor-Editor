@@ -20,8 +20,8 @@ function TextArea({text, anchors}) {
             {/*</textarea>*/}
             <ul className="list-group">
                 {
-                    anchors.map((anchor) =>
-                        <li className="list-group-item">{anchor.timestamp}</li>
+                    anchors.map((anchor, index) =>
+                        <li className="list-group-item" key ={index}>{anchor.timestamp}</li>
                     )
                 }
             </ul>

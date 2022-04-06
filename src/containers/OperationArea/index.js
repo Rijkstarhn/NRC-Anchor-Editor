@@ -2,7 +2,7 @@ import react, {useEffect, useState} from 'react';
 import actions from "./actions";
 import {connect} from "react-redux";
 
-function OperationArea({loadText, uploadXML, getAnchors}) {
+function OperationArea({loadText, uploadXML, getAnchors, updateAnchor}) {
 
     useEffect(() => {
         document.getElementById('inputGroupFile04').addEventListener('change', handleFileSelect, false);
@@ -10,6 +10,14 @@ function OperationArea({loadText, uploadXML, getAnchors}) {
 
     const [xmlFile, setXMLFile] = useState({});
     const [xmlData, setXMLData] = useState("");
+    const [originalAnchor, setOriginalAnchor] = useState({
+        timestamp: "3.6s",
+        location: 55,
+    });
+    const [destinationAnchor, setDestinationAnchor] = useState({
+        timestamp: "7.2s",
+        location: 72,
+    });
 
     const loadTextFromServer = () => {
         loadText();
@@ -41,9 +49,15 @@ function OperationArea({loadText, uploadXML, getAnchors}) {
         getAnchors();
     }
 
+    const updateAnchorToServer = (originalAnchor, destinationAnchor) => {
+        console.log("update anchors");
+        updateAnchor(originalAnchor, destinationAnchor);
+    }
+
     return (
         <div>
             <button type="button" className="btn btn-primary" onClick = {() => getAnchorsFromServer()}>Get Anchors</button>
+            <button type="button" className="btn btn-primary" onClick = {() => updateAnchorToServer(originalAnchor, destinationAnchor)}>Update Anchor</button>
             <button type="button" className="btn btn-primary" onClick = {() => loadTextFromServer()}>Get Text</button>
             <button type="button" className="btn btn-primary" onClick = {() => uploadXMLFile()}>Upload Text</button>
             <div className="input-group">
@@ -60,6 +74,7 @@ const dtpm = (dispatch) => {
         loadText: () => actions.loadText(dispatch),
         uploadXML: (xmlData) => actions.uploadXML(dispatch, xmlData),
         getAnchors: () => actions.getAnchors(dispatch),
+        updateAnchor: (originalAnchor, destinationAnchor) => actions.updateAnchor(dispatch, originalAnchor, destinationAnchor),
     }
 }
 
