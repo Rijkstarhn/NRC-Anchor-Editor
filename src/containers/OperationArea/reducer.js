@@ -1,8 +1,10 @@
 import {LOAD_TEXT} from "./actions";
+import {GET_ANCHORS} from "./actions";
 
 
 const initialState = {
-    text: "Please upload XML file"
+    text: "Please upload XML file",
+    anchors: [],
 }
 
 const textareaReducer = (state = initialState, action) => {
@@ -12,6 +14,11 @@ const textareaReducer = (state = initialState, action) => {
                 ...state,
                 text: action.text,
             };
+        case GET_ANCHORS:
+            return {
+                ...state,
+                anchors: action.anchors,
+            }
         default:
             return state;
     }

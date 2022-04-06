@@ -24,12 +24,23 @@ export const uploadXMLFile = (xmlData) => {
                 },
             }
         )
-    )
+    );
+}
+
+export const getAnchors = () => {
+    return (
+        fetch(`${SERVER_URL}/Anchors`, {
+            headers: {'Accept': 'application/json'}
+        }).then(
+            res => res.json()
+        )
+    );
 }
 
 const services = {
     loadPlainText,
     uploadXMLFile,
+    getAnchors,
 }
 
 export default services;

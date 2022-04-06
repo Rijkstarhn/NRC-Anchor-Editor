@@ -1,8 +1,8 @@
 import react, {useEffect, useState} from 'react';
-import actions, {uploadXML} from "./actions";
+import actions from "./actions";
 import {connect} from "react-redux";
 
-function OperationArea({loadText, uploadXML}) {
+function OperationArea({loadText, uploadXML, getAnchors}) {
 
     useEffect(() => {
         document.getElementById('inputGroupFile04').addEventListener('change', handleFileSelect, false);
@@ -36,8 +36,14 @@ function OperationArea({loadText, uploadXML}) {
         uploadXML(xmlData);
     }
 
+    const getAnchorsFromServer = () => {
+        console.log("get anchors");
+        getAnchors();
+    }
+
     return (
         <div>
+            <button type="button" className="btn btn-primary" onClick = {() => getAnchorsFromServer()}>Get Anchors</button>
             <button type="button" className="btn btn-primary" onClick = {() => loadTextFromServer()}>Get Text</button>
             <button type="button" className="btn btn-primary" onClick = {() => uploadXMLFile()}>Upload Text</button>
             <div className="input-group">
@@ -53,6 +59,7 @@ const dtpm = (dispatch) => {
     return {
         loadText: () => actions.loadText(dispatch),
         uploadXML: (xmlData) => actions.uploadXML(dispatch, xmlData),
+        getAnchors: () => actions.getAnchors(dispatch),
     }
 }
 
