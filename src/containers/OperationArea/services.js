@@ -38,8 +38,6 @@ export const getAnchors = () => {
 }
 
 export const updateAnchor = (originalAnchor, destinationAnchor) => {
-    console.log(originalAnchor);
-    console.log(destinationAnchor);
     return (
         fetch(`${SERVER_URL}/Anchors?originalTimestamp=${originalAnchor.timestamp}&originalLocation=${originalAnchor.location}&destinationTimestamp=${destinationAnchor.timestamp}&destinationLocation=${destinationAnchor.location}`,
         {
@@ -52,11 +50,24 @@ export const updateAnchor = (originalAnchor, destinationAnchor) => {
     );
 }
 
+export const deleteAnchor = (deleteAnchor) => {
+    return (
+        fetch(`${SERVER_URL}/Anchors/${deleteAnchor.timestamp}`,
+            {
+                    method: 'DELETE',
+                }
+        ).then(
+            res => res.json()
+        )
+    )
+}
+
 const services = {
     loadPlainText,
     uploadXMLFile,
     getAnchors,
     updateAnchor,
+    deleteAnchor,
 }
 
 export default services;

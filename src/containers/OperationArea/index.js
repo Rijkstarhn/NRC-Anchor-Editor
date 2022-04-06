@@ -2,7 +2,7 @@ import react, {useEffect, useState} from 'react';
 import actions from "./actions";
 import {connect} from "react-redux";
 
-function OperationArea({loadText, uploadXML, getAnchors, updateAnchor}) {
+function OperationArea({loadText, uploadXML, getAnchors, updateAnchor, deleteAnchor}) {
 
     useEffect(() => {
         document.getElementById('inputGroupFile04').addEventListener('change', handleFileSelect, false);
@@ -18,6 +18,10 @@ function OperationArea({loadText, uploadXML, getAnchors, updateAnchor}) {
         timestamp: "7.2s",
         location: 72,
     });
+    const [deletedAnchor, setDeletedAnchor] = useState({
+        timestamp: "7.2s",
+        location: 72,
+    })
 
     const loadTextFromServer = () => {
         loadText();
@@ -54,8 +58,14 @@ function OperationArea({loadText, uploadXML, getAnchors, updateAnchor}) {
         updateAnchor(originalAnchor, destinationAnchor);
     }
 
+    const deleteAnchorToServer = (deletedAnchor) => {
+        console.log("delete anchors");
+        deleteAnchor(deletedAnchor);
+    }
+
     return (
         <div>
+            <button type="button" className="btn btn-primary" onClick = {() => deleteAnchorToServer(deletedAnchor)}>Delete Anchors</button>
             <button type="button" className="btn btn-primary" onClick = {() => getAnchorsFromServer()}>Get Anchors</button>
             <button type="button" className="btn btn-primary" onClick = {() => updateAnchorToServer(originalAnchor, destinationAnchor)}>Update Anchor</button>
             <button type="button" className="btn btn-primary" onClick = {() => loadTextFromServer()}>Get Text</button>
@@ -75,6 +85,7 @@ const dtpm = (dispatch) => {
         uploadXML: (xmlData) => actions.uploadXML(dispatch, xmlData),
         getAnchors: () => actions.getAnchors(dispatch),
         updateAnchor: (originalAnchor, destinationAnchor) => actions.updateAnchor(dispatch, originalAnchor, destinationAnchor),
+        deleteAnchor: (deletedAnchor) => actions.deleteAnchor(dispatch, deletedAnchor),
     }
 }
 

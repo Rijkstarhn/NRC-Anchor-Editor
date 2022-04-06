@@ -16,11 +16,14 @@ export const getAnchors = (dispatch) => services.getAnchors().then(
 
 export const updateAnchor = (dispatch, originalAnchor, destinationAnchor) => services.updateAnchor(originalAnchor, destinationAnchor)
 
+export const deleteAnchor = (dispatch, deleteAnchor) => services.deleteAnchor(deleteAnchor)
+
 const actions = {
     loadText,
     uploadXML,
     getAnchors,
     updateAnchor,
+    deleteAnchor,
 }
 
 export default actions;
