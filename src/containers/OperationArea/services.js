@@ -59,7 +59,20 @@ export const deleteAnchor = (deleteAnchor) => {
         ).then(
             res => res.json()
         )
-    )
+    );
+}
+
+export const postAnchor = (postAnchor) => {
+    return (
+        fetch(`${SERVER_URL}/Anchors?destinationTimestamp=${postAnchor.timestamp}&destinationLocation=${postAnchor.location}`,
+            {
+                    method: 'POST',
+                    headers: {'Accept': 'application/json'}
+                }
+            ).then(
+                res => res.json()
+        )
+    );
 }
 
 const services = {
@@ -68,6 +81,7 @@ const services = {
     getAnchors,
     updateAnchor,
     deleteAnchor,
+    postAnchor,
 }
 
 export default services;

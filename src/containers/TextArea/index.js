@@ -1,8 +1,6 @@
 import react, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
-
 import actions from "../OperationArea/actions";
-import textareaReducer from "../OperationArea/reducer";
 
 function TextArea({text, anchors, getAnchors}) {
     const text_area_style = {
@@ -20,13 +18,18 @@ function TextArea({text, anchors, getAnchors}) {
             {/*          defaultValue = { anchors[0].timestamp }*/}
             {/*>*/}
             {/*</textarea>*/}
-            <ul className="list-group">
+            <ol className="list-group list-group-numbered">
                 {
                     anchors.map((anchor, index) =>
-                        <li className="list-group-item" key ={index}>{anchor.timestamp}</li>
+                        <li className="list-group-item d-flex justify-content-between align-items-start" key = {index}>
+                            <div className="ms-2 me-auto">
+                                <div className="fw-bold">{anchor.timestamp}</div>
+                            </div>
+                            <span className="badge bg-primary rounded-pill">{anchor.location}</span>
+                        </li>
                     )
                 }
-            </ul>
+            </ol>
             <h1>
                 {text}
             </h1>

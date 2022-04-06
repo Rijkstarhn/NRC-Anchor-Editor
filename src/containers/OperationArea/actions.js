@@ -2,7 +2,6 @@ import services from './services'
 
 export const LOAD_TEXT = 'LOAD_TEXT';
 export const GET_ANCHORS = 'GET_ANCHORS';
-// export const UPDATE_ANCHORS = 'GET_ANCHORS';
 
 export const loadText = (dispatch) => services.loadPlainText().then(
     plainText => dispatch({type: LOAD_TEXT, text: plainText})
@@ -18,12 +17,15 @@ export const updateAnchor = (dispatch, originalAnchor, destinationAnchor) => ser
 
 export const deleteAnchor = (dispatch, deleteAnchor) => services.deleteAnchor(deleteAnchor)
 
+export const postAnchor = (dispatch, postAnchor) => services.postAnchor(postAnchor)
+
 const actions = {
     loadText,
     uploadXML,
     getAnchors,
     updateAnchor,
     deleteAnchor,
+    postAnchor,
 }
 
 export default actions;

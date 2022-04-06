@@ -1,8 +1,8 @@
 import react, {useEffect, useState} from 'react';
-import actions from "./actions";
+import actions, {postAnchor} from "./actions";
 import {connect} from "react-redux";
 
-function OperationArea({loadText, uploadXML, getAnchors, updateAnchor, deleteAnchor}) {
+function OperationArea({loadText, uploadXML, getAnchors, updateAnchor, deleteAnchor, postAnchor}) {
 
     useEffect(() => {
         document.getElementById('inputGroupFile04').addEventListener('change', handleFileSelect, false);
@@ -21,6 +21,10 @@ function OperationArea({loadText, uploadXML, getAnchors, updateAnchor, deleteAnc
     const [deletedAnchor, setDeletedAnchor] = useState({
         timestamp: "7.2s",
         location: 72,
+    })
+    const [postedAnchor, setPostedAnchor] = useState({
+        timestamp: "8.8s",
+        location: 88,
     })
 
     const loadTextFromServer = () => {
@@ -54,17 +58,23 @@ function OperationArea({loadText, uploadXML, getAnchors, updateAnchor, deleteAnc
     }
 
     const updateAnchorToServer = (originalAnchor, destinationAnchor) => {
-        console.log("update anchors");
+        console.log("update anchor");
         updateAnchor(originalAnchor, destinationAnchor);
     }
 
     const deleteAnchorToServer = (deletedAnchor) => {
-        console.log("delete anchors");
+        console.log("delete anchor");
         deleteAnchor(deletedAnchor);
+    }
+
+    const postAnchorToServer = (postedAnchor) => {
+        console.log("post anchor");
+        postAnchor(postedAnchor);
     }
 
     return (
         <div>
+            <button type="button" className="btn btn-primary" onClick = {() => postAnchorToServer(postedAnchor)}>Post Anchors</button>
             <button type="button" className="btn btn-primary" onClick = {() => deleteAnchorToServer(deletedAnchor)}>Delete Anchors</button>
             <button type="button" className="btn btn-primary" onClick = {() => getAnchorsFromServer()}>Get Anchors</button>
             <button type="button" className="btn btn-primary" onClick = {() => updateAnchorToServer(originalAnchor, destinationAnchor)}>Update Anchor</button>
@@ -86,6 +96,7 @@ const dtpm = (dispatch) => {
         getAnchors: () => actions.getAnchors(dispatch),
         updateAnchor: (originalAnchor, destinationAnchor) => actions.updateAnchor(dispatch, originalAnchor, destinationAnchor),
         deleteAnchor: (deletedAnchor) => actions.deleteAnchor(dispatch, deletedAnchor),
+        postAnchor: (postedAnchor) => actions.postAnchor(dispatch, postedAnchor),
     }
 }
 
