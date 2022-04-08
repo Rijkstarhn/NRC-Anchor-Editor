@@ -29,6 +29,12 @@ export const getAnchorByTimestamp = (timestamp) => {
     }).then((res) => res.json());
 };
 
+export const getAnchorByLocation = (location) => {
+    return fetch(`${SERVER_URL}/Anchors/${location}`, {
+        headers: { Accept: "application/json" },
+    }).then((res) => res.json());
+};
+
 export const updateAnchor = (originalAnchor, destinationAnchor) => {
     return fetch(
         `${SERVER_URL}/Anchors?originalTimestamp=${originalAnchor.timestamp}&originalLocation=${originalAnchor.location}&destinationTimestamp=${destinationAnchor.timestamp}&destinationLocation=${destinationAnchor.location}`,
@@ -63,6 +69,7 @@ const services = {
     deleteAnchor,
     postAnchor,
     getAnchorByTimestamp,
+    getAnchorByLocation
 };
 
 export default services;

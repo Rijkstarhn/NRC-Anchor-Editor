@@ -17,6 +17,10 @@ export const getAnchorByTimestamp = (dispatch, timestamp) => services.getAnchorB
     response => console.log(response)
 )
 
+export const getAnchorByLocation = (dispatch, location) => services.getAnchorByLocation(location).then(
+    response => console.log(response)
+)
+
 export const updateAnchor = (dispatch, originalAnchor, destinationAnchor) => services.updateAnchor(originalAnchor, destinationAnchor)
 
 export const deleteAnchor = (dispatch, deleteAnchor) => services.deleteAnchor(deleteAnchor)
@@ -31,6 +35,7 @@ const actions = {
     deleteAnchor,
     postAnchor,
     getAnchorByTimestamp,
+    getAnchorByLocation,
 }
 
 export default actions;
