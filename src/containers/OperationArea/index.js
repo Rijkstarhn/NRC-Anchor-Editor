@@ -2,7 +2,7 @@ import react, {useEffect, useState} from 'react';
 import actions, {postAnchor} from "./actions";
 import {connect} from "react-redux";
 
-function OperationArea({loadText, uploadXML, getAnchors, updateAnchor, deleteAnchor, postAnchor}) {
+function OperationArea({loadText, uploadXML, getAnchors, updateAnchor, deleteAnchor, postAnchor, getAnchorByTimestamp}) {
 
     useEffect(() => {
         document.getElementById('inputGroupFile04').addEventListener('change', handleFileSelect, false);
@@ -26,6 +26,8 @@ function OperationArea({loadText, uploadXML, getAnchors, updateAnchor, deleteAnc
         timestamp: "8.8s",
         location: 88,
     })
+
+    const [timestamp, setTimestamp] = useState("1.62s")
 
     const loadTextFromServer = () => {
         loadText();
@@ -72,6 +74,11 @@ function OperationArea({loadText, uploadXML, getAnchors, updateAnchor, deleteAnc
         postAnchor(postedAnchor);
     }
 
+    const getAnchorByTimestampFromServer = (timestamp) => {
+        console.log("Get anchor by timestamp");
+        getAnchorByTimestamp(timestamp);
+    }
+
     return (
         <div>
             <button type="button" className="btn btn-primary" onClick = {() => postAnchorToServer(postedAnchor)}>Post Anchors</button>
@@ -80,6 +87,7 @@ function OperationArea({loadText, uploadXML, getAnchors, updateAnchor, deleteAnc
             <button type="button" className="btn btn-primary" onClick = {() => updateAnchorToServer(originalAnchor, destinationAnchor)}>Update Anchor</button>
             <button type="button" className="btn btn-primary" onClick = {() => loadTextFromServer()}>Get Text</button>
             <button type="button" className="btn btn-primary" onClick = {() => uploadXMLFile()}>Upload Text</button>
+            <button type="button" className="btn btn-primary" onClick = {() => getAnchorByTimestampFromServer(timestamp)}>Get Anchor by Timestamp</button>
             <div className="input-group">
                 <input type="file" className="form-control" id="inputGroupFile04"
                        aria-describedby="inputGroupFileAddon04" aria-label="Upload"/>
@@ -97,6 +105,7 @@ const dtpm = (dispatch) => {
         updateAnchor: (originalAnchor, destinationAnchor) => actions.updateAnchor(dispatch, originalAnchor, destinationAnchor),
         deleteAnchor: (deletedAnchor) => actions.deleteAnchor(dispatch, deletedAnchor),
         postAnchor: (postedAnchor) => actions.postAnchor(dispatch, postedAnchor),
+        getAnchorByTimestamp: (timestamp) => actions.getAnchorByTimestamp(dispatch, timestamp),
     }
 }
 
