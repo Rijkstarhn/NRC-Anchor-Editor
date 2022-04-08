@@ -61,6 +61,25 @@ export const postAnchor = (postAnchor) => {
     ).then((res) => res.json());
 };
 
+
+export const getXMLFile = () => {
+    return fetch(`${SERVER_URL}/XMLFiles`, {
+        headers: {
+            "Content-Type": "application/xml",
+            Accept: "*/*",
+        },
+    }).then((res) => res.blob())
+        .then((blob) => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "NewFile.xml";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        });
+};
+
 const services = {
     loadPlainText,
     uploadXMLFile,
@@ -69,7 +88,8 @@ const services = {
     deleteAnchor,
     postAnchor,
     getAnchorByTimestamp,
-    getAnchorByLocation
+    getAnchorByLocation,
+    getXMLFile,
 };
 
 export default services;
