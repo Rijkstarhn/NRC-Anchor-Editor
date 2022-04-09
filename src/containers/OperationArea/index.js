@@ -1,8 +1,21 @@
-import react, {useEffect, useState} from 'react';
-import actions, {postAnchor} from "./actions";
-import {connect} from "react-redux";
+import react, { useEffect, useState } from 'react';
+import actions from "./actions";
+import { connect } from "react-redux";
 
-function OperationArea({loadText, uploadXML, getAnchors, updateAnchor, deleteAnchor, postAnchor}) {
+function OperationArea(
+    {
+        loadText,
+        uploadXML,
+        getAnchors,
+        updateAnchor,
+        deleteAnchor,
+        postAnchor,
+        getAnchorByTimestamp,
+        getAnchorByLocation,
+        getXMLFile,
+        refreshAnchors,
+        anchors,
+    }) {
 
     useEffect(() => {
         document.getElementById('inputGroupFile04').addEventListener('change', handleFileSelect, false);
@@ -26,6 +39,10 @@ function OperationArea({loadText, uploadXML, getAnchors, updateAnchor, deleteAnc
         timestamp: "8.8s",
         location: 88,
     })
+
+    const [timestamp, setTimestamp] = useState("1.62s")
+
+    const [location, setLocation] = useState(88)
 
     const loadTextFromServer = () => {
         loadText();
@@ -72,18 +89,36 @@ function OperationArea({loadText, uploadXML, getAnchors, updateAnchor, deleteAnc
         postAnchor(postedAnchor);
     }
 
+    const getAnchorByTimestampFromServer = (timestamp) => {
+        console.log("Get anchor by timestamp");
+        getAnchorByTimestamp(timestamp);
+    }
+
+    const getAnchorByLocationFromServer = (location) => {
+        console.log("Get Anchor By Location");
+        getAnchorByLocation(location);
+    }
+
+    const getXMLFileFromServer = () => {
+        console.log("Get XML File");
+        getXMLFile();
+    }
+
     return (
         <div>
-            <button type="button" className="btn btn-primary" onClick = {() => postAnchorToServer(postedAnchor)}>Post Anchors</button>
-            <button type="button" className="btn btn-primary" onClick = {() => deleteAnchorToServer(deletedAnchor)}>Delete Anchors</button>
-            <button type="button" className="btn btn-primary" onClick = {() => getAnchorsFromServer()}>Get Anchors</button>
-            <button type="button" className="btn btn-primary" onClick = {() => updateAnchorToServer(originalAnchor, destinationAnchor)}>Update Anchor</button>
-            <button type="button" className="btn btn-primary" onClick = {() => loadTextFromServer()}>Get Text</button>
-            <button type="button" className="btn btn-primary" onClick = {() => uploadXMLFile()}>Upload Text</button>
+            <button type="button" className="btn btn-primary" onClick={() => postAnchorToServer(postedAnchor)}>Post Anchors</button>
+            <button type="button" className="btn btn-primary" onClick={() => deleteAnchorToServer(deletedAnchor)}>Delete Anchors</button>
+            <button type="button" className="btn btn-primary" onClick={() => getAnchorsFromServer()}>Get Anchors</button>
+            <button type="button" className="btn btn-primary" onClick={() => updateAnchorToServer(originalAnchor, destinationAnchor)}>Update Anchor</button>
+            <button type="button" className="btn btn-primary" onClick={() => loadTextFromServer()}>Get Text</button>
+            <button type="button" className="btn btn-primary" onClick={() => uploadXMLFile()}>Upload Text</button>
+            <button type="button" className="btn btn-primary" onClick={() => getAnchorByTimestampFromServer(timestamp)}>Get Anchor by Timestamp</button>
+            <button type="button" className="btn btn-primary" onClick={() => getAnchorByLocationFromServer(location)}>Get Anchor by Location</button>
+            <button type="button" className="btn btn-primary" onClick={() => getXMLFileFromServer()}>Get XML File</button>
             <div className="input-group">
                 <input type="file" className="form-control" id="inputGroupFile04"
-                       aria-describedby="inputGroupFileAddon04" aria-label="Upload"/>
-                    <button className="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" onClick={() => getXMLFileText()}>Upload File</button>
+                    aria-describedby="inputGroupFileAddon04" aria-label="Upload" />
+                <button className="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" onClick={() => getXMLFileText()}>Upload File</button>
             </div>
         </div>
     );
@@ -97,8 +132,11 @@ const dtpm = (dispatch) => {
         updateAnchor: (originalAnchor, destinationAnchor) => actions.updateAnchor(dispatch, originalAnchor, destinationAnchor),
         deleteAnchor: (deletedAnchor) => actions.deleteAnchor(dispatch, deletedAnchor),
         postAnchor: (postedAnchor) => actions.postAnchor(dispatch, postedAnchor),
+        getAnchorByTimestamp: (timestamp) => actions.getAnchorByTimestamp(dispatch, timestamp),
+        getAnchorByLocation: (location) => actions.getAnchorByLocation(dispatch, location),
+        getXMLFile: () => actions.getXMLFile(dispatch),
     }
 }
 
 
-export default connect(null, dtpm) (OperationArea);
+export default connect(null, dtpm)(OperationArea);
