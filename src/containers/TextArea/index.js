@@ -2,13 +2,11 @@ import react, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import actions from "../OperationArea/actions";
 
-function TextArea({text, anchors, getAnchors}) {
+function TextArea({text, anchors}) {
     const text_area_style = {
         height: "500px",
         width: "300px",
     };
-
-    useEffect(() => getAnchors(), [anchors]);
 
     return (
         <div className="input-group">
@@ -44,11 +42,4 @@ const stpm = (state) => {
     }
 }
 
-const dtpm = (dispatch) => {
-    return {
-        getAnchors: () => actions.getAnchors(dispatch),
-    }
-}
-
-
-export default connect(stpm, dtpm) (TextArea);
+export default connect(stpm) (TextArea);

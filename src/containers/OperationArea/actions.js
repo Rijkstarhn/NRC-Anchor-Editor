@@ -13,13 +13,9 @@ export const getAnchors = (dispatch) => services.getAnchors().then(
     response => dispatch({ type: GET_ANCHORS, anchors: response })
 )
 
-export const getAnchorByTimestamp = (dispatch, timestamp) => services.getAnchorByTimestamp(timestamp).then(
-    response => console.log(response)
-)
+export const getAnchorByTimestamp = (dispatch, timestamp) => services.getAnchorByTimestamp(timestamp)
 
-export const getAnchorByLocation = (dispatch, location) => services.getAnchorByLocation(location).then(
-    response => console.log(response)
-)
+export const getAnchorByLocation = (dispatch, location) => services.getAnchorByLocation(location)
 
 export const updateAnchor = (dispatch, originalAnchor, destinationAnchor) => services.updateAnchor(originalAnchor, destinationAnchor)
 
@@ -27,9 +23,7 @@ export const deleteAnchor = (dispatch, deleteAnchor) => services.deleteAnchor(de
 
 export const postAnchor = (dispatch, postAnchor) => services.postAnchor(postAnchor)
 
-export const getXMLFile = (dispatch) => services.getXMLFile().then(response => console.log("hi" + response))
-
-
+export const getXMLFile = (dispatch) => services.getXMLFile()
 
 const actions = {
     loadText,

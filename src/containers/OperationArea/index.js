@@ -1,8 +1,21 @@
 import react, { useEffect, useState } from 'react';
-import actions, { postAnchor } from "./actions";
+import actions from "./actions";
 import { connect } from "react-redux";
 
-function OperationArea({ loadText, uploadXML, getAnchors, updateAnchor, deleteAnchor, postAnchor, getAnchorByTimestamp, getAnchorByLocation, getXMLFile }) {
+function OperationArea(
+    {
+        loadText,
+        uploadXML,
+        getAnchors,
+        updateAnchor,
+        deleteAnchor,
+        postAnchor,
+        getAnchorByTimestamp,
+        getAnchorByLocation,
+        getXMLFile,
+        refreshAnchors,
+        anchors,
+    }) {
 
     useEffect(() => {
         document.getElementById('inputGroupFile04').addEventListener('change', handleFileSelect, false);
