@@ -106,19 +106,19 @@ function OperationArea(
 
     return (
         <div>
-            <button type="button" className="btn btn-primary" onClick={() => postAnchorToServer(postedAnchor)}>Post Anchors</button>
-            <button type="button" className="btn btn-primary" onClick={() => deleteAnchorToServer(deletedAnchor)}>Delete Anchors</button>
-            <button type="button" className="btn btn-primary" onClick={() => getAnchorsFromServer()}>Get Anchors</button>
-            <button type="button" className="btn btn-primary" onClick={() => updateAnchorToServer(originalAnchor, destinationAnchor)}>Update Anchor</button>
-            <button type="button" className="btn btn-primary" onClick={() => loadTextFromServer()}>Get Text</button>
-            <button type="button" className="btn btn-primary" onClick={() => uploadXMLFile()}>Upload Text</button>
+            <button type="button" className="btn btn-primary post-anchor-button" onClick={() => postAnchorToServer(postedAnchor)}>Post Anchors</button>
+            <button type="button" className="btn btn-primary delete-anchor-button" onClick={() => deleteAnchorToServer(deletedAnchor)}>Delete Anchors</button>
+            <button type="button" className="btn btn-primary get-anchors-button" onClick={() => getAnchorsFromServer()}>Get Anchors</button>
+            <button type="button" className="btn btn-primary update-anchor-button" onClick={() => updateAnchorToServer(originalAnchor, destinationAnchor)}>Update Anchor</button>
+            <button type="button" className="btn btn-primary get-text-button" onClick={() => loadTextFromServer()}>Get Text</button>
+            <button type="button" className="btn btn-primary upload-text-button" onClick={() => uploadXMLFile()}>Upload Text</button>
             <button type="button" className="btn btn-primary" onClick={() => getAnchorByTimestampFromServer(timestamp)}>Get Anchor by Timestamp</button>
             <button type="button" className="btn btn-primary" onClick={() => getAnchorByLocationFromServer(location)}>Get Anchor by Location</button>
             <button type="button" className="btn btn-primary" onClick={() => getXMLFileFromServer()}>Get XML File</button>
             <div className="input-group">
                 <input type="file" className="form-control" id="inputGroupFile04"
                     aria-describedby="inputGroupFileAddon04" aria-label="Upload" />
-                <button className="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" onClick={() => getXMLFileText()}>Upload File</button>
+                <button className="btn btn-outline-secondary upload-file-button" type="button" id="inputGroupFileAddon04" onClick={() => getXMLFileText()}>Upload File</button>
             </div>
         </div>
     );
