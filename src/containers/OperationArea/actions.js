@@ -17,11 +17,17 @@ export const getAnchorByTimestamp = (dispatch, timestamp) => services.getAnchorB
 
 export const getAnchorByLocation = (dispatch, location) => services.getAnchorByLocation(location)
 
-export const updateAnchor = (dispatch, originalAnchor, destinationAnchor) => services.updateAnchor(originalAnchor, destinationAnchor)
+export const updateAnchor = (dispatch, originalAnchor, destinationAnchor) => services.updateAnchor(originalAnchor, destinationAnchor).then(
+    response => dispatch({ type: GET_ANCHORS, anchors: response })
+)
 
-export const deleteAnchor = (dispatch, deleteAnchor) => services.deleteAnchor(deleteAnchor)
+export const deleteAnchor = (dispatch, deleteAnchor) => services.deleteAnchor(deleteAnchor).then(
+    response => dispatch({ type: GET_ANCHORS, anchors: response })
+)
 
-export const postAnchor = (dispatch, postAnchor) => services.postAnchor(postAnchor)
+export const postAnchor = (dispatch, postAnchor) => services.postAnchor(postAnchor).then(
+    response => dispatch({ type: GET_ANCHORS, anchors: response })
+)
 
 export const getXMLFile = (dispatch) => services.getXMLFile()
 
