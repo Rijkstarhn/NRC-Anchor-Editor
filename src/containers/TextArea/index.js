@@ -16,19 +16,19 @@ function TextArea({text, anchors}) {
             {/*          defaultValue = { anchors[0].timestamp }*/}
             {/*>*/}
             {/*</textarea>*/}
-            <ol className="list-group list-group-numbered">
+            <ol className="list-group list-group-numbered anchors-list">
                 {
                     anchors.map((anchor, index) =>
                         <li className="list-group-item d-flex justify-content-between align-items-start" key = {index}>
                             <div className="ms-2 me-auto">
-                                <div className="fw-bold">{anchor.timestamp}</div>
+                                <div className="fw-bold anchor-timestamp-info">{anchor.timestamp}</div>
                             </div>
-                            <span className="badge bg-primary rounded-pill">{anchor.location}</span>
+                            <span className="badge bg-primary rounded-pill anchor-location-info">{anchor.location}</span>
                         </li>
                     )
                 }
             </ol>
-            <h1>
+            <h1 className = "text-content">
                 {text}
             </h1>
         </div>
