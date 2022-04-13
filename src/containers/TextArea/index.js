@@ -21,13 +21,24 @@ function TextArea({ text, anchors }) {
             if (text[i] === " ") {
                 // Space -> Anchor Holder
                 position++;
-                var tag = document.createElement("span");
-                // Set anchor id and class
-                tag.setAttribute("id", `${position}`);
-                tag.setAttribute("class", "anchor-holder");
-                var content = document.createTextNode(" ");
-                tag.appendChild(content);
-                textContent.appendChild(tag);
+                if (i > 0 && text[i - 1] === " ") {
+                    // previous space is an anchor holder.
+                    var tag = document.createElement("span");
+                    // Set anchor id and class
+                    tag.classList.add(`location-${position - 1}`);
+                    tag.classList.add("anchor-holder");
+                    var content = document.createTextNode(" ");
+                    tag.innerHTML = "\u00A0";
+                    textContent.appendChild(tag);
+                } else {
+                    tag = document.createElement("span");
+                    // Set anchor id and class
+                    tag.classList.add(`location-${position}`);
+                    tag.classList.add("anchor-holder");
+                    content = document.createTextNode(" ");
+                    tag.appendChild(content);
+                    textContent.appendChild(tag);
+                }
             } else if (text[i] === "\n") {
                 // \n
                 position++;
@@ -40,8 +51,8 @@ function TextArea({ text, anchors }) {
                 // If the charcter is the first one in a paragraph, add an anchor holder before it.
                 if (position === 0 || text[i - 1] === "\n") {
                     tag = document.createElement("span");
-                    tag.setAttribute("id", `${position}`);
-                    tag.setAttribute("class", "anchor-holder");
+                    tag.classList.add(`location-${position}`);
+                    tag.classList.add("anchor-holder");
                     content = document.createTextNode("\u00A0");
                     tag.appendChild(content);
                     textContent.appendChild(tag);
@@ -57,8 +68,8 @@ function TextArea({ text, anchors }) {
         // Add an anchor holder at the end of text.
         position++;
         tag = document.createElement("span");
-        tag.setAttribute("id", `${position}`);
-        tag.setAttribute("class", "anchor-holder");
+        tag.classList.add(`location-${position}`);
+        tag.classList.add("anchor-holder");
         content = document.createTextNode("\u00A0");
         tag.appendChild(content);
         textContent.appendChild(tag);
@@ -74,8 +85,14 @@ function TextArea({ text, anchors }) {
     useEffect(() => {
         console.log(anchorList);
         for (var anchor of anchorList) {
-            var anchorElement = document.getElementById(`${anchor.location}`);
-            anchorElement.style.backgroundColor = "red";
+            const anchorElements = document.getElementsByClassName(
+                `location-${anchor.location}`
+            );
+            for (var anchorElement of anchorElements) {
+                anchorElement.style.backgroundColor = "red";
+                anchorElement.classList.add("anchor");
+                anchorElement.classList.add(`timestamp-${anchor.timestamp}`);
+            }
         }
     }, [anchorList]);
 
@@ -105,7 +122,7 @@ function TextArea({ text, anchors }) {
                 ))}
             </ol>
             <h1 className="text-content" id="text-content">
-                {/* {text} */}
+                {" "}
             </h1>
         </div>
     );
