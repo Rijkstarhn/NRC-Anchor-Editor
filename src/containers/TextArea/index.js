@@ -29,17 +29,24 @@ function TextArea({ text, anchors }) {
                 tag.appendChild(content);
                 textContent.appendChild(tag);
             } else if (text[i] === "\n") {
-                // \n -> Anchor Holder
+                // \n
                 position++;
                 tag = document.createElement("p");
-                // Set anchor id and class
-                tag.setAttribute("id", `${position}`);
-                tag.setAttribute("class", "anchor-holder");
                 content = document.createTextNode(" ");
                 tag.appendChild(content);
                 textContent.appendChild(tag);
             } else {
                 // Character
+                // If the charcter is the first one in a paragraph, add an anchor holder before it.
+                if (position === 0 || text[i - 1] === "\n") {
+                    tag = document.createElement("span");
+                    tag.setAttribute("id", `${position}`);
+                    tag.setAttribute("class", "anchor-holder");
+                    content = document.createTextNode("\u00A0");
+                    tag.appendChild(content);
+                    textContent.appendChild(tag);
+                }
+                // Add charcter element.
                 position++;
                 tag = document.createElement("span");
                 content = document.createTextNode(`${text[i]}`);
@@ -47,14 +54,30 @@ function TextArea({ text, anchors }) {
                 textContent.appendChild(tag);
             }
         }
+        // Add an anchor holder at the end of text.
+        position++;
+        tag = document.createElement("span");
+        tag.setAttribute("id", `${position}`);
+        tag.setAttribute("class", "anchor-holder");
+        content = document.createTextNode("\u00A0");
+        tag.appendChild(content);
+        textContent.appendChild(tag);
     }, [text]);
 
-    // Set up exsiting anchor.
+    // Set up exsiting anchor to anchor list.
     useEffect(() => {
         // update anchorList
         setAnchorList(anchors);
-        console.log(anchorList);
     }, [anchors]);
+
+    // Change exsiting anchor color.
+    useEffect(() => {
+        console.log(anchorList);
+        for (var anchor of anchorList) {
+            var anchorElement = document.getElementById(`${anchor.location}`);
+            anchorElement.style.backgroundColor = "red";
+        }
+    }, [anchorList]);
 
     return (
         <div className="input-group">
