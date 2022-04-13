@@ -89,9 +89,15 @@ function TextArea({ text, anchors }) {
                 `location-${anchor.location}`
             );
             for (var anchorElement of anchorElements) {
-                anchorElement.style.backgroundColor = "red";
-                anchorElement.classList.add("anchor");
-                anchorElement.classList.add(`timestamp-${anchor.timestamp}`);
+                if (!anchorElement.classList.contains("anchor")) {
+                    console.log(anchorElement);
+                    anchorElement.style.backgroundColor = "red";
+                    anchorElement.classList.add("anchor");
+                    anchorElement.classList.add(
+                        `timestamp-${anchor.timestamp}`
+                    );
+                    break;
+                }
             }
         }
     }, [anchorList]);
