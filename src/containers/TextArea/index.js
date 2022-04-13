@@ -8,25 +8,33 @@ function TextArea({ text, anchors }) {
         width: "300px",
     };
 
+    const [anchorList, setAnchorList] = useState(anchors);
+
+    // Convert plain text to html elements, and add them in text content.
     useEffect(() => {
         var textContent = document.getElementById("text-content");
         console.log(text);
+        textContent.innerHTML = "";
         // Iterate the plain text and create element in text content
         var position = 0;
         for (var i = 0; i < text.length; i++) {
             if (text[i] === " ") {
-                // Space -> Anchor
+                // Space -> Anchor Holder
                 position++;
                 var tag = document.createElement("span");
+                // Set anchor id and class
                 tag.setAttribute("id", `${position}`);
+                tag.setAttribute("class", "anchor-holder");
                 var content = document.createTextNode(" ");
                 tag.appendChild(content);
                 textContent.appendChild(tag);
             } else if (text[i] === "\n") {
-                // \n -> Anchor
+                // \n -> Anchor Holder
                 position++;
                 tag = document.createElement("p");
+                // Set anchor id and class
                 tag.setAttribute("id", `${position}`);
+                tag.setAttribute("class", "anchor-holder");
                 content = document.createTextNode(" ");
                 tag.appendChild(content);
                 textContent.appendChild(tag);
@@ -39,7 +47,14 @@ function TextArea({ text, anchors }) {
                 textContent.appendChild(tag);
             }
         }
-    });
+    }, [text]);
+
+    // Set up exsiting anchor.
+    useEffect(() => {
+        // update anchorList
+        setAnchorList(anchors);
+        console.log(anchorList);
+    }, [anchors]);
 
     return (
         <div className="input-group">
@@ -67,7 +82,7 @@ function TextArea({ text, anchors }) {
                 ))}
             </ol>
             <h1 className="text-content" id="text-content">
-                {text}
+                {/* {text} */}
             </h1>
         </div>
     );
