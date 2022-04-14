@@ -82,7 +82,8 @@ function AudioArea() {
         setTimelineVis(!timelineVis);
     }, [timelineVis]);
 
-
+    // playing status flag
+    const [playing, setPlay] = useState(false);
 
 
     //by alice
@@ -128,7 +129,7 @@ function AudioArea() {
             wavesurferRef.current = waveSurfer;
 
             if (wavesurferRef.current && url) {
-
+                setPlay(false);
                 wavesurferRef.current.load(url);
 
                 console.log(wavesurferRef.current)
@@ -200,8 +201,11 @@ function AudioArea() {
     }, [markers]);
 
     const play = useCallback(() => {
+        // switch the playing status
+        setPlay(!playing);
         wavesurferRef.current.playPause();
-    }, []);
+        console.log("playing status --> ", playing);
+    }, [playing]);
 
     const getCurrentTime = useCallback(() => {
         let currentTime = 0;
