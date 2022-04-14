@@ -1,10 +1,11 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import styled from "styled-components";
-import {Marker, WaveForm, WaveSurfer} from "wavesurfer-react";
+import { Marker, WaveForm, WaveSurfer } from "wavesurfer-react";
 import "./styles.css";
 import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions.min";
 import TimelinePlugin from "wavesurfer.js/dist/plugin/wavesurfer.timeline.min";
 import MarkersPlugin from "wavesurfer.js/src/plugin/markers";
+import FileSaver from 'file-saver';
 
 const Buttons = styled.div`
   display: inline-block;
@@ -42,25 +43,25 @@ function AudioArea() {
     const [timelineVis, setTimelineVis] = useState(true);
 
     const [markers, setMarkers] = useState([
-                                               {
-                                                   time: 5.5,
-                                                   label: "V1",
-                                                   color: "#ff990a",
-                                                   draggable: true
-                                               },
-                                               {
-                                                   time: 10,
-                                                   label: "V2",
-                                                   color: "#00ffcc",
-                                                   position: "top"
-                                               }
-                                           ]);
+        {
+            time: 5.5,
+            label: "V1",
+            color: "#ff990a",
+            draggable: true
+        },
+        {
+            time: 10,
+            label: "V2",
+            color: "#00ffcc",
+            position: "top"
+        }
+    ]);
 
     const plugins = useMemo(() => {
         return [
             {
                 plugin: RegionsPlugin,
-                options: {dragSelection: true}
+                options: { dragSelection: true }
             },
             timelineVis && {
                 plugin: TimelinePlugin,
@@ -71,7 +72,7 @@ function AudioArea() {
             {
                 plugin: MarkersPlugin,
                 options: {
-                    markers: [{draggable: true}]
+                    markers: [{ draggable: true }]
                 }
             }
         ].filter(Boolean);
@@ -80,6 +81,40 @@ function AudioArea() {
     const toggleTimeline = useCallback(() => {
         setTimelineVis(!timelineVis);
     }, [timelineVis]);
+
+
+
+
+    //by alice
+    const inputFile = useRef(null);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [isFilePicked, setIsFilePicked] = useState(false);
+    const [url, setUrl] = useState('');
+
+    useEffect(() => {
+        if (selectedFile) {
+            setUrl(selectedFile);
+        }
+    }, [url, selectedFile]);
+
+    const handleSubmission = () => {
+        console.log("handling submitting");
+        inputFile.current.click();
+    }
+
+    const changeHandler = (event) => {
+        setSelectedFile(URL.createObjectURL(event.target.files[0]));
+        console.log("THIS IS URL: ", URL.createObjectURL(event.target.files[0]));
+        setIsFilePicked(true);
+        console.log(event.target.files[0].name);
+        console.log("now selected file is: ", selectedFile);
+        console.log("now isFilePicked is: ", isFilePicked);
+    };
+    //end by alice
+
+
+
+
 
     // use wavesurfer ref to pass it inside useCallback
     // so it will use always the most fresh version of markers list
@@ -92,9 +127,12 @@ function AudioArea() {
 
             wavesurferRef.current = waveSurfer;
 
-            if (wavesurferRef.current) {
-                wavesurferRef.current.load("/ej-fra.mp3");
+            if (wavesurferRef.current && url) {
+
+                wavesurferRef.current.load(url);
+
                 console.log(wavesurferRef.current)
+                console.log("now url is: ", url);
 
                 wavesurferRef.current.on("ready", () => {
                     console.log("WaveSurfer is ready");
@@ -109,7 +147,7 @@ function AudioArea() {
                 }
             }
         },
-        []
+        [url, isFilePicked]
     );
 
     const addMarker = useCallback(() => {
@@ -122,14 +160,14 @@ function AudioArea() {
         const currentTime = wavesurferRef.current.getCurrentTime()
 
         setMarkers([
-                       ...markers,
-                       {
-                           label: `@${currentTime.toFixed(1)}s`,
-                           time: currentTime,
-                           color: `rgba(${r}, ${g}, ${b}, 0.5)`,
-                           draggable: true
-                       }
-                   ]);
+            ...markers,
+            {
+                label: `@${currentTime.toFixed(1)}s`,
+                time: currentTime,
+                color: `rgba(${r}, ${g}, ${b}, 0.5)`,
+                draggable: true
+            }
+        ]);
     }, [markers, wavesurferRef]);
 
     const removeLastMarker = useCallback(() => {
@@ -173,6 +211,8 @@ function AudioArea() {
         console.log("current --> ", currentTime);
     }, [wavesurferRef]);
 
+
+
     return (
         <div>
             {/*<div className="progress">*/}
@@ -181,29 +221,32 @@ function AudioArea() {
             {/*         style={{width: '75%'}}></div>*/}
             {/*</div>*/}
             <div className="AudioArea">
-                <WaveSurfer plugins={plugins} onMount={handleWSMount}>
-                    <WaveForm id="waveform" cursorColor="transparent">
-                        {/*<WaveForm id="waveform" cursorColor="#fff">*/}
-                        {markers.map((marker, index) => {
-                            return (
-                                <Marker
-                                    key={index}
-                                    {...marker}
-                                    onClick={(...args) => {
-                                        console.log("onClick", ...args);
-                                    }}
-                                    onDrag={(...args) => {
-                                        console.log("onDrag", ...args);
-                                    }}
-                                    onDrop={(...args) => {
-                                        console.log("onDrop", ...args);
-                                    }}
-                                />
-                            );
-                        })}
-                    </WaveForm>
-                    <div id="timeline"/>
-                </WaveSurfer>
+                {url ?
+                    <WaveSurfer plugins={plugins} onMount={handleWSMount}>
+                        <WaveForm id="waveform" cursorColor="transparent">
+                            {/*<WaveForm id="waveform" cursorColor="#fff">*/}
+                            {markers.map((marker, index) => {
+                                return (
+                                    <Marker
+                                        key={index}
+                                        {...marker}
+                                        onClick={(...args) => {
+                                            console.log("onClick", ...args);
+                                        }}
+                                        onDrag={(...args) => {
+                                            console.log("onDrag", ...args);
+                                        }}
+                                        onDrop={(...args) => {
+                                            console.log("onDrop", ...args);
+                                        }}
+                                    />
+                                );
+                            })}
+                        </WaveForm>
+                        <div id="timeline" />
+                    </WaveSurfer>
+                    : console.log("no")}
+
                 <Buttons>
                     <Button onClick={getCurrentTime}>Get current time</Button>
                     <Button onClick={addMarker}>Add Marker</Button>
@@ -211,6 +254,11 @@ function AudioArea() {
                     <Button onClick={removeLastMarker}>Remove last marker</Button>
                     <Button onClick={shuffleLastMarker}>Shuffle last marker</Button>
                     <Button onClick={toggleTimeline}>Toggle timeline</Button>
+                    <input type="file" name="file" ref={inputFile} style={{ display: 'none' }}
+                        accept='audio/*' onChange={changeHandler} />
+                    <div>
+                        <Button onClick={handleSubmission} >Upload Audio</Button>
+                    </div>
                 </Buttons>
             </div>
         </div>
