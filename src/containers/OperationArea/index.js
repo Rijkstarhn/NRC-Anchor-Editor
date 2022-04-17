@@ -13,7 +13,8 @@ function OperationArea(
         getAnchorByTimestamp,
         getAnchorByLocation,
         getXMLFile,
-        toggleAddingAnchor,
+        setAddingAnchorToTrue,
+        setAddingAnchorToFalse,
         isAddingAnchor,
         isDeletingAnchor,
         currentTime,
@@ -109,9 +110,8 @@ function OperationArea(
         getXMLFile();
     }
 
-    const toggleAddingAnchorStatus = () => {
-        console.log("toggel add anchor status");
-        toggleAddingAnchor();
+    const setAddingAnchorToTrueStatus = () => {
+        setAddingAnchorToTrue();
     }
 
     const handleSave = () => {
@@ -123,7 +123,7 @@ function OperationArea(
                     location: currentLocation,
                 })
             // set isAddingAnchor to false
-            toggleAddingAnchor();
+            setAddingAnchorToFalse();
         } else if (!isAddingAnchor && isDeletingAnchor) {
 
         } else if (!isAddingAnchor && !isDeletingAnchor) {
@@ -145,7 +145,7 @@ function OperationArea(
             <button type="button" className="btn btn-primary" onClick={() => getAnchorByTimestampFromServer(timestamp)}>Get Anchor by Timestamp</button>
             <button type="button" className="btn btn-primary" onClick={() => getAnchorByLocationFromServer(location)}>Get Anchor by Location</button>
             <button type="button" className="btn btn-primary" onClick={() => getXMLFileFromServer()}>Get XML File</button>
-            <button type="button" className="btn btn-primary" onClick={() => toggleAddingAnchorStatus()}>Add Anchor</button>
+            <button type="button" className="btn btn-primary" onClick={() => setAddingAnchorToTrueStatus()}>Add Anchor</button>
             <button type="button" className="btn btn-primary" onClick={() => handleSave()}>Save</button>
             <button type="button" className="btn btn-primary" >Cancel</button>
             <div className="input-group">
@@ -176,7 +176,8 @@ const dtpm = (dispatch) => {
         getAnchorByTimestamp: (timestamp) => actions.getAnchorByTimestamp(dispatch, timestamp),
         getAnchorByLocation: (location) => actions.getAnchorByLocation(dispatch, location),
         getXMLFile: () => actions.getXMLFile(dispatch),
-        toggleAddingAnchor: () => actions.toggleAddingAnchor(dispatch),
+        setAddingAnchorToTrue: () => actions.setAddingAnchorToTrue(dispatch),
+        setAddingAnchorToFalse: () => actions.setAddingAnchorToFalse(dispatch),
     }
 }
 

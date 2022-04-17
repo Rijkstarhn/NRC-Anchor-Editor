@@ -1,6 +1,7 @@
 import { LOAD_TEXT } from "./actions";
 import { GET_ANCHORS } from "./actions";
-import { ADD_ANCHOR } from "./actions";
+import { ADD_ANCHOR_TRUE } from "./actions";
+import { ADD_ANCHOR_FALSE } from "./actions";
 import { UPDATE_CURRENT_LOCATION } from "./actions";
 import { UPDATE_CURRENT_TIME } from "./actions";
 
@@ -24,10 +25,15 @@ const textareaReducer = (state = initialState, action) => {
                 ...state,
                 anchors: action.anchors,
             };
-        case ADD_ANCHOR:
+        case ADD_ANCHOR_TRUE:
             return {
                 ...state,
-                isAddingAnchor: !state.isAddingAnchor,
+                isAddingAnchor: true,
+            };
+        case ADD_ANCHOR_FALSE:
+            return {
+                ...state,
+                isAddingAnchor: false,
             };
         case UPDATE_CURRENT_LOCATION:
             return {
