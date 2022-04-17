@@ -16,11 +16,6 @@ function TextArea({
 
     const [anchorList, setAnchorList] = useState(anchors);
 
-    const handleAddingAnchorClick = () => {
-        console.log(this.classList);
-        // updateCurrentAnchorLocation()
-    };
-
     // Convert plain text to html elements, and add them in text content.
     useEffect(() => {
         var textContent = document.getElementById("text-content");
@@ -43,12 +38,6 @@ function TextArea({
                     // Set anchor id and class
                     tag.classList.add(`location-${position - 1}`);
                     tag.classList.add("anchor-holder");
-                    // tag.onclick = function () {
-                    //     console.log(this.classList[0]);
-                    //     let thisLocation = this.classList[0].substring(9);
-                    //     console.log(thisLocation);
-                    //     updateCurrentAnchorLocation(thisLocation);
-                    // };
                     var content = document.createTextNode(" ");
                     tag.innerHTML = "\u00A0";
                     textContent.appendChild(tag);
@@ -57,11 +46,6 @@ function TextArea({
                     // Set anchor id and class
                     tag.classList.add(`location-${position}`);
                     tag.classList.add("anchor-holder");
-                    // tag.onclick = function () {
-                    //     let thisLocation = this.classList[0].substring(9);
-                    //     console.log(thisLocation);
-                    //     updateCurrentAnchorLocation(thisLocation);
-                    // };
                     content = document.createTextNode(" ");
                     tag.appendChild(content);
                     textContent.appendChild(tag);
@@ -100,7 +84,7 @@ function TextArea({
         content = document.createTextNode("\u00A0");
         tag.appendChild(content);
         textContent.appendChild(tag);
-    }, [text, updateCurrentAnchorLocation]);
+    }, [text]);
 
     // Set up exsiting anchor to anchor list.
     useEffect(() => {
