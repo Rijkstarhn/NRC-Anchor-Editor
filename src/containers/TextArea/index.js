@@ -1,8 +1,14 @@
-import react, { useEffect, useState } from "react";
+import react, { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
-import actions, {UPDATE_CURRENT_LOCATION} from "../OperationArea/actions";
+import actions, { UPDATE_CURRENT_LOCATION } from "../OperationArea/actions";
 
-function TextArea({ text, anchors, isAddingAnchor, updateCurrentAnchorLocation }) {
+function TextArea({
+    text,
+    anchors,
+    isAddingAnchor,
+    currentLocation,
+    updateCurrentAnchorLocation,
+}) {
     const text_area_style = {
         height: "500px",
         width: "300px",
@@ -13,7 +19,7 @@ function TextArea({ text, anchors, isAddingAnchor, updateCurrentAnchorLocation }
     const handleAddingAnchorClick = () => {
         console.log(this.classList);
         // updateCurrentAnchorLocation()
-    }
+    };
 
     // Convert plain text to html elements, and add them in text content.
     useEffect(() => {
@@ -42,7 +48,8 @@ function TextArea({ text, anchors, isAddingAnchor, updateCurrentAnchorLocation }
                         console.log(this.classList[0]);
                         let thisLocation = this.classList[0].substring(9);
                         console.log(thisLocation);
-                    }
+                        updateCurrentAnchorLocation(thisLocation);
+                    };
                     var content = document.createTextNode(" ");
                     tag.innerHTML = "\u00A0";
                     textContent.appendChild(tag);
@@ -52,11 +59,10 @@ function TextArea({ text, anchors, isAddingAnchor, updateCurrentAnchorLocation }
                     tag.classList.add(`location-${position}`);
                     tag.classList.add("anchor-holder");
                     tag.onclick = function () {
-                        console.log(this.classList[0]);
                         let thisLocation = this.classList[0].substring(9);
                         console.log(thisLocation);
                         updateCurrentAnchorLocation(thisLocation);
-                    }
+                    };
                     content = document.createTextNode(" ");
                     tag.appendChild(content);
                     textContent.appendChild(tag);
@@ -95,7 +101,7 @@ function TextArea({ text, anchors, isAddingAnchor, updateCurrentAnchorLocation }
         content = document.createTextNode("\u00A0");
         tag.appendChild(content);
         textContent.appendChild(tag);
-    }, [text]);
+    }, [text, updateCurrentAnchorLocation]);
 
     // Set up exsiting anchor to anchor list.
     useEffect(() => {
@@ -107,7 +113,7 @@ function TextArea({ text, anchors, isAddingAnchor, updateCurrentAnchorLocation }
     useEffect(() => {
         console.log(anchorList);
         for (var anchor of anchorList) {
-            const anchorElements = document.getElementsByClassName(
+            var anchorElements = document.getElementsByClassName(
                 `location-${anchor.location}`
             );
             for (var anchorElement of anchorElements) {
@@ -124,11 +130,30 @@ function TextArea({ text, anchors, isAddingAnchor, updateCurrentAnchorLocation }
         }
     }, [anchorList]);
 
+    const prevCurrentLocation = useRef();
+    useEffect(
+        (currentLocation) => {
+            prevCurrentLocation.current = currentLocation;
+            console.log(prevCurrentLocation.current);
+        },
+        [currentLocation]
+    );
+
+    // Change adding anchor color.
+    useEffect(() => {
+        console.log(currentLocation);
+        if (currentLocation > 0) {
+            var spanElement = document.getElementsByClassName(
+                `location-${currentLocation}`
+            )[0];
+            console.log(spanElement);
+            spanElement.style.backgroundColor = "red";
+        }
+    }, [currentLocation]);
+
     return (
         <div className="input-group">
-            <div>
-                {isAddingAnchor && <h3>Adding Anchor</h3>}
-            </div>
+            <div>{isAddingAnchor && <h3>Adding Anchor</h3>}</div>
             {/*<textarea className="form-control"*/}
             {/*          aria-label="With textarea"*/}
             {/*          style={ text_area_style }*/}
@@ -164,14 +189,18 @@ const stpm = (state) => {
         text: state.textareaReducer.text,
         anchors: state.textareaReducer.anchors,
         isAddingAnchor: state.textareaReducer.isAddingAnchor,
-        textContent: state.textareaReducer.currentLocation,
+        currentLocation: state.textareaReducer.currentLocation,
     };
 };
 
 const dtpm = (dispatch) => {
     return {
-        updateCurrentAnchorLocation: (currentLocation) => dispatch({type: UPDATE_CURRENT_LOCATION, currentLocation: currentLocation})
-    }
-}
+        updateCurrentAnchorLocation: (currentLocation) =>
+            dispatch({
+                type: UPDATE_CURRENT_LOCATION,
+                currentLocation: currentLocation,
+            }),
+    };
+};
 
 export default connect(stpm, dtpm)(TextArea);
