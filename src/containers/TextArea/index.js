@@ -135,13 +135,21 @@ function TextArea({
     // Change adding anchor color.
     useEffect(() => {
         if (currentLocation > 0) {
+            // Cancel previous currentLocation span.
+            console.log("prevCurrentLocation.current", prevCurrentLocation);
+            if (prevCurrentLocation > 0) {
+                var prevElement = document.getElementsByClassName(
+                    `location-${prevCurrentLocation}`
+                )[0];
+                prevElement.style.backgroundColor = null;
+            }
+            // Change new current span color
             var spanElement = document.getElementsByClassName(
                 `location-${currentLocation}`
             )[0];
-            console.log("prevCurrentLocation.current", prevCurrentLocation);
             spanElement.style.backgroundColor = "red";
         }
-    }, [currentLocation]);
+    }, [currentLocation, prevCurrentLocation]);
 
     return (
         <div className="input-group">
@@ -198,9 +206,9 @@ const dtpm = (dispatch) => {
 export default connect(stpm, dtpm)(TextArea);
 
 function usePrevious(value) {
-    const ref = useRef()
+    const ref = useRef();
     useEffect(() => {
         ref.current = value;
-    }, [value])
+    }, [value]);
     return ref.current;
 }
