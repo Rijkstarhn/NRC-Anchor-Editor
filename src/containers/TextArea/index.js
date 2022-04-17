@@ -130,23 +130,15 @@ function TextArea({
         }
     }, [anchorList]);
 
-    const prevCurrentLocation = useRef();
-    useEffect(
-        (currentLocation) => {
-            prevCurrentLocation.current = currentLocation;
-            console.log(prevCurrentLocation.current);
-        },
-        [currentLocation]
-    );
+    const prevCurrentLocation = usePrevious(currentLocation);
 
     // Change adding anchor color.
     useEffect(() => {
-        console.log(currentLocation);
         if (currentLocation > 0) {
             var spanElement = document.getElementsByClassName(
                 `location-${currentLocation}`
             )[0];
-            console.log(spanElement);
+            console.log("prevCurrentLocation.current", prevCurrentLocation);
             spanElement.style.backgroundColor = "red";
         }
     }, [currentLocation]);
@@ -204,3 +196,11 @@ const dtpm = (dispatch) => {
 };
 
 export default connect(stpm, dtpm)(TextArea);
+
+function usePrevious(value) {
+    const ref = useRef()
+    useEffect(() => {
+        ref.current = value;
+    }, [value])
+    return ref.current;
+}
