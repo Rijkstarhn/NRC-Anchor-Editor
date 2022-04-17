@@ -1,6 +1,6 @@
-import react, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
-import actions, { UPDATE_CURRENT_LOCATION } from "../OperationArea/actions";
+import { UPDATE_CURRENT_LOCATION } from "../OperationArea/actions";
 
 function TextArea({
     text,
@@ -9,21 +9,9 @@ function TextArea({
     currentLocation,
     updateCurrentAnchorLocation,
 }) {
-    const text_area_style = {
-        height: "500px",
-        width: "300px",
-    };
-
-    const [anchorList, setAnchorList] = useState(anchors);
-
     // Convert plain text to html elements, and add them in text content.
     useEffect(() => {
         var textContent = document.getElementById("text-content");
-        // let handleAddingAnchorClick = document.createElement("script");
-        // let handleAddingAnchorClickTextForm = "function handleAddingAnchorClick(){ \n";
-        // handleAddingAnchorClickTextForm += "console.log(this.classList);}\n";
-        // handleAddingAnchorClick.innerHTML = handleAddingAnchorClickTextForm;
-        // textContent.appendChild(handleAddingAnchorClick);
         console.log(text);
         textContent.innerHTML = "";
         // Iterate the plain text and create element in text content
@@ -86,16 +74,10 @@ function TextArea({
         textContent.appendChild(tag);
     }, [text]);
 
-    // Set up exsiting anchor to anchor list.
-    useEffect(() => {
-        // update anchorList
-        setAnchorList(anchors);
-    }, [anchors]);
-
     // Change exsiting anchor color.
     useEffect(() => {
-        console.log(anchorList);
-        for (var anchor of anchorList) {
+        console.log(anchors);
+        for (var anchor of anchors) {
             var anchorElements = document.getElementsByClassName(
                 `location-${anchor.location}`
             );
@@ -111,7 +93,7 @@ function TextArea({
                 }
             }
         }
-    }, [anchorList]);
+    }, [anchors]);
 
     // Set up onclick attribute for span in adding mode
     useEffect(() => {
@@ -174,6 +156,7 @@ function TextArea({
             {/*>*/}
             {/*</textarea>*/}
             <ol className="list-group list-group-numbered anchors-list">
+                {console.log("anchors: ", anchors)};
                 {anchors.map((anchor, index) => (
                     <li
                         className="list-group-item d-flex justify-content-between align-items-start"
