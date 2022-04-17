@@ -43,13 +43,12 @@ function TextArea({
                     // Set anchor id and class
                     tag.classList.add(`location-${position - 1}`);
                     tag.classList.add("anchor-holder");
-                    // tag.setAttribute("onclick","handleAddingAnchorClick()");
-                    tag.onclick = function () {
-                        console.log(this.classList[0]);
-                        let thisLocation = this.classList[0].substring(9);
-                        console.log(thisLocation);
-                        updateCurrentAnchorLocation(thisLocation);
-                    };
+                    // tag.onclick = function () {
+                    //     console.log(this.classList[0]);
+                    //     let thisLocation = this.classList[0].substring(9);
+                    //     console.log(thisLocation);
+                    //     updateCurrentAnchorLocation(thisLocation);
+                    // };
                     var content = document.createTextNode(" ");
                     tag.innerHTML = "\u00A0";
                     textContent.appendChild(tag);
@@ -58,11 +57,11 @@ function TextArea({
                     // Set anchor id and class
                     tag.classList.add(`location-${position}`);
                     tag.classList.add("anchor-holder");
-                    tag.onclick = function () {
-                        let thisLocation = this.classList[0].substring(9);
-                        console.log(thisLocation);
-                        updateCurrentAnchorLocation(thisLocation);
-                    };
+                    // tag.onclick = function () {
+                    //     let thisLocation = this.classList[0].substring(9);
+                    //     console.log(thisLocation);
+                    //     updateCurrentAnchorLocation(thisLocation);
+                    // };
                     content = document.createTextNode(" ");
                     tag.appendChild(content);
                     textContent.appendChild(tag);
@@ -130,7 +129,37 @@ function TextArea({
         }
     }, [anchorList]);
 
+    // Set up onclick attribute for span in adding mode
+    useEffect(() => {
+        var spanElements = document.getElementsByClassName("anchor-holder");
+        if (isAddingAnchor) {
+            for (var spanElement of spanElements) {
+                if (!spanElement.classList.contains("anchor")) {
+                    spanElement.onclick = function () {
+                        let thisLocation = this.classList[0].substring(9);
+                        console.log(thisLocation);
+                        updateCurrentAnchorLocation(thisLocation);
+                    };
+                }
+            }
+        } else {
+            for (spanElement of spanElements) {
+                if (!spanElement.classList.contains("anchor")) {
+                    spanElement.onclick = null;
+                }
+            }
+        }
+    }, [isAddingAnchor, updateCurrentAnchorLocation]);
+
     const prevCurrentLocation = usePrevious(currentLocation);
+
+    function usePrevious(value) {
+        const ref = useRef();
+        useEffect(() => {
+            ref.current = value;
+        }, [value]);
+        return ref.current;
+    }
 
     // Change adding anchor color.
     useEffect(() => {
@@ -204,11 +233,3 @@ const dtpm = (dispatch) => {
 };
 
 export default connect(stpm, dtpm)(TextArea);
-
-function usePrevious(value) {
-    const ref = useRef();
-    useEffect(() => {
-        ref.current = value;
-    }, [value]);
-    return ref.current;
-}
