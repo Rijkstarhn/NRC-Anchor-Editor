@@ -2,6 +2,9 @@ import services from './services'
 
 export const LOAD_TEXT = 'LOAD_TEXT';
 export const GET_ANCHORS = 'GET_ANCHORS';
+export const ADD_ANCHOR = 'ADD_ANCHOR';
+export const UPDATE_CURRENT_LOCATION = 'UPDATE_CURRENT_LOCATION';
+export const UPDATE_CURRENT_TIME = 'UPDATE_CURRENT_TIME';
 
 export const loadText = (dispatch) => services.loadPlainText().then(
     plainText => dispatch({ type: LOAD_TEXT, text: plainText })
@@ -31,6 +34,8 @@ export const postAnchor = (dispatch, postAnchor) => services.postAnchor(postAnch
 
 export const getXMLFile = (dispatch) => services.getXMLFile()
 
+export const toggleAddingAnchor = (dispatch) => dispatch({type: ADD_ANCHOR})
+
 const actions = {
     loadText,
     uploadXML,
@@ -41,6 +46,7 @@ const actions = {
     getAnchorByTimestamp,
     getAnchorByLocation,
     getXMLFile,
+    toggleAddingAnchor,
 }
 
 export default actions;

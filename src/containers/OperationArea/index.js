@@ -13,6 +13,11 @@ function OperationArea(
         getAnchorByTimestamp,
         getAnchorByLocation,
         getXMLFile,
+        toggleAddingAnchor,
+        isAddingAnchor,
+        isDeletingAnchor,
+        currentTime,
+        currentLocation,
         refreshAnchors,
         anchors,
     }) {
@@ -104,8 +109,33 @@ function OperationArea(
         getXMLFile();
     }
 
+    const toggleAddingAnchorStatus = () => {
+        console.log("toggel add anchor status");
+        toggleAddingAnchor();
+    }
+
+    const handleSave = () => {
+        if (isAddingAnchor && !isDeletingAnchor) {
+            // post anchor
+            postAnchor(
+                {
+                    timestamp: currentTime,
+                    location: currentLocation,
+                })
+            // set isAddingAnchor to false
+            toggleAddingAnchor();
+        } else if (!isAddingAnchor && isDeletingAnchor) {
+
+        } else if (!isAddingAnchor && !isDeletingAnchor) {
+
+        } else {
+
+        }
+    }
+
     return (
         <div>
+            <h1>{currentLocation}</h1>
             <button type="button" className="btn btn-primary post-anchor-button" onClick={() => postAnchorToServer(postedAnchor)}>Post Anchors</button>
             <button type="button" className="btn btn-primary delete-anchor-button" onClick={() => deleteAnchorToServer(deletedAnchor)}>Delete Anchors</button>
             <button type="button" className="btn btn-primary get-anchors-button" onClick={() => getAnchorsFromServer()}>Get Anchors</button>
@@ -115,6 +145,9 @@ function OperationArea(
             <button type="button" className="btn btn-primary" onClick={() => getAnchorByTimestampFromServer(timestamp)}>Get Anchor by Timestamp</button>
             <button type="button" className="btn btn-primary" onClick={() => getAnchorByLocationFromServer(location)}>Get Anchor by Location</button>
             <button type="button" className="btn btn-primary" onClick={() => getXMLFileFromServer()}>Get XML File</button>
+            <button type="button" className="btn btn-primary" onClick={() => toggleAddingAnchorStatus()}>Add Anchor</button>
+            <button type="button" className="btn btn-primary" onClick={() => handleSave()}>Save</button>
+            <button type="button" className="btn btn-primary" >Cancel</button>
             <div className="input-group">
                 <input type="file" className="form-control" id="inputGroupFile04"
                     aria-describedby="inputGroupFileAddon04" aria-label="Upload" />
@@ -123,6 +156,14 @@ function OperationArea(
         </div>
     );
 }
+
+const stpm = (state) => {
+    return {
+        isAddingAnchor: state.textareaReducer.isAddingAnchor,
+        currentTime: state.textareaReducer.currentTime,
+        currentLocation: state.textareaReducer.currentLocation,
+    };
+};
 
 const dtpm = (dispatch) => {
     return {
@@ -135,8 +176,8 @@ const dtpm = (dispatch) => {
         getAnchorByTimestamp: (timestamp) => actions.getAnchorByTimestamp(dispatch, timestamp),
         getAnchorByLocation: (location) => actions.getAnchorByLocation(dispatch, location),
         getXMLFile: () => actions.getXMLFile(dispatch),
+        toggleAddingAnchor: () => actions.toggleAddingAnchor(dispatch),
     }
 }
 
-
-export default connect(null, dtpm)(OperationArea);
+export default connect(stpm, dtpm)(OperationArea);

@@ -1,8 +1,8 @@
 import react, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import actions from "../OperationArea/actions";
+import actions, {UPDATE_CURRENT_LOCATION} from "../OperationArea/actions";
 
-function TextArea({ text, anchors }) {
+function TextArea({ text, anchors, isAddingAnchor, updateCurrentAnchorLocation }) {
     const text_area_style = {
         height: "500px",
         width: "300px",
@@ -10,9 +10,19 @@ function TextArea({ text, anchors }) {
 
     const [anchorList, setAnchorList] = useState(anchors);
 
+    const handleAddingAnchorClick = () => {
+        console.log(this.classList);
+        // updateCurrentAnchorLocation()
+    }
+
     // Convert plain text to html elements, and add them in text content.
     useEffect(() => {
         var textContent = document.getElementById("text-content");
+        // let handleAddingAnchorClick = document.createElement("script");
+        // let handleAddingAnchorClickTextForm = "function handleAddingAnchorClick(){ \n";
+        // handleAddingAnchorClickTextForm += "console.log(this.classList);}\n";
+        // handleAddingAnchorClick.innerHTML = handleAddingAnchorClickTextForm;
+        // textContent.appendChild(handleAddingAnchorClick);
         console.log(text);
         textContent.innerHTML = "";
         // Iterate the plain text and create element in text content
@@ -27,6 +37,12 @@ function TextArea({ text, anchors }) {
                     // Set anchor id and class
                     tag.classList.add(`location-${position - 1}`);
                     tag.classList.add("anchor-holder");
+                    // tag.setAttribute("onclick","handleAddingAnchorClick()");
+                    tag.onclick = function () {
+                        console.log(this.classList[0]);
+                        let thisLocation = this.classList[0].substring(9);
+                        console.log(thisLocation);
+                    }
                     var content = document.createTextNode(" ");
                     tag.innerHTML = "\u00A0";
                     textContent.appendChild(tag);
@@ -35,6 +51,12 @@ function TextArea({ text, anchors }) {
                     // Set anchor id and class
                     tag.classList.add(`location-${position}`);
                     tag.classList.add("anchor-holder");
+                    tag.onclick = function () {
+                        console.log(this.classList[0]);
+                        let thisLocation = this.classList[0].substring(9);
+                        console.log(thisLocation);
+                        updateCurrentAnchorLocation(thisLocation);
+                    }
                     content = document.createTextNode(" ");
                     tag.appendChild(content);
                     textContent.appendChild(tag);
@@ -104,6 +126,9 @@ function TextArea({ text, anchors }) {
 
     return (
         <div className="input-group">
+            <div>
+                {isAddingAnchor && <h3>Adding Anchor</h3>}
+            </div>
             {/*<textarea className="form-control"*/}
             {/*          aria-label="With textarea"*/}
             {/*          style={ text_area_style }*/}
@@ -138,7 +163,15 @@ const stpm = (state) => {
     return {
         text: state.textareaReducer.text,
         anchors: state.textareaReducer.anchors,
+        isAddingAnchor: state.textareaReducer.isAddingAnchor,
+        textContent: state.textareaReducer.currentLocation,
     };
 };
 
-export default connect(stpm)(TextArea);
+const dtpm = (dispatch) => {
+    return {
+        updateCurrentAnchorLocation: (currentLocation) => dispatch({type: UPDATE_CURRENT_LOCATION, currentLocation: currentLocation})
+    }
+}
+
+export default connect(stpm, dtpm)(TextArea);
