@@ -12,65 +12,65 @@ function TextArea({
 }) {
     // Convert plain text to html elements, and add them in text content.
     useEffect(() => {
-        var textContent = document.getElementById("text-content");
+        let textContent = document.getElementById("text-content");
         console.log(text);
         textContent.innerHTML = "";
         // Iterate the plain text and create element in text content
-        var position = 0;
-        for (var i = 0; i < text.length; i++) {
+        let position = 0;
+        for (let i = 0; i < text.length; i++) {
             if (text[i] === " ") {
                 // Space -> Anchor Holder
                 position++;
                 if (i > 0 && text[i - 1] === " ") {
                     // previous space is an anchor holder.
-                    var tag = document.createElement("span");
+                    let tag = document.createElement("span");
                     // Set anchor id and class
                     tag.classList.add(`location-${position - 1}`);
                     tag.classList.add("anchor-holder");
-                    var content = document.createTextNode(" ");
+                    // let content = document.createTextNode(" ");
                     tag.innerHTML = "\u00A0";
                     textContent.appendChild(tag);
                 } else {
-                    tag = document.createElement("span");
+                    let tag = document.createElement("span");
                     // Set anchor id and class
                     tag.classList.add(`location-${position}`);
                     tag.classList.add("anchor-holder");
-                    content = document.createTextNode(" ");
+                    let content = document.createTextNode(" ");
                     tag.appendChild(content);
                     textContent.appendChild(tag);
                 }
             } else if (text[i] === "\n") {
                 // \n
                 position++;
-                tag = document.createElement("p");
-                content = document.createTextNode(" ");
+                let tag = document.createElement("p");
+                let content = document.createTextNode(" ");
                 tag.appendChild(content);
                 textContent.appendChild(tag);
             } else {
                 // Character
                 // If the charcter is the first one in a paragraph, add an anchor holder before it.
                 if (position === 0 || text[i - 1] === "\n") {
-                    tag = document.createElement("span");
+                    let tag = document.createElement("span");
                     tag.classList.add(`location-${position}`);
                     tag.classList.add("anchor-holder");
-                    content = document.createTextNode("\u00A0");
+                    let content = document.createTextNode("\u00A0");
                     tag.appendChild(content);
                     textContent.appendChild(tag);
                 }
                 // Add charcter element.
                 position++;
-                tag = document.createElement("span");
-                content = document.createTextNode(`${text[i]}`);
+                let tag = document.createElement("span");
+                let content = document.createTextNode(`${text[i]}`);
                 tag.appendChild(content);
                 textContent.appendChild(tag);
             }
         }
         // Add an anchor holder at the end of text.
         position++;
-        tag = document.createElement("span");
+        let tag = document.createElement("span");
         tag.classList.add(`location-${position}`);
         tag.classList.add("anchor-holder");
-        content = document.createTextNode("\u00A0");
+        let content = document.createTextNode("\u00A0");
         tag.appendChild(content);
         textContent.appendChild(tag);
     }, [text]);
@@ -78,11 +78,11 @@ function TextArea({
     // Change existing anchor color.
     useEffect(() => {
         console.log(anchors);
-        for (var anchor of anchors) {
-            var anchorElements = document.getElementsByClassName(
+        for (let anchor of anchors) {
+            let anchorElements = document.getElementsByClassName(
                 `location-${anchor.location}`
             );
-            for (var anchorElement of anchorElements) {
+            for (let anchorElement of anchorElements) {
                 if (!anchorElement.classList.contains("anchor")) {
                     anchorElement.style.backgroundColor = "red";
                     anchorElement.classList.add("anchor");
@@ -97,9 +97,9 @@ function TextArea({
 
     // Set up onclick attribute for span in adding mode
     useEffect(() => {
-        var spanElements = document.getElementsByClassName("anchor-holder");
+        let spanElements = document.getElementsByClassName("anchor-holder");
         if (isAddingAnchor) {
-            for (var spanElement of spanElements) {
+            for (let spanElement of spanElements) {
                 if (!spanElement.classList.contains("anchor")) {
                     spanElement.onclick = function () {
                         let thisLocation = this.classList[0].substring(9);
@@ -108,7 +108,7 @@ function TextArea({
                 }
             }
         } else {
-            for (spanElement of spanElements) {
+            for (let spanElement of spanElements) {
                 if (!spanElement.classList.contains("anchor")) {
                     spanElement.onclick = null;
                 }
@@ -130,7 +130,7 @@ function TextArea({
     useEffect(() => {
         if (!isAddingAnchor && !isDeletingAnchor) {
             // Cancel previous currentLocation span.
-            var currentAnchor = document.getElementsByClassName(
+            let currentAnchor = document.getElementsByClassName(
                 `location-${prevCurrentLocation}`
             )[0];
             if (currentAnchor) {
@@ -145,13 +145,13 @@ function TextArea({
             if (currentLocation > 0) {
                 // Cancel previous currentLocation span.
                 if (prevCurrentLocation > 0) {
-                    var prevElement = document.getElementsByClassName(
+                    let prevElement = document.getElementsByClassName(
                         `location-${prevCurrentLocation}`
                     )[0];
                     prevElement.style.backgroundColor = null;
                 }
                 // Change new current span color
-                var spanElement = document.getElementsByClassName(
+                let spanElement = document.getElementsByClassName(
                     `location-${currentLocation}`
                 )[0];
                 spanElement.style.backgroundColor = "red";
