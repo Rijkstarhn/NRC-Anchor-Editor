@@ -84,7 +84,6 @@ function TextArea({
             );
             for (var anchorElement of anchorElements) {
                 if (!anchorElement.classList.contains("anchor")) {
-                    console.log(anchorElement);
                     anchorElement.style.backgroundColor = "red";
                     anchorElement.classList.add("anchor");
                     anchorElement.classList.add(
@@ -118,19 +117,6 @@ function TextArea({
         }
     }, [isAddingAnchor, updateCurrentAnchorLocation]);
 
-    // Change the background color of current selected anchor to white after clicking cancel
-    useEffect(() => {
-        if (!isDeletingAnchor && !isDeletingAnchor) {
-            var currentAnchor = document.getElementsByClassName(`location-${currentLocation} anchor-holder`)[0];
-            if (currentAnchor) {
-                console.log("currentAnchor",currentAnchor);
-                currentAnchor.style.backgroundColor = null;
-                // currentAnchor.style.border = 'solid';
-                console.log("currentAnchor",currentAnchor);
-            }
-        }
-    }, [isAddingAnchor, isDeletingAnchor])
-
     const prevCurrentLocation = usePrevious(currentLocation);
 
     function usePrevious(value) {
@@ -141,22 +127,47 @@ function TextArea({
         return ref.current;
     }
 
+    // Change the background color of current selected anchor to white after clicking cancel
+    useEffect(() => {
+        if (!isAddingAnchor && !isDeletingAnchor) {
+            // Cancel previous currentLocation span.
+            console.log(
+                "prevCurrentLocation.current.cancel",
+                prevCurrentLocation
+            );
+            var currentAnchor = document.getElementsByClassName(
+                `location-${prevCurrentLocation}`
+            )[0];
+            if (currentAnchor) {
+                console.log("currentAnchor1", currentAnchor);
+                currentAnchor.style.backgroundColor = null;
+                // currentAnchor.style.border = 'solid';
+                console.log("currentAnchor2", currentAnchor);
+            }
+        }
+    }, [isAddingAnchor, isDeletingAnchor]);
+
     // Change adding anchor color.
     useEffect(() => {
-        if (currentLocation > 0) {
-            // Cancel previous currentLocation span.
-            console.log("prevCurrentLocation.current", prevCurrentLocation);
-            if (prevCurrentLocation > 0) {
-                var prevElement = document.getElementsByClassName(
-                    `location-${prevCurrentLocation}`
+        if (isAddingAnchor) {
+            if (currentLocation > 0) {
+                // Cancel previous currentLocation span.
+                console.log(
+                    "prevCurrentLocation.current.adding",
+                    prevCurrentLocation
+                );
+                if (prevCurrentLocation > 0) {
+                    var prevElement = document.getElementsByClassName(
+                        `location-${prevCurrentLocation}`
+                    )[0];
+                    prevElement.style.backgroundColor = null;
+                }
+                // Change new current span color
+                var spanElement = document.getElementsByClassName(
+                    `location-${currentLocation}`
                 )[0];
-                prevElement.style.backgroundColor = null;
+                spanElement.style.backgroundColor = "red";
             }
-            // Change new current span color
-            var spanElement = document.getElementsByClassName(
-                `location-${currentLocation}`
-            )[0];
-            spanElement.style.backgroundColor = "red";
         }
     }, [currentLocation, prevCurrentLocation]);
 

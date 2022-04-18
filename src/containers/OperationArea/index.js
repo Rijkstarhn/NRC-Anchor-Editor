@@ -134,8 +134,8 @@ function OperationArea({
         // cancel current selected span's background color
         setAddingAnchorToFalse();
         setDeletingAnchorToFalse();
-        // setAnchorLocationToDefault();
-    }
+        setAnchorLocationToDefault();
+    };
 
     return (
         <div>
@@ -219,7 +219,11 @@ function OperationArea({
             >
                 Save
             </button>
-            <button type="button" className="btn btn-primary" onClick={() => handleCancel()}>
+            <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => handleCancel()}
+            >
                 Cancel
             </button>
             <div className="input-group">
@@ -269,9 +273,12 @@ const dtpm = (dispatch) => {
         getXMLFile: () => actions.getXMLFile(dispatch),
         setAddingAnchorToTrue: () => actions.setAddingAnchorToTrue(dispatch),
         setAddingAnchorToFalse: () => actions.setAddingAnchorToFalse(dispatch),
-        setDeletingAnchorToTrue: () => actions.setDeletingAnchorToTrue(dispatch),
-        setDeletingAnchorToFalse: () => actions.setDeletingAnchorToFalse(dispatch),
-        setAnchorLocationToDefault: () => actions.setAnchorLocationToDefault(dispatch),
+        setDeletingAnchorToTrue: () =>
+            actions.setDeletingAnchorToTrue(dispatch),
+        setDeletingAnchorToFalse: () =>
+            actions.setDeletingAnchorToFalse(dispatch),
+        setAnchorLocationToDefault: () =>
+            actions.setAnchorLocationToDefault(dispatch),
     };
 };
 
