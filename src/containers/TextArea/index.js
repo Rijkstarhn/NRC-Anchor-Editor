@@ -121,10 +121,11 @@ function TextArea({
     // Change the background color of current selected anchor to white after clicking cancel
     useEffect(() => {
         if (!isDeletingAnchor && !isDeletingAnchor) {
-            let currentAnchor = document.getElementsByClassName(`location-${currentLocation} anchor-holder`)[0]
+            var currentAnchor = document.getElementsByClassName(`location-${currentLocation} anchor-holder`)[0];
             if (currentAnchor) {
                 console.log("currentAnchor",currentAnchor);
                 currentAnchor.style.backgroundColor = null;
+                // currentAnchor.style.border = 'solid';
                 console.log("currentAnchor",currentAnchor);
             }
         }
