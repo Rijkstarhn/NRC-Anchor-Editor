@@ -7,6 +7,8 @@ export const ADD_ANCHOR_FALSE = 'ADD_ANCHOR_FALSE';
 export const UPDATE_CURRENT_LOCATION = 'UPDATE_CURRENT_LOCATION';
 export const UPDATE_CURRENT_TIME = 'UPDATE_CURRENT_TIME';
 export const SET_ANCHOR_LOCATION_DEFAULT = 'SET_ANCHOR_LOCATION_DEFAULT';
+export const DELETE_ANCHOR_FALSE = 'DELETE_ANCHOR_FALSE';
+export const DELETE_ANCHOR_TRUE = 'DELETE_ANCHOR_TRUE';
 
 export const loadText = (dispatch) => services.loadPlainText().then(
     plainText => dispatch({ type: LOAD_TEXT, text: plainText })
@@ -42,6 +44,10 @@ export const setAddingAnchorToFalse = (dispatch) => dispatch({type: ADD_ANCHOR_F
 
 export const setAnchorLocationToDefault = (dispatch) => dispatch({type: SET_ANCHOR_LOCATION_DEFAULT})
 
+export const setDeletingAnchorToFalse = (dispatch) => dispatch({type: DELETE_ANCHOR_FALSE})
+
+export const setDeletingAnchorToTrue = (dispatch) => dispatch({type: DELETE_ANCHOR_TRUE})
+
 const actions = {
     loadText,
     uploadXML,
@@ -55,6 +61,8 @@ const actions = {
     setAddingAnchorToTrue,
     setAddingAnchorToFalse,
     setAnchorLocationToDefault,
+    setDeletingAnchorToFalse,
+    setDeletingAnchorToTrue,
 }
 
 export default actions;

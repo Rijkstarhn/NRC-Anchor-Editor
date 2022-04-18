@@ -6,6 +6,7 @@ function TextArea({
     text,
     anchors,
     isAddingAnchor,
+    isDeletingAnchor,
     currentLocation,
     updateCurrentAnchorLocation,
 }) {
@@ -74,7 +75,7 @@ function TextArea({
         textContent.appendChild(tag);
     }, [text]);
 
-    // Change exsiting anchor color.
+    // Change existing anchor color.
     useEffect(() => {
         console.log(anchors);
         for (var anchor of anchors) {
@@ -117,6 +118,18 @@ function TextArea({
         }
     }, [isAddingAnchor, updateCurrentAnchorLocation]);
 
+    // Change the background color of current selected anchor to white after clicking cancel
+    useEffect(() => {
+        if (!isDeletingAnchor && !isDeletingAnchor) {
+            let currentAnchor = document.getElementsByClassName(`location-${currentLocation} anchor-holder`)[0]
+            if (currentAnchor) {
+                console.log("currentAnchor",currentAnchor);
+                currentAnchor.style.backgroundColor = null;
+                console.log("currentAnchor",currentAnchor);
+            }
+        }
+    }, [isAddingAnchor, isDeletingAnchor])
+
     const prevCurrentLocation = usePrevious(currentLocation);
 
     function usePrevious(value) {
@@ -156,7 +169,6 @@ function TextArea({
             {/*>*/}
             {/*</textarea>*/}
             <ol className="list-group list-group-numbered anchors-list">
-                {console.log("anchors: ", anchors)};
                 {anchors.map((anchor, index) => (
                     <li
                         className="list-group-item d-flex justify-content-between align-items-start"
@@ -185,6 +197,7 @@ const stpm = (state) => {
         text: state.textareaReducer.text,
         anchors: state.textareaReducer.anchors,
         isAddingAnchor: state.textareaReducer.isAddingAnchor,
+        isDeletingAnchor: state.textareaReducer.isDeletingAnchor,
         currentLocation: state.textareaReducer.currentLocation,
     };
 };
