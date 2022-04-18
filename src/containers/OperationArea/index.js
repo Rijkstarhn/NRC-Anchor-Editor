@@ -18,8 +18,7 @@ function OperationArea({
     isDeletingAnchor,
     currentTime,
     currentLocation,
-    refreshAnchors,
-    anchors,
+    setAnchorLocationToDefault,
 }) {
     useEffect(() => {
         document
@@ -122,6 +121,7 @@ function OperationArea({
             });
             // set isAddingAnchor to false
             setAddingAnchorToFalse();
+            setAnchorLocationToDefault();
         } else if (!isAddingAnchor && isDeletingAnchor) {
         } else if (!isAddingAnchor && !isDeletingAnchor) {
         } else {
@@ -260,6 +260,7 @@ const dtpm = (dispatch) => {
         getXMLFile: () => actions.getXMLFile(dispatch),
         setAddingAnchorToTrue: () => actions.setAddingAnchorToTrue(dispatch),
         setAddingAnchorToFalse: () => actions.setAddingAnchorToFalse(dispatch),
+        setAnchorLocationToDefault: () => actions.setAnchorLocationToDefault(dispatch),
     };
 };
 

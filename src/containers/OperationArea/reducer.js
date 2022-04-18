@@ -1,9 +1,10 @@
-import { LOAD_TEXT } from "./actions";
+import {LOAD_TEXT} from "./actions";
 import { GET_ANCHORS } from "./actions";
 import { ADD_ANCHOR_TRUE } from "./actions";
 import { ADD_ANCHOR_FALSE } from "./actions";
 import { UPDATE_CURRENT_LOCATION } from "./actions";
 import { UPDATE_CURRENT_TIME } from "./actions";
+import { SET_ANCHOR_LOCATION_DEFAULT } from "./actions";
 
 const initialState = {
     text: "Please upload XML file",
@@ -45,6 +46,11 @@ const textareaReducer = (state = initialState, action) => {
                 ...state,
                 currentTime: action.currentTime,
             };
+        case SET_ANCHOR_LOCATION_DEFAULT:
+            return {
+                ...state,
+                currentLocation: -1,
+            }
         default:
             return state;
     }

@@ -6,6 +6,7 @@ export const ADD_ANCHOR_TRUE = 'ADD_ANCHOR_TRUE';
 export const ADD_ANCHOR_FALSE = 'ADD_ANCHOR_FALSE';
 export const UPDATE_CURRENT_LOCATION = 'UPDATE_CURRENT_LOCATION';
 export const UPDATE_CURRENT_TIME = 'UPDATE_CURRENT_TIME';
+export const SET_ANCHOR_LOCATION_DEFAULT = 'SET_ANCHOR_LOCATION_DEFAULT';
 
 export const loadText = (dispatch) => services.loadPlainText().then(
     plainText => dispatch({ type: LOAD_TEXT, text: plainText })
@@ -39,6 +40,8 @@ export const setAddingAnchorToTrue = (dispatch) => dispatch({type: ADD_ANCHOR_TR
 
 export const setAddingAnchorToFalse = (dispatch) => dispatch({type: ADD_ANCHOR_FALSE})
 
+export const setAnchorLocationToDefault = (dispatch) => dispatch({type: SET_ANCHOR_LOCATION_DEFAULT})
+
 const actions = {
     loadText,
     uploadXML,
@@ -51,6 +54,7 @@ const actions = {
     getXMLFile,
     setAddingAnchorToTrue,
     setAddingAnchorToFalse,
+    setAnchorLocationToDefault,
 }
 
 export default actions;
