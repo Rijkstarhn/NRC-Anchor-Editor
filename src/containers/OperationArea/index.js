@@ -38,14 +38,14 @@ function OperationArea({
         timestamp: "7.2s",
         location: 72,
     });
-    const [deletedAnchor, setDeletedAnchor] = useState({
-        timestamp: "7.2s",
-        location: 72,
-    });
-    const [postedAnchor, setPostedAnchor] = useState({
-        timestamp: "8.8s",
-        location: 88,
-    });
+    // const [deletedAnchor, setDeletedAnchor] = useState({
+    //     timestamp: "7.2s",
+    //     location: 72,
+    // });
+    // const [postedAnchor, setPostedAnchor] = useState({
+    //     timestamp: "8.8s",
+    //     location: 88,
+    // });
 
     const [timestamp, setTimestamp] = useState("1.62s");
 
@@ -140,20 +140,20 @@ function OperationArea({
     return (
         <div>
             <h1>{currentLocation}</h1>
-            <button
-                type="button"
-                className="btn btn-primary post-anchor-button"
-                onClick={() => postAnchorToServer(postedAnchor)}
-            >
-                Post Anchors
-            </button>
-            <button
-                type="button"
-                className="btn btn-primary delete-anchor-button"
-                onClick={() => deleteAnchorToServer(deletedAnchor)}
-            >
-                Delete Anchors
-            </button>
+            {/*<button*/}
+            {/*    type="button"*/}
+            {/*    className="btn btn-primary post-anchor-button"*/}
+            {/*    onClick={() => postAnchorToServer(postedAnchor)}*/}
+            {/*>*/}
+            {/*    Post Anchors*/}
+            {/*</button>*/}
+            {/*<button*/}
+            {/*    type="button"*/}
+            {/*    className="btn btn-primary delete-anchor-button"*/}
+            {/*    onClick={() => deleteAnchorToServer(deletedAnchor)}*/}
+            {/*>*/}
+            {/*    Delete Anchors*/}
+            {/*</button>*/}
             <button
                 type="button"
                 className="btn btn-primary get-anchors-button"
@@ -184,20 +184,20 @@ function OperationArea({
             >
                 Upload Text
             </button>
-            <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => getAnchorByTimestampFromServer(timestamp)}
-            >
-                Get Anchor by Timestamp
-            </button>
-            <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => getAnchorByLocationFromServer(location)}
-            >
-                Get Anchor by Location
-            </button>
+            {/*<button*/}
+            {/*    type="button"*/}
+            {/*    className="btn btn-primary"*/}
+            {/*    onClick={() => getAnchorByTimestampFromServer(timestamp)}*/}
+            {/*>*/}
+            {/*    Get Anchor by Timestamp*/}
+            {/*</button>*/}
+            {/*<button*/}
+            {/*    type="button"*/}
+            {/*    className="btn btn-primary"*/}
+            {/*    onClick={() => getAnchorByLocationFromServer(location)}*/}
+            {/*>*/}
+            {/*    Get Anchor by Location*/}
+            {/*</button>*/}
             <button
                 type="button"
                 className="btn btn-primary"

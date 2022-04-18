@@ -103,7 +103,6 @@ function TextArea({
                 if (!spanElement.classList.contains("anchor")) {
                     spanElement.onclick = function () {
                         let thisLocation = this.classList[0].substring(9);
-                        console.log(thisLocation);
                         updateCurrentAnchorLocation(thisLocation);
                     };
                 }
@@ -131,18 +130,11 @@ function TextArea({
     useEffect(() => {
         if (!isAddingAnchor && !isDeletingAnchor) {
             // Cancel previous currentLocation span.
-            console.log(
-                "prevCurrentLocation.current.cancel",
-                prevCurrentLocation
-            );
             var currentAnchor = document.getElementsByClassName(
                 `location-${prevCurrentLocation}`
             )[0];
             if (currentAnchor) {
-                console.log("currentAnchor1", currentAnchor);
                 currentAnchor.style.backgroundColor = null;
-                // currentAnchor.style.border = 'solid';
-                console.log("currentAnchor2", currentAnchor);
             }
         }
     }, [isAddingAnchor, isDeletingAnchor]);
@@ -152,10 +144,6 @@ function TextArea({
         if (isAddingAnchor) {
             if (currentLocation > 0) {
                 // Cancel previous currentLocation span.
-                console.log(
-                    "prevCurrentLocation.current.adding",
-                    prevCurrentLocation
-                );
                 if (prevCurrentLocation > 0) {
                     var prevElement = document.getElementsByClassName(
                         `location-${prevCurrentLocation}`
