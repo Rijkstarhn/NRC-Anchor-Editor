@@ -48,6 +48,8 @@ export const setDeletingAnchorToFalse = (dispatch) => dispatch({type: DELETE_ANC
 
 export const setDeletingAnchorToTrue = (dispatch) => dispatch({type: DELETE_ANCHOR_TRUE})
 
+export const updateCurrentAnchorLocation = (dispatch, currentLocation) => dispatch({type: UPDATE_CURRENT_LOCATION, currentLocation: currentLocation})
+
 const actions = {
     loadText,
     uploadXML,
@@ -63,6 +65,7 @@ const actions = {
     setAnchorLocationToDefault,
     setDeletingAnchorToFalse,
     setDeletingAnchorToTrue,
+    updateCurrentAnchorLocation,
 }
 
 export default actions;

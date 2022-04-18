@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
-import { UPDATE_CURRENT_LOCATION } from "../OperationArea/actions";
+import actions from "../OperationArea/actions";
 
 function TextArea({
     text,
@@ -204,11 +204,7 @@ const stpm = (state) => {
 
 const dtpm = (dispatch) => {
     return {
-        updateCurrentAnchorLocation: (currentLocation) =>
-            dispatch({
-                type: UPDATE_CURRENT_LOCATION,
-                currentLocation: currentLocation,
-            }),
+        updateCurrentAnchorLocation: (currentLocation) => actions.updateCurrentAnchorLocation(dispatch, currentLocation),
     };
 };
 

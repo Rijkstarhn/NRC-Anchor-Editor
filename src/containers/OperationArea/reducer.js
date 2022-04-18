@@ -15,7 +15,7 @@ const initialState = {
     isAddingAnchor: false,
     isDeletingAnchor: false,
     currentLocation: -1,
-    currentTime: -0.1,
+    currentTime: '-0.1s',
 };
 
 const textareaReducer = (state = initialState, action) => {
