@@ -11,6 +11,10 @@ function TextArea({
     updateCurrentAnchorLocation,
     cancelButtonHits,
 }) {
+    /* -------------------------------------------------------------------------- */
+    /*                               TextArea Set Up                              */
+    /* -------------------------------------------------------------------------- */
+
     // Convert plain text to html elements, and add them in text content.
     useEffect(() => {
         let textContent = document.getElementById("text-content");
@@ -97,6 +101,10 @@ function TextArea({
         }
     }, [anchors]);
 
+    /* -------------------------------------------------------------------------- */
+    /*                                 Adding Mode                                */
+    /* -------------------------------------------------------------------------- */
+
     // Set up onclick attribute for span in adding mode
     useEffect(() => {
         let spanElements = document.getElementsByClassName("anchor-holder");
@@ -128,22 +136,6 @@ function TextArea({
         return ref.current;
     }
 
-    // Change the background color of current selected anchor to white after clicking cancel
-    useEffect(() => {
-        console.log("cancel hits", cancelButtonHits);
-        console.log("isAddingAnchor", isAddingAnchor);
-        console.log("isDeletingAnchor", isDeletingAnchor);
-        if (!isAddingAnchor && !isDeletingAnchor) {
-            // Cancel previous currentLocation span.
-            let currentAnchor = document.getElementsByClassName(
-                `location-${prevCurrentLocation}`
-            )[0];
-            if (currentAnchor) {
-                currentAnchor.style.backgroundColor = null;
-            }
-        }
-    }, [cancelButtonHits]);
-
     // Change adding anchor color.
     useEffect(() => {
         if (isAddingAnchor) {
@@ -163,6 +155,30 @@ function TextArea({
             }
         }
     }, [currentLocation, prevCurrentLocation]);
+
+    /* -------------------------------------------------------------------------- */
+    /*                                Deleting Mode                               */
+    /* -------------------------------------------------------------------------- */
+
+    /* -------------------------------------------------------------------------- */
+    /*                            Cancel / Default Mode                           */
+    /* -------------------------------------------------------------------------- */
+
+    // Change the background color of current selected anchor to white after clicking cancel
+    useEffect(() => {
+        console.log("cancel hits", cancelButtonHits);
+        console.log("isAddingAnchor", isAddingAnchor);
+        console.log("isDeletingAnchor", isDeletingAnchor);
+        if (!isAddingAnchor && !isDeletingAnchor) {
+            // Cancel previous currentLocation span.
+            let currentAnchor = document.getElementsByClassName(
+                `location-${prevCurrentLocation}`
+            )[0];
+            if (currentAnchor) {
+                currentAnchor.style.backgroundColor = null;
+            }
+        }
+    }, [cancelButtonHits]);
 
     return (
         <div className="input-group">
