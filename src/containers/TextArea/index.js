@@ -9,6 +9,7 @@ function TextArea({
     isDeletingAnchor,
     currentLocation,
     updateCurrentAnchorLocation,
+    cancelButtonHits,
 }) {
     // Convert plain text to html elements, and add them in text content.
     useEffect(() => {
@@ -114,7 +115,7 @@ function TextArea({
                 }
             }
         }
-    }, [isAddingAnchor, updateCurrentAnchorLocation]);
+    }, [isAddingAnchor]);
 
     const prevCurrentLocation = usePrevious(currentLocation);
 
@@ -128,6 +129,9 @@ function TextArea({
 
     // Change the background color of current selected anchor to white after clicking cancel
     useEffect(() => {
+        console.log("cancel hits", cancelButtonHits);
+        console.log("isAddingAnchor", isAddingAnchor);
+        console.log("isDeletingAnchor", isDeletingAnchor);
         if (!isAddingAnchor && !isDeletingAnchor) {
             // Cancel previous currentLocation span.
             let currentAnchor = document.getElementsByClassName(
@@ -137,7 +141,7 @@ function TextArea({
                 currentAnchor.style.backgroundColor = null;
             }
         }
-    }, [isAddingAnchor, isDeletingAnchor]);
+    }, [cancelButtonHits]);
 
     // Change adding anchor color.
     useEffect(() => {
@@ -199,6 +203,7 @@ const stpm = (state) => {
         isAddingAnchor: state.textareaReducer.isAddingAnchor,
         isDeletingAnchor: state.textareaReducer.isDeletingAnchor,
         currentLocation: state.textareaReducer.currentLocation,
+        cancelButtonHits: state.textareaReducer.cancelButtonHits,
     };
 };
 
