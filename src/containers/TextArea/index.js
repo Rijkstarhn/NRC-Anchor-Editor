@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import actions from "../OperationArea/actions";
 
@@ -146,9 +146,9 @@ function TextArea({
     // Change adding anchor color.
     useEffect(() => {
         if (isAddingAnchor) {
-            if (currentLocation > 0) {
+            if (currentLocation >= 0) {
                 // Cancel previous currentLocation span.
-                if (prevCurrentLocation > 0) {
+                if (prevCurrentLocation >= 0) {
                     let prevElement = document.getElementsByClassName(
                         `location-${prevCurrentLocation}`
                     )[0];
@@ -209,7 +209,8 @@ const stpm = (state) => {
 
 const dtpm = (dispatch) => {
     return {
-        updateCurrentAnchorLocation: (currentLocation) => actions.updateCurrentAnchorLocation(dispatch, currentLocation),
+        updateCurrentAnchorLocation: (currentLocation) =>
+            actions.updateCurrentAnchorLocation(dispatch, currentLocation),
     };
 };
 
