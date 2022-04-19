@@ -18,7 +18,8 @@ function TextArea({
         textContent.innerHTML = "";
         // Iterate the plain text and create element in text content
         let position = 0;
-        for (let i = 0; i < text.length; i++) {
+        // Iterate without the last three char, which are "\n".
+        for (let i = 0; i < text.length - 3; i++) {
             if (text[i] === " ") {
                 // Space -> Anchor Holder
                 position++;
