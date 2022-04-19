@@ -145,6 +145,13 @@ function AudioArea({ originalTime, updateCurrentTime }) {
                     console.log("loading --> ", data);
                 });
 
+                // When you use wavesurfer.on('seek') and
+                // calling getCurrentTime() you get the time AFTER it seeked due to mouse clicking.
+                wavesurferRef.current.on('seek', () => {
+                    const tmp = getCurrentTime();
+                    updateCurrentTime(`${tmp.toFixed(2)}s`);
+                });
+
                 if (window) {
                     window.surferidze = wavesurferRef.current;
                 }
@@ -215,6 +222,7 @@ function AudioArea({ originalTime, updateCurrentTime }) {
             currentTime = wavesurferRef.current.getCurrentTime();
         }
         console.log("current --> ", currentTime);
+        return currentTime;
     }, [wavesurferRef]);
 
     const [m, setM] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -288,7 +296,7 @@ function AudioArea({ originalTime, updateCurrentTime }) {
                     : console.log("no")}
 
                 <Buttons>
-                    <Button onClick={getReady}>Get current time</Button>
+                    {/*<Button onClick={getReady}>Get current time</Button>*/}
                     <Button onClick={addMarker}>Add Marker</Button>
                     <Button onClick={play}>Play / Pause</Button>
                     <Button onClick={removeLastMarker}>Remove last marker</Button>
