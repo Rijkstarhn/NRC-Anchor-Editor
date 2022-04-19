@@ -61,10 +61,10 @@ function AudioArea({ originalTime, updateCurrentTime }) {
 
     const plugins = useMemo(() => {
         return [
-            {
-                plugin: RegionsPlugin,
-                options: { dragSelection: true }
-            },
+            // {
+            //     plugin: RegionsPlugin,
+            //     options: { dragSelection: true }
+            // },
             timelineVis && {
                 plugin: TimelinePlugin,
                 options: {
