@@ -59,10 +59,10 @@ function AudioArea() {
 
     const plugins = useMemo(() => {
         return [
-            {
-                plugin: RegionsPlugin,
-                options: { dragSelection: true }
-            },
+            // {
+            //     plugin: RegionsPlugin,
+            //     options: { dragSelection: true }
+            // },
             timelineVis && {
                 plugin: TimelinePlugin,
                 options: {
@@ -141,6 +141,8 @@ function AudioArea() {
                 wavesurferRef.current.on("loading", (data) => {
                     console.log("loading --> ", data);
                 });
+
+                wavesurferRef.current.drawer.on('click', () => getCurrentTime());
 
                 if (window) {
                     window.surferidze = wavesurferRef.current;
