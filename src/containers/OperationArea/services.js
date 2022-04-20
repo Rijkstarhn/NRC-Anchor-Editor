@@ -51,14 +51,25 @@ export const deleteAnchor = (deleteAnchor) => {
     }).then((res) => res.json());
 };
 
-export const postAnchor = (postAnchor) => {
-    return fetch(
+export async function postAnchor(postAnchor) {
+    const res = await fetch(
         `${SERVER_URL}/Anchors?destinationTimestamp=${postAnchor.timestamp}&destinationLocation=${postAnchor.location}`,
         {
             method: "POST",
             headers: { Accept: "application/json" },
         }
-    ).then((res) => res.json());
+    );
+    if (res.ok) {
+        return res.json();
+    }
+    return null;
+    // return fetch(
+    //     `${SERVER_URL}/Anchors?destinationTimestamp=${postAnchor.timestamp}&destinationLocation=${postAnchor.location}`,
+    //     {
+    //         method: "POST",
+    //         headers: { Accept: "application/json" },
+    //     }
+    // ).then((res) => res.json());
 };
 
 
