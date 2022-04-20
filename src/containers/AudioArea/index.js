@@ -148,32 +148,16 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
     //generating exisiting and new markers
     //by alice
     const existingMarkers = anchors.map((anchor) => {
+        console.log("anchor", anchor);
         return {
             time: parseFloat(anchor.timestamp.slice(0, -1)),
-            label: anchor.timestamp,
+            // label: anchor.timestamp,
             color: "#ff990a",
             position: "top"
         }
     })
 
-    const [markers, setMarkers] = useState([
-
-        ...existingMarkers,
-        {
-            time: 5.5,
-            label: "V1",
-            color: "#ff990a",
-            draggable: true
-        },
-
-        // {
-        //     time: 10,
-        //     label: "V2",
-        //     color: "#00ffcc",
-        //     position: "top"
-        // }
-
-    ]);
+    const [markers, setMarkers] = useState([...existingMarkers]);
 
     //temporarily we do not use this function
     const addMarker = useCallback(() => {
@@ -198,20 +182,22 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
 
     useEffect(() => {
         // setMarkers([...existingMarkers]);
+        console.log("useEffect called!");
         if (!wavesurferRef.current) {
             setMarkers([...existingMarkers]);
             return;
         }
-        const r = generateNum(0, 255);
-        const g = generateNum(0, 255);
-        const b = generateNum(0, 255);
+        // const r = generateNum(0, 255);
+        // const g = generateNum(0, 255);
+        // const b = generateNum(0, 255);
         const currentTime = wavesurferRef.current.getCurrentTime()
         setMarkers([
             ...existingMarkers,
             {
                 //label: `@${currentTime.toFixed(1)}s`,
                 time: currentTime,
-                color: `rgba(${r}, ${g}, ${b}, 0.5)`,
+                color: "#ff990a",
+                position: "top",
                 //draggable: true
             }
         ]);
@@ -383,8 +369,5 @@ const dtpm = (dispatch) => {
     };
 };
 
-// export default AudioArea;
-
 export default connect(stpm, dtpm)(AudioArea);
 
-// export default AudioArea;
