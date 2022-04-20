@@ -295,20 +295,40 @@ function AudioArea({ originalTime, updateCurrentTime }) {
                     </WaveSurfer>
                     : console.log("no")}
 
-                <Buttons>
+                <div>
                     {/*<Button onClick={getReady}>Get current time</Button>*/}
-                    <Button onClick={addMarker}>Add Marker</Button>
-                    <Button onClick={play}>Play / Pause</Button>
-                    <Button onClick={removeLastMarker}>Remove last marker</Button>
-                    <Button onClick={shuffleLastMarker}>Shuffle last marker</Button>
-                    <Button onClick={toggleTimeline}>Toggle timeline</Button>
-                    <Button onClick={testDelete}>TEST</Button>
-                    <input type="file" name="file" ref={inputFile} style={{ display: 'none' }}
-                        accept='audio/*' onChange={changeHandler} />
-                    <div>
-                        <Button onClick={handleSubmission} >Upload Audio</Button>
+                    {/*<Button onClick={addMarker}>Add Marker</Button>*/}
+                    <Button className="btn btn-primary" onClick={play}>Play / Pause</Button>
+                    {/*<Button onClick={removeLastMarker}>Remove last marker</Button>*/}
+                    {/*<Button onClick={shuffleLastMarker}>Shuffle last marker</Button>*/}
+                    {/*<Button onClick={toggleTimeline}>Toggle timeline</Button>*/}
+                    {/*<Button onClick={testDelete}>TEST</Button>*/}
+                    <div className="input-group">
+                        <input
+                            type="file"
+                            className="form-control"
+                            id="audioInput"
+                            aria-describedby="audioInput"
+                            aria-label="Upload"
+                            ref={inputFile}
+                            accept='audio/*'
+                            onChange={changeHandler}
+                        />
+                        <button
+                            className="btn btn-outline-secondary upload-file-button"
+                            type="button"
+                            id="audioInput"
+                            onClick={() => handleSubmission()}
+                        >
+                            Upload Audio
+                        </button>
                     </div>
-                </Buttons>
+                    {/*<input type="file" name="file" ref={inputFile} style={{ display: 'none' }}*/}
+                    {/*    accept='audio/*' onChange={changeHandler} />*/}
+                    {/*<div>*/}
+                    {/*    <Button onClick={handleSubmission} >Upload Audio</Button>*/}
+                    {/*</div>*/}
+                </div>
             </div>
         </div>
     );
