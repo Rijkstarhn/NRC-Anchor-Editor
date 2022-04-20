@@ -34,7 +34,13 @@ export const deleteAnchor = (dispatch, deleteAnchor) => services.deleteAnchor(de
 )
 
 export const postAnchor = (dispatch, postAnchor) => services.postAnchor(postAnchor).then(
-    response => dispatch({ type: GET_ANCHORS, anchors: response })
+    function processRes(response) {
+        if (response) {
+            dispatch({ type: GET_ANCHORS, anchors: response })
+        } else {
+            alert("anchor is illegal because time and location doesn't match");
+        }
+    }
 )
 
 export const getXMLFile = (dispatch) => services.getXMLFile()
