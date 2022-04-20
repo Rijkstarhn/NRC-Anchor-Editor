@@ -2,6 +2,14 @@ import services from './services'
 
 export const LOAD_TEXT = 'LOAD_TEXT';
 export const GET_ANCHORS = 'GET_ANCHORS';
+export const ADD_ANCHOR_TRUE = 'ADD_ANCHOR_TRUE';
+export const ADD_ANCHOR_FALSE = 'ADD_ANCHOR_FALSE';
+export const UPDATE_CURRENT_LOCATION = 'UPDATE_CURRENT_LOCATION';
+export const UPDATE_CURRENT_TIME = 'UPDATE_CURRENT_TIME';
+export const SET_ANCHOR_LOCATION_DEFAULT = 'SET_ANCHOR_LOCATION_DEFAULT';
+export const DELETE_ANCHOR_FALSE = 'DELETE_ANCHOR_FALSE';
+export const DELETE_ANCHOR_TRUE = 'DELETE_ANCHOR_TRUE';
+export const HIT_CANCEL_BUTTON = 'HIT_CANCEL_BUTTON';
 
 export const loadText = (dispatch) => services.loadPlainText().then(
     plainText => dispatch({ type: LOAD_TEXT, text: plainText })
@@ -26,10 +34,30 @@ export const deleteAnchor = (dispatch, deleteAnchor) => services.deleteAnchor(de
 )
 
 export const postAnchor = (dispatch, postAnchor) => services.postAnchor(postAnchor).then(
-    response => dispatch({ type: GET_ANCHORS, anchors: response })
+    function processRes(response) {
+        if (response) {
+            dispatch({ type: GET_ANCHORS, anchors: response })
+        } else {
+            alert("anchor is illegal because time and location doesn't match");
+        }
+    }
 )
 
 export const getXMLFile = (dispatch) => services.getXMLFile()
+
+export const setAddingAnchorToTrue = (dispatch) => dispatch({type: ADD_ANCHOR_TRUE})
+
+export const setAddingAnchorToFalse = (dispatch) => dispatch({type: ADD_ANCHOR_FALSE})
+
+export const setAnchorLocationToDefault = (dispatch) => dispatch({type: SET_ANCHOR_LOCATION_DEFAULT})
+
+export const setDeletingAnchorToFalse = (dispatch) => dispatch({type: DELETE_ANCHOR_FALSE})
+
+export const setDeletingAnchorToTrue = (dispatch) => dispatch({type: DELETE_ANCHOR_TRUE})
+
+export const updateCurrentAnchorLocation = (dispatch, currentLocation) => dispatch({type: UPDATE_CURRENT_LOCATION, currentLocation: currentLocation})
+
+export const hitCancelButton = (dispatch) => dispatch({type: HIT_CANCEL_BUTTON})
 
 const actions = {
     loadText,
@@ -41,6 +69,13 @@ const actions = {
     getAnchorByTimestamp,
     getAnchorByLocation,
     getXMLFile,
+    setAddingAnchorToTrue,
+    setAddingAnchorToFalse,
+    setAnchorLocationToDefault,
+    setDeletingAnchorToFalse,
+    setDeletingAnchorToTrue,
+    updateCurrentAnchorLocation,
+    hitCancelButton,
 }
 
 export default actions;
