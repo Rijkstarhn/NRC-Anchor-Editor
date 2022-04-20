@@ -1,11 +1,13 @@
 import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import styled from "styled-components";
+import { connect } from "react-redux";
 import { Marker, WaveForm, WaveSurfer } from "wavesurfer-react";
 import "./styles.css";
 import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions.min";
 import TimelinePlugin from "wavesurfer.js/dist/plugin/wavesurfer.timeline.min";
 import MarkersPlugin from "wavesurfer.js/src/plugin/markers";
 import FileSaver from 'file-saver';
+import { UPDATE_CURRENT_TIME } from "../OperationArea/actions";
 
 const Buttons = styled.div`
   display: inline-block;
@@ -38,7 +40,7 @@ function generateTwoNumsWithDistance(distance, min, max) {
     return generateTwoNumsWithDistance(distance, min, max);
 }
 
-function AudioArea() {
+function AudioArea({ originalTime, updateCurrentTime }) {
 
     const [timelineVis, setTimelineVis] = useState(true);
 
@@ -59,10 +61,10 @@ function AudioArea() {
 
     const plugins = useMemo(() => {
         return [
-            {
-                plugin: RegionsPlugin,
-                options: { dragSelection: true }
-            },
+            // {
+            //     plugin: RegionsPlugin,
+            //     options: { dragSelection: true }
+            // },
             timelineVis && {
                 plugin: TimelinePlugin,
                 options: {
@@ -143,6 +145,13 @@ function AudioArea() {
                     console.log("loading --> ", data);
                 });
 
+                // When you use wavesurfer.on('seek') and
+                // calling getCurrentTime() you get the time AFTER it seeked due to mouse clicking.
+                wavesurferRef.current.on('seek', () => {
+                    const tmp = getCurrentTime();
+                    updateCurrentTime(`${tmp.toFixed(2)}s`);
+                });
+
                 if (window) {
                     window.surferidze = wavesurferRef.current;
                 }
@@ -213,8 +222,43 @@ function AudioArea() {
             currentTime = wavesurferRef.current.getCurrentTime();
         }
         console.log("current --> ", currentTime);
+        return currentTime;
     }, [wavesurferRef]);
 
+    const [m, setM] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    const [f, setF] = useState(false);
+
+    const testDelete = () => {
+        console.log("test delete");
+        setF(!f);
+        console.log("f is: ", f);
+
+    }
+
+    useEffect(() => {
+        setM(m.filter(i => i !== 1));
+        console.log("setting");
+        console.log("m is: ", m);
+    }, [f])
+
+    //by alice
+    const [currentTime, setCurrentTime] = useState(originalTime);
+    const [event, setEvent] = useState(false);
+
+    const getReady = () => {
+        event === false ? setEvent(true) : setEvent(false);
+        // setEvent(true);
+    }
+
+    useEffect(() => {
+        if (wavesurferRef.current) {
+            const tmp = wavesurferRef.current.getCurrentTime();
+            setCurrentTime(`${tmp.toFixed(1)}s`);
+            updateCurrentTime(currentTime);
+        }
+        console.log("ALICE currentTime is  : ", currentTime);
+    }, [currentTime, event])
+    //end by alice 
 
 
     return (
@@ -252,12 +296,13 @@ function AudioArea() {
                     : console.log("no")}
 
                 <Buttons>
-                    <Button onClick={getCurrentTime}>Get current time</Button>
+                    {/*<Button onClick={getReady}>Get current time</Button>*/}
                     <Button onClick={addMarker}>Add Marker</Button>
                     <Button onClick={play}>Play / Pause</Button>
                     <Button onClick={removeLastMarker}>Remove last marker</Button>
                     <Button onClick={shuffleLastMarker}>Shuffle last marker</Button>
                     <Button onClick={toggleTimeline}>Toggle timeline</Button>
+                    <Button onClick={testDelete}>TEST</Button>
                     <input type="file" name="file" ref={inputFile} style={{ display: 'none' }}
                         accept='audio/*' onChange={changeHandler} />
                     <div>
@@ -269,4 +314,25 @@ function AudioArea() {
     );
 }
 
-export default AudioArea;
+const stpm = (state) => {
+    return {
+        originalTime: state.textareaReducer.currentTime,
+    };
+};
+
+const dtpm = (dispatch) => {
+    return {
+        updateCurrentTime: (currentTime) =>
+            dispatch({
+                type: UPDATE_CURRENT_TIME,
+                currentTime: currentTime,
+            }),
+
+    };
+};
+
+// export default AudioArea;
+
+export default connect(stpm, dtpm)(AudioArea);
+
+// export default AudioArea;

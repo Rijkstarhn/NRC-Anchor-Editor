@@ -106,6 +106,7 @@ function TextArea({
     /* -------------------------------------------------------------------------- */
 
     // Set up onclick attribute for span in adding mode
+    //once clicked, default currentLocaten will change from -1 to selected location 
     useEffect(() => {
         let spanElements = document.getElementsByClassName("anchor-holder");
         if (isAddingAnchor) {
