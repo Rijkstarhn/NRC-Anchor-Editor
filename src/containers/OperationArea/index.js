@@ -141,7 +141,7 @@ function OperationArea({
 
     return (
         <div>
-            <h1>{currentLocation}</h1>
+            {/*<h1>{currentLocation}</h1>*/}
             {/*<button*/}
             {/*    type="button"*/}
             {/*    className="btn btn-primary post-anchor-button"*/}

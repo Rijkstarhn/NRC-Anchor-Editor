@@ -81,7 +81,7 @@ function TextArea({
         textContent.appendChild(tag);
     }, [text]);
 
-    // Change existing anchor color.
+    // Change existing anchor color. Add 'anchor' and 'timestamp' class to anchor element.
     useEffect(() => {
         console.log(anchors);
         for (let anchor of anchors) {
@@ -106,7 +106,7 @@ function TextArea({
     /* -------------------------------------------------------------------------- */
 
     // Set up onclick attribute for span in adding mode
-    //once clicked, default currentLocaten will change from -1 to selected location 
+    //once clicked, default currentLocaten will change from -1 to selected location
     useEffect(() => {
         let spanElements = document.getElementsByClassName("anchor-holder");
         if (isAddingAnchor) {
@@ -167,9 +167,6 @@ function TextArea({
 
     // Change the background color of current selected anchor to white after clicking cancel
     useEffect(() => {
-        console.log("cancel hits", cancelButtonHits);
-        console.log("isAddingAnchor", isAddingAnchor);
-        console.log("isDeletingAnchor", isDeletingAnchor);
         if (!isAddingAnchor && !isDeletingAnchor) {
             // Cancel previous currentLocation span.
             let currentAnchor = document.getElementsByClassName(
@@ -183,7 +180,7 @@ function TextArea({
 
     return (
         <div className="input-group">
-            <div>{isAddingAnchor && <h3>Adding Anchor</h3>}</div>
+            {/*<div>{isAddingAnchor && <h3>Adding Anchor</h3>}</div>*/}
             {/*<textarea className="form-control"*/}
             {/*          aria-label="With textarea"*/}
             {/*          style={ text_area_style }*/}
