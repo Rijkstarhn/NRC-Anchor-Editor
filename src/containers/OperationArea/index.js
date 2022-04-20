@@ -1,5 +1,5 @@
 import react, { useEffect, useState } from "react";
-import actions from "./actions";
+import actions, {hitCancelButton} from "./actions";
 import { connect } from "react-redux";
 
 function OperationArea({
@@ -21,6 +21,7 @@ function OperationArea({
     currentTime,
     currentLocation,
     setAnchorLocationToDefault,
+    hitCancelButton,
 }) {
     useEffect(() => {
         document
@@ -134,6 +135,7 @@ function OperationArea({
         // cancel current selected span's background color
         setAddingAnchorToFalse();
         setDeletingAnchorToFalse();
+        hitCancelButton(); // trigger the useEffect to cancel previous selected span background color
         setAnchorLocationToDefault();
     };
 
@@ -279,6 +281,7 @@ const dtpm = (dispatch) => {
             actions.setDeletingAnchorToFalse(dispatch),
         setAnchorLocationToDefault: () =>
             actions.setAnchorLocationToDefault(dispatch),
+        hitCancelButton: () => actions.hitCancelButton(dispatch),
     };
 };
 

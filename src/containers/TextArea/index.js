@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import { UPDATE_CURRENT_LOCATION } from "../OperationArea/actions";
+import actions from "../OperationArea/actions";
 
 function TextArea({
     text,
@@ -9,68 +9,74 @@ function TextArea({
     isDeletingAnchor,
     currentLocation,
     updateCurrentAnchorLocation,
+    cancelButtonHits,
 }) {
+    /* -------------------------------------------------------------------------- */
+    /*                               TextArea Set Up                              */
+    /* -------------------------------------------------------------------------- */
+
     // Convert plain text to html elements, and add them in text content.
     useEffect(() => {
-        var textContent = document.getElementById("text-content");
+        let textContent = document.getElementById("text-content");
         console.log(text);
         textContent.innerHTML = "";
         // Iterate the plain text and create element in text content
-        var position = 0;
-        for (var i = 0; i < text.length; i++) {
+        let position = 0;
+        // Iterate without the last three char, which are "\n".
+        for (let i = 0; i < text.length - 3; i++) {
             if (text[i] === " ") {
                 // Space -> Anchor Holder
                 position++;
                 if (i > 0 && text[i - 1] === " ") {
                     // previous space is an anchor holder.
-                    var tag = document.createElement("span");
+                    let tag = document.createElement("span");
                     // Set anchor id and class
                     tag.classList.add(`location-${position - 1}`);
                     tag.classList.add("anchor-holder");
-                    var content = document.createTextNode(" ");
+                    // let content = document.createTextNode(" ");
                     tag.innerHTML = "\u00A0";
                     textContent.appendChild(tag);
                 } else {
-                    tag = document.createElement("span");
+                    let tag = document.createElement("span");
                     // Set anchor id and class
                     tag.classList.add(`location-${position}`);
                     tag.classList.add("anchor-holder");
-                    content = document.createTextNode(" ");
+                    let content = document.createTextNode(" ");
                     tag.appendChild(content);
                     textContent.appendChild(tag);
                 }
             } else if (text[i] === "\n") {
                 // \n
                 position++;
-                tag = document.createElement("p");
-                content = document.createTextNode(" ");
+                let tag = document.createElement("p");
+                let content = document.createTextNode(" ");
                 tag.appendChild(content);
                 textContent.appendChild(tag);
             } else {
                 // Character
                 // If the charcter is the first one in a paragraph, add an anchor holder before it.
                 if (position === 0 || text[i - 1] === "\n") {
-                    tag = document.createElement("span");
+                    let tag = document.createElement("span");
                     tag.classList.add(`location-${position}`);
                     tag.classList.add("anchor-holder");
-                    content = document.createTextNode("\u00A0");
+                    let content = document.createTextNode("\u00A0");
                     tag.appendChild(content);
                     textContent.appendChild(tag);
                 }
                 // Add charcter element.
                 position++;
-                tag = document.createElement("span");
-                content = document.createTextNode(`${text[i]}`);
+                let tag = document.createElement("span");
+                let content = document.createTextNode(`${text[i]}`);
                 tag.appendChild(content);
                 textContent.appendChild(tag);
             }
         }
         // Add an anchor holder at the end of text.
         position++;
-        tag = document.createElement("span");
+        let tag = document.createElement("span");
         tag.classList.add(`location-${position}`);
         tag.classList.add("anchor-holder");
-        content = document.createTextNode("\u00A0");
+        let content = document.createTextNode("\u00A0");
         tag.appendChild(content);
         textContent.appendChild(tag);
     }, [text]);
@@ -78,11 +84,11 @@ function TextArea({
     // Change existing anchor color.
     useEffect(() => {
         console.log(anchors);
-        for (var anchor of anchors) {
-            var anchorElements = document.getElementsByClassName(
+        for (let anchor of anchors) {
+            let anchorElements = document.getElementsByClassName(
                 `location-${anchor.location}`
             );
-            for (var anchorElement of anchorElements) {
+            for (let anchorElement of anchorElements) {
                 if (!anchorElement.classList.contains("anchor")) {
                     anchorElement.style.backgroundColor = "red";
                     anchorElement.classList.add("anchor");
@@ -95,12 +101,16 @@ function TextArea({
         }
     }, [anchors]);
 
+    /* -------------------------------------------------------------------------- */
+    /*                                 Adding Mode                                */
+    /* -------------------------------------------------------------------------- */
+
     // Set up onclick attribute for span in adding mode
     //once clicked, default currentLocaten will change from -1 to selected location 
     useEffect(() => {
-        var spanElements = document.getElementsByClassName("anchor-holder");
+        let spanElements = document.getElementsByClassName("anchor-holder");
         if (isAddingAnchor) {
-            for (var spanElement of spanElements) {
+            for (let spanElement of spanElements) {
                 if (!spanElement.classList.contains("anchor")) {
                     spanElement.onclick = function () {
                         let thisLocation = this.classList[0].substring(9);
@@ -109,13 +119,13 @@ function TextArea({
                 }
             }
         } else {
-            for (spanElement of spanElements) {
+            for (let spanElement of spanElements) {
                 if (!spanElement.classList.contains("anchor")) {
                     spanElement.onclick = null;
                 }
             }
         }
-    }, [isAddingAnchor, updateCurrentAnchorLocation]);
+    }, [isAddingAnchor]);
 
     const prevCurrentLocation = usePrevious(currentLocation);
 
@@ -127,38 +137,49 @@ function TextArea({
         return ref.current;
     }
 
-    // Change the background color of current selected anchor to white after clicking cancel
-    useEffect(() => {
-        if (!isAddingAnchor && !isDeletingAnchor) {
-            // Cancel previous currentLocation span.
-            var currentAnchor = document.getElementsByClassName(
-                `location-${prevCurrentLocation}`
-            )[0];
-            if (currentAnchor) {
-                currentAnchor.style.backgroundColor = null;
-            }
-        }
-    }, [isAddingAnchor, isDeletingAnchor]);
-
     // Change adding anchor color.
     useEffect(() => {
         if (isAddingAnchor) {
-            if (currentLocation > 0) {
+            if (currentLocation >= 0) {
                 // Cancel previous currentLocation span.
-                if (prevCurrentLocation > 0) {
-                    var prevElement = document.getElementsByClassName(
+                if (prevCurrentLocation >= 0) {
+                    let prevElement = document.getElementsByClassName(
                         `location-${prevCurrentLocation}`
                     )[0];
                     prevElement.style.backgroundColor = null;
                 }
                 // Change new current span color
-                var spanElement = document.getElementsByClassName(
+                let spanElement = document.getElementsByClassName(
                     `location-${currentLocation}`
                 )[0];
                 spanElement.style.backgroundColor = "red";
             }
         }
     }, [currentLocation, prevCurrentLocation]);
+
+    /* -------------------------------------------------------------------------- */
+    /*                                Deleting Mode                               */
+    /* -------------------------------------------------------------------------- */
+
+    /* -------------------------------------------------------------------------- */
+    /*                            Cancel / Default Mode                           */
+    /* -------------------------------------------------------------------------- */
+
+    // Change the background color of current selected anchor to white after clicking cancel
+    useEffect(() => {
+        console.log("cancel hits", cancelButtonHits);
+        console.log("isAddingAnchor", isAddingAnchor);
+        console.log("isDeletingAnchor", isDeletingAnchor);
+        if (!isAddingAnchor && !isDeletingAnchor) {
+            // Cancel previous currentLocation span.
+            let currentAnchor = document.getElementsByClassName(
+                `location-${prevCurrentLocation}`
+            )[0];
+            if (currentAnchor) {
+                currentAnchor.style.backgroundColor = null;
+            }
+        }
+    }, [cancelButtonHits]);
 
     return (
         <div className="input-group">
@@ -200,16 +221,14 @@ const stpm = (state) => {
         isAddingAnchor: state.textareaReducer.isAddingAnchor,
         isDeletingAnchor: state.textareaReducer.isDeletingAnchor,
         currentLocation: state.textareaReducer.currentLocation,
+        cancelButtonHits: state.textareaReducer.cancelButtonHits,
     };
 };
 
 const dtpm = (dispatch) => {
     return {
         updateCurrentAnchorLocation: (currentLocation) =>
-            dispatch({
-                type: UPDATE_CURRENT_LOCATION,
-                currentLocation: currentLocation,
-            }),
+            actions.updateCurrentAnchorLocation(dispatch, currentLocation),
     };
 };
 

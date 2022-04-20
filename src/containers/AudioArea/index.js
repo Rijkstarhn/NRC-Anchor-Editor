@@ -40,24 +40,9 @@ function generateTwoNumsWithDistance(distance, min, max) {
     return generateTwoNumsWithDistance(distance, min, max);
 }
 
-function AudioArea({ originalTime, updateCurrentTime }) {
+function AudioArea({ originalTime, updateCurrentTime, anchors }) {
 
     const [timelineVis, setTimelineVis] = useState(true);
-
-    const [markers, setMarkers] = useState([
-        {
-            time: 5.5,
-            label: "V1",
-            color: "#ff990a",
-            draggable: true
-        },
-        {
-            time: 10,
-            label: "V2",
-            color: "#00ffcc",
-            position: "top"
-        }
-    ]);
 
     const plugins = useMemo(() => {
         return [
@@ -87,7 +72,7 @@ function AudioArea({ originalTime, updateCurrentTime }) {
     // playing status flag
     const [playing, setPlay] = useState(false);
 
-
+    //uploading audio
     //by alice
     const inputFile = useRef(null);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -101,17 +86,17 @@ function AudioArea({ originalTime, updateCurrentTime }) {
     }, [url, selectedFile]);
 
     const handleSubmission = () => {
-        console.log("handling submitting");
+        // console.log("handling submitting");
         inputFile.current.click();
     }
 
     const changeHandler = (event) => {
         setSelectedFile(URL.createObjectURL(event.target.files[0]));
-        console.log("THIS IS URL: ", URL.createObjectURL(event.target.files[0]));
+        // console.log("THIS IS URL: ", URL.createObjectURL(event.target.files[0]));
         setIsFilePicked(true);
         console.log(event.target.files[0].name);
-        console.log("now selected file is: ", selectedFile);
-        console.log("now isFilePicked is: ", isFilePicked);
+        // console.log("now selected file is: ", selectedFile);
+        // console.log("now isFilePicked is: ", isFilePicked);
     };
     //end by alice
 
@@ -145,7 +130,11 @@ function AudioArea({ originalTime, updateCurrentTime }) {
                     console.log("loading --> ", data);
                 });
 
-                wavesurferRef.current.drawer.on('click', () => getCurrentTime());
+                // When you use wavesurfer.on('seek') and
+                // calling getCurrentTime() you get the time AFTER it seeked due to mouse clicking.
+                wavesurferRef.current.on('seek', () => {
+                    updateCurrentTime(`${getCurrentTime()}s`);
+                });
 
                 if (window) {
                     window.surferidze = wavesurferRef.current;
@@ -155,6 +144,38 @@ function AudioArea({ originalTime, updateCurrentTime }) {
         [url, isFilePicked]
     );
 
+
+    //generating exisiting and new markers
+    //by alice
+    const existingMarkers = anchors.map((anchor) => {
+        return {
+            time: parseFloat(anchor.timestamp.slice(0, -1)),
+            label: anchor.timestamp,
+            color: "#ff990a",
+            position: "top"
+        }
+    })
+
+    const [markers, setMarkers] = useState([
+
+        ...existingMarkers,
+        {
+            time: 5.5,
+            label: "V1",
+            color: "#ff990a",
+            draggable: true
+        },
+
+        // {
+        //     time: 10,
+        //     label: "V2",
+        //     color: "#00ffcc",
+        //     position: "top"
+        // }
+
+    ]);
+
+    //temporarily we do not use this function
     const addMarker = useCallback(() => {
         if (!wavesurferRef.current) {
             return;
@@ -167,13 +188,41 @@ function AudioArea({ originalTime, updateCurrentTime }) {
         setMarkers([
             ...markers,
             {
-                label: `@${currentTime.toFixed(1)}s`,
+                //label: `@${currentTime.toFixed(1)}s`,
                 time: currentTime,
                 color: `rgba(${r}, ${g}, ${b}, 0.5)`,
-                draggable: true
+                //draggable: true
             }
         ]);
     }, [markers, wavesurferRef]);
+
+    useEffect(() => {
+        // setMarkers([...existingMarkers]);
+        if (!wavesurferRef.current) {
+            setMarkers([...existingMarkers]);
+            return;
+        }
+        const r = generateNum(0, 255);
+        const g = generateNum(0, 255);
+        const b = generateNum(0, 255);
+        const currentTime = wavesurferRef.current.getCurrentTime()
+        setMarkers([
+            ...existingMarkers,
+            {
+                //label: `@${currentTime.toFixed(1)}s`,
+                time: currentTime,
+                color: `rgba(${r}, ${g}, ${b}, 0.5)`,
+                //draggable: true
+            }
+        ]);
+        console.log("SETTING markers are: ", markers);
+
+    }, [existingMarkers.length, anchors]);
+    //end generating markers
+
+
+
+
 
     const removeLastMarker = useCallback(() => {
         let nextMarkers = [...markers];
@@ -208,6 +257,7 @@ function AudioArea({ originalTime, updateCurrentTime }) {
         // switch the playing status
         setPlay(!playing);
         wavesurferRef.current.playPause();
+        updateCurrentTime(`${getCurrentTime()}s`);
         console.log("playing status --> ", playing);
     }, [playing]);
 
@@ -217,8 +267,11 @@ function AudioArea({ originalTime, updateCurrentTime }) {
             currentTime = wavesurferRef.current.getCurrentTime();
         }
         console.log("current --> ", currentTime);
+        return currentTime.toFixed(2);
     }, [wavesurferRef]);
 
+
+    //testing delete
     const [m, setM] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     const [f, setF] = useState(false);
 
@@ -226,14 +279,18 @@ function AudioArea({ originalTime, updateCurrentTime }) {
         console.log("test delete");
         setF(!f);
         console.log("f is: ", f);
-
+        console.log("now markers are: ", markers);
+        console.log("now existing are : ", existingMarkers);
     }
 
     useEffect(() => {
         setM(m.filter(i => i !== 1));
-        console.log("setting");
-        console.log("m is: ", m);
+        // console.log("setting");
+        // console.log("m is: ", m);
     }, [f])
+    //end testing delete
+
+
 
     //by alice
     const [currentTime, setCurrentTime] = useState(originalTime);
@@ -250,9 +307,9 @@ function AudioArea({ originalTime, updateCurrentTime }) {
             setCurrentTime(`${tmp.toFixed(1)}s`);
             updateCurrentTime(currentTime);
         }
-        console.log("ALICE currentTime is  : ", currentTime);
+        // console.log("ALICE currentTime is  : ", currentTime);
     }, [currentTime, event])
-    //end by alice 
+    //end by alice
 
 
     return (
@@ -287,10 +344,10 @@ function AudioArea({ originalTime, updateCurrentTime }) {
                         </WaveForm>
                         <div id="timeline" />
                     </WaveSurfer>
-                    : console.log("no")}
+                    : console.log("no audio file yet")}
 
                 <Buttons>
-                    <Button onClick={getReady}>Get current time</Button>
+                    {/*<Button onClick={getReady}>Get current time</Button>*/}
                     <Button onClick={addMarker}>Add Marker</Button>
                     <Button onClick={play}>Play / Pause</Button>
                     <Button onClick={removeLastMarker}>Remove last marker</Button>
@@ -311,6 +368,7 @@ function AudioArea({ originalTime, updateCurrentTime }) {
 const stpm = (state) => {
     return {
         originalTime: state.textareaReducer.currentTime,
+        anchors: state.textareaReducer.anchors,
     };
 };
 
