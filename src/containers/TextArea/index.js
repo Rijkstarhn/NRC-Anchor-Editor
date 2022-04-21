@@ -155,12 +155,43 @@ function TextArea({
                 spanElement.style.backgroundColor = "red";
             }
         }
+        if (isDeletingAnchor) {
+            if (currentLocation >= 0) {
+                // Cancel previous currentLocation span.
+                if (prevCurrentLocation >= 0) {
+                    let prevElement = document.getElementsByClassName(
+                        `location-${prevCurrentLocation}`
+                    )[0];
+                    prevElement.style.backgroundColor = "red";
+                }
+                // Change new current span color
+                let spanElement = document.getElementsByClassName(
+                    `location-${currentLocation}`
+                )[0];
+                spanElement.style.backgroundColor = "green";
+            }
+        }
     }, [currentLocation, prevCurrentLocation]);
 
     /* -------------------------------------------------------------------------- */
     /*                                Deleting Mode                               */
     /* -------------------------------------------------------------------------- */
-
+    useEffect(() => {
+        let spanElements = document.getElementsByClassName("anchor");
+        if (isDeletingAnchor) {
+            for (let spanElement of spanElements) {
+                spanElement.onclick = function () {
+                    let thisLocation = this.classList[0].substring(9);
+                    updateCurrentAnchorLocation(thisLocation);
+                    this.style.backgroundColor = 'green';
+                };
+            }
+        } else {
+            for (let spanElement of spanElements) {
+                spanElement.onclick = null;
+            }
+        }
+    }, [isDeletingAnchor]);
     /* -------------------------------------------------------------------------- */
     /*                            Cancel / Default Mode                           */
     /* -------------------------------------------------------------------------- */
@@ -204,9 +235,9 @@ function TextArea({
                     </li>
                 ))}
             </ol>
-            <h1 className="text-content" id="text-content">
+            <h4 className="text-content" id="text-content">
                 {" "}
-            </h1>
+            </h4>
         </div>
     );
 }
