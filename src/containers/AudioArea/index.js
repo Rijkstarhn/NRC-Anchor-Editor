@@ -59,7 +59,7 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
             {
                 plugin: MarkersPlugin,
                 options: {
-                    markers: [{ draggable: true }]
+                    markers: [{draggable: true}]
                 }
             }
         ].filter(Boolean);
@@ -99,9 +99,6 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
         // console.log("now isFilePicked is: ", isFilePicked);
     };
     //end by alice
-
-
-
 
 
     // use wavesurfer ref to pass it inside useCallback
@@ -152,7 +149,7 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
         return {
             time: parseFloat(anchor.timestamp.slice(0, -1)),
             // label: anchor.timestamp,
-            color: "#ff990a",
+            color: "red",
             position: "top"
         }
     })
@@ -194,9 +191,9 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
         setMarkers([
             ...existingMarkers,
             {
-                //label: `@${currentTime.toFixed(1)}s`,
+                // label: `@${currentTime.toFixed(1)}s`,
                 time: currentTime,
-                color: "#ff990a",
+                color: "red",
                 position: "top",
                 //draggable: true
             }
@@ -205,9 +202,6 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
 
     }, [existingMarkers.length, anchors]);
     //end generating markers
-
-
-
 
 
     const removeLastMarker = useCallback(() => {
@@ -277,7 +271,6 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
     //end testing delete
 
 
-
     //by alice
     const [currentTime, setCurrentTime] = useState(originalTime);
     const [event, setEvent] = useState(false);
@@ -328,7 +321,7 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
                                 );
                             })}
                         </WaveForm>
-                        <div id="timeline" />
+                        <div id="timeline"/>
                     </WaveSurfer>
                     : console.log("no audio file yet")}
 

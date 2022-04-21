@@ -115,6 +115,10 @@ function OperationArea({
         setAddingAnchorToTrue();
     };
 
+    const setDeletingAnchorToTrueStatus= () => {
+        setDeletingAnchorToTrue();
+    };
+
     const handleSave = () => {
         if (isAddingAnchor && !isDeletingAnchor) {
             // post anchor
@@ -126,6 +130,24 @@ function OperationArea({
             setAddingAnchorToFalse();
             setAnchorLocationToDefault();
         } else if (!isAddingAnchor && isDeletingAnchor) {
+            console.log("delete called");
+            console.log("currentTime", currentTime);
+            console.log("currentLocation", currentLocation);
+            // delete anchor
+            // location-342 anchor-holder anchor timestamp--0.1s
+            let toBeDeleteAnchor = document.getElementsByClassName(`location-${currentLocation} anchor-holder anchor timestamp-${currentTime}`)[0]
+            console.log("toBeDeleteAnchor", toBeDeleteAnchor);
+            toBeDeleteAnchor.classList.remove(`anchor`);
+            toBeDeleteAnchor.classList.remove(`timestamp-${currentTime}`);
+            toBeDeleteAnchor.removeAttribute("style");
+            console.log("toBeDeleteAnchor", toBeDeleteAnchor);
+            deleteAnchor({
+                timestamp: currentTime,
+                location: currentLocation,
+            });
+            // set isDeletingAnchor to false
+            setDeletingAnchorToFalse();
+            setAnchorLocationToDefault();
         } else if (!isAddingAnchor && !isDeletingAnchor) {
         } else {
         }
@@ -149,13 +171,6 @@ function OperationArea({
             {/*>*/}
             {/*    Post Anchors*/}
             {/*</button>*/}
-            {/*<button*/}
-            {/*    type="button"*/}
-            {/*    className="btn btn-primary delete-anchor-button"*/}
-            {/*    onClick={() => deleteAnchorToServer(deletedAnchor)}*/}
-            {/*>*/}
-            {/*    Delete Anchors*/}
-            {/*</button>*/}
             <button
                 type="button"
                 className="btn btn-primary get-anchors-button"
@@ -163,15 +178,15 @@ function OperationArea({
             >
                 Get Anchors
             </button>
-            <button
-                type="button"
-                className="btn btn-primary update-anchor-button"
-                onClick={() =>
-                    updateAnchorToServer(originalAnchor, destinationAnchor)
-                }
-            >
-                Update Anchor
-            </button>
+            {/*<button*/}
+            {/*    type="button"*/}
+            {/*    className="btn btn-primary update-anchor-button"*/}
+            {/*    onClick={() =>*/}
+            {/*        updateAnchorToServer(originalAnchor, destinationAnchor)*/}
+            {/*    }*/}
+            {/*>*/}
+            {/*    Update Anchor*/}
+            {/*</button>*/}
             <button
                 type="button"
                 className="btn btn-primary get-text-button"
@@ -216,6 +231,13 @@ function OperationArea({
             </button>
             <button
                 type="button"
+                className="btn btn-primary delete-anchor-button"
+                onClick={() => setDeletingAnchorToTrueStatus()}
+            >
+                Delete Anchor
+            </button>
+            <button
+                type="button"
                 className="btn btn-primary"
                 onClick={() => handleSave()}
             >
@@ -252,6 +274,7 @@ function OperationArea({
 const stpm = (state) => {
     return {
         isAddingAnchor: state.textareaReducer.isAddingAnchor,
+        isDeletingAnchor: state.textareaReducer.isDeletingAnchor,
         currentTime: state.textareaReducer.currentTime,
         currentLocation: state.textareaReducer.currentLocation,
     };
