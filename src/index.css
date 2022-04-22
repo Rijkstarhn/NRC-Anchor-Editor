@@ -22,6 +22,8 @@ code {
 .text-style {
   padding-top: 1%;
   padding-bottom: 1%;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .audio-area-style {
