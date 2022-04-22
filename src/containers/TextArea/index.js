@@ -9,6 +9,7 @@ function TextArea({
     isDeletingAnchor,
     currentLocation,
     updateCurrentAnchorLocation,
+    updateCurrentAnchorTime,
     cancelButtonHits,
 }) {
     /* -------------------------------------------------------------------------- */
@@ -182,7 +183,10 @@ function TextArea({
             for (let spanElement of spanElements) {
                 spanElement.onclick = function () {
                     let thisLocation = this.classList[0].substring(9);
+                    let thisTime = this.classList[3].substring(10);
+                    console.log("this time ", thisTime);
                     updateCurrentAnchorLocation(thisLocation);
+                    updateCurrentAnchorTime(thisTime);
                     this.style.backgroundColor = 'green';
                 };
             }
@@ -218,26 +222,29 @@ function TextArea({
             {/*          defaultValue = { anchors[0].timestamp }*/}
             {/*>*/}
             {/*</textarea>*/}
-            <ol className="list-group list-group-numbered anchors-list">
-                {anchors.map((anchor, index) => (
-                    <li
-                        className="list-group-item d-flex justify-content-between align-items-start"
-                        key={index}
-                    >
-                        <div className="ms-2 me-auto">
-                            <div className="fw-bold anchor-timestamp-info">
-                                {anchor.timestamp}
-                            </div>
-                        </div>
-                        <span className="badge bg-primary rounded-pill anchor-location-info">
-                            {anchor.location}
-                        </span>
-                    </li>
-                ))}
-            </ol>
-            <h4 className="text-content" id="text-content">
-                {" "}
-            </h4>
+            {/*<ol className="list-group list-group-numbered anchors-list">*/}
+            {/*    {anchors.map((anchor, index) => (*/}
+            {/*        <li*/}
+            {/*            className="list-group-item d-flex justify-content-between align-items-start"*/}
+            {/*            key={index}*/}
+            {/*        >*/}
+            {/*            <div className="ms-2 me-auto">*/}
+            {/*                <div className="fw-bold anchor-timestamp-info">*/}
+            {/*                    {anchor.timestamp}*/}
+            {/*                </div>*/}
+            {/*            </div>*/}
+            {/*            <span className="badge bg-primary rounded-pill anchor-location-info">*/}
+            {/*                {anchor.location}*/}
+            {/*            </span>*/}
+            {/*        </li>*/}
+            {/*    ))}*/}
+            {/*</ol>*/}
+            <div className = "text-area-style">
+                <h5 className="text-content text-style" id="text-content">
+                    {" "}
+                </h5>
+            </div>
+
         </div>
     );
 }
@@ -257,6 +264,9 @@ const dtpm = (dispatch) => {
     return {
         updateCurrentAnchorLocation: (currentLocation) =>
             actions.updateCurrentAnchorLocation(dispatch, currentLocation),
+        updateCurrentAnchorTime: (currentTime) => {
+            actions.updateCurrentAnchorTime(dispatch, currentTime)
+        },
     };
 };
 
