@@ -10,6 +10,9 @@ export const SET_ANCHOR_LOCATION_DEFAULT = 'SET_ANCHOR_LOCATION_DEFAULT';
 export const DELETE_ANCHOR_FALSE = 'DELETE_ANCHOR_FALSE';
 export const DELETE_ANCHOR_TRUE = 'DELETE_ANCHOR_TRUE';
 export const HIT_CANCEL_BUTTON = 'HIT_CANCEL_BUTTON';
+export const SET_DELETE_SIGNAL = 'SET_DELETE_SIGNAL';
+export const SET_ADD_SIGNAL = 'SET_ADD_SIGNAL';
+
 
 export const loadText = (dispatch) => services.loadPlainText().then(
     plainText => dispatch({ type: LOAD_TEXT, text: plainText })
@@ -45,17 +48,25 @@ export const postAnchor = (dispatch, postAnchor) => services.postAnchor(postAnch
 
 export const getXMLFile = (dispatch) => services.getXMLFile()
 
-export const setAddingAnchorToTrue = (dispatch) => dispatch({type: ADD_ANCHOR_TRUE})
+export const setAddingAnchorToTrue = (dispatch) => dispatch({ type: ADD_ANCHOR_TRUE })
 
-export const setAddingAnchorToFalse = (dispatch) => dispatch({type: ADD_ANCHOR_FALSE})
+export const setAddingAnchorToFalse = (dispatch) => dispatch({ type: ADD_ANCHOR_FALSE })
 
-export const setAnchorLocationToDefault = (dispatch) => dispatch({type: SET_ANCHOR_LOCATION_DEFAULT})
+export const setAnchorLocationToDefault = (dispatch) => dispatch({ type: SET_ANCHOR_LOCATION_DEFAULT })
 
-export const setDeletingAnchorToFalse = (dispatch) => dispatch({type: DELETE_ANCHOR_FALSE})
+export const setDeletingAnchorToFalse = (dispatch) => dispatch({ type: DELETE_ANCHOR_FALSE })
 
-export const setDeletingAnchorToTrue = (dispatch) => dispatch({type: DELETE_ANCHOR_TRUE})
+export const setDeletingAnchorToTrue = (dispatch) => dispatch({ type: DELETE_ANCHOR_TRUE })
 
-export const updateCurrentAnchorLocation = (dispatch, currentLocation) => dispatch({type: UPDATE_CURRENT_LOCATION, currentLocation: currentLocation})
+export const updateCurrentAnchorLocation = (dispatch, currentLocation) => dispatch({ type: UPDATE_CURRENT_LOCATION, currentLocation: currentLocation })
+
+export const hitCancelButton = (dispatch) => dispatch({ type: HIT_CANCEL_BUTTON })
+
+export const setDeleteSignal = (dispatch) => dispatch({ type: SET_DELETE_SIGNAL })
+
+export const setAddSignal = (dispatch) => dispatch({ type: SET_ADD_SIGNAL })
+
+export const updateCurrentAnchorTime = (dispatch, currentTime) => dispatch({ type: UPDATE_CURRENT_TIME, currentTime: currentTime })
 
 export const updateCurrentAnchorTime = (dispatch, currentTime) => dispatch({type: UPDATE_CURRENT_TIME, currentTime: currentTime})
 
@@ -79,6 +90,8 @@ const actions = {
     updateCurrentAnchorLocation,
     updateCurrentAnchorTime,
     hitCancelButton,
+    setDeleteSignal,
+    setAddSignal,
 }
 
 export default actions;

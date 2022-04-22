@@ -6,8 +6,9 @@ import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions.min";
 import TimelinePlugin from "wavesurfer.js/dist/plugin/wavesurfer.timeline.min";
 import MarkersPlugin from "wavesurfer.js/src/plugin/markers";
 import FileSaver from 'file-saver';
-import { UPDATE_CURRENT_TIME } from "../OperationArea/actions";
+import { UPDATE_CURRENT_TIME, SET_DELETE_SIGNAL, SET_ADD_SIGNAL } from "../OperationArea/actions";
 import OperationArea from "../OperationArea";
+
 
 const Buttons = styled.div`
   display: inline-block;
@@ -40,7 +41,8 @@ function generateTwoNumsWithDistance(distance, min, max) {
     return generateTwoNumsWithDistance(distance, min, max);
 }
 
-function AudioArea({ originalTime, updateCurrentTime, anchors }) {
+function AudioArea({ originalTime, targetLocation, updateCurrentTime,
+    anchors, isDeletingAnchor, deleteSignal, setDeleteSignal, addSignal, setAddSignal }) {
 
     const [timelineVis, setTimelineVis] = useState(true);
 
@@ -59,7 +61,7 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
             {
                 plugin: MarkersPlugin,
                 options: {
-                    markers: [{draggable: true}]
+                    markers: [{ draggable: true }]
                 }
             }
         ].filter(Boolean);
@@ -145,16 +147,23 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
     //generating exisiting and new markers
     //by alice
     const existingMarkers = anchors.map((anchor) => {
-        console.log("anchor", anchor);
+        //console.log("anchor", anchor);
         return {
             time: parseFloat(anchor.timestamp.slice(0, -1)),
             // label: anchor.timestamp,
             color: "red",
-            position: "top"
+            position: "top",
+            // id: anchor.location,
         }
     })
 
     const [markers, setMarkers] = useState([...existingMarkers]);
+
+    const [deletingModeTrue, setDeletingModeTrue] = useState(isDeletingAnchor && (targetLocation > -1));
+
+    useEffect(() => {
+        setDeletingModeTrue(isDeletingAnchor && (targetLocation > -1));
+    }, [isDeletingAnchor, targetLocation]);
 
     //temporarily we do not use this function
     const addMarker = useCallback(() => {
@@ -177,31 +186,75 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
         ]);
     }, [markers, wavesurferRef]);
 
+
+
+
+
+    //by alice
+    const [currentTime, setCurrentTime] = useState(originalTime);
+    const [event, setEvent] = useState(false);
+
+    const getReady = () => {
+        event === false ? setEvent(true) : setEvent(false);
+        // setEvent(true);
+    }
+
     useEffect(() => {
-        // setMarkers([...existingMarkers]);
-        console.log("useEffect called!");
+        if (wavesurferRef.current) {
+            const tmp = wavesurferRef.current.getCurrentTime();
+            setCurrentTime(`${tmp.toFixed(1)}s`);
+            updateCurrentTime(currentTime);
+        }
+    }, [currentTime])
+    //end by alice
+
+    //where we add new markers and delete markers 
+    useEffect(() => {
+        console.log("AUDIO useEffect called!");
+        console.log("delete signal is: ", deleteSignal);
+        console.log("addSignal is: ", addSignal);
+
         if (!wavesurferRef.current) {
+            console.log("🐶 no wavesurfer", existingMarkers);
             setMarkers([...existingMarkers]);
             return;
         }
-        // const r = generateNum(0, 255);
-        // const g = generateNum(0, 255);
-        // const b = generateNum(0, 255);
-        const currentTime = wavesurferRef.current.getCurrentTime()
-        setMarkers([
-            ...existingMarkers,
-            {
-                // label: `@${currentTime.toFixed(1)}s`,
-                time: currentTime,
-                color: "red",
-                position: "top",
-                //draggable: true
-            }
-        ]);
-        console.log("SETTING markers are: ", markers);
 
-    }, [existingMarkers.length, anchors]);
-    //end generating markers
+        if (deleteSignal) {
+            console.log("🐱AUDIO isDeletingAnchor is true!");
+            const targetNumber = parseInt(targetLocation);
+            const newMarkers = markers.filter((marker) => marker.time !== parseFloat(originalTime.slice(0, -1)));
+            console.log("originalTime: ", originalTime);
+
+            setMarkers([
+                ...newMarkers,
+            ]);
+            setDeleteSignal(false);
+            console.log("🐱AUDIO newMarkers: ", newMarkers);
+            console.log("🐱AUDIO existing marjers: ", existingMarkers);
+            return;
+        }
+
+        if (addSignal) {
+            console.log("AUDIO isAddingAnchor is true!");
+            const currentTime = wavesurferRef.current.getCurrentTime()
+            setMarkers([
+                ...existingMarkers,
+                {
+                    // label: `@${currentTime.toFixed(1)}s`,
+                    time: parseFloat(currentTime.toFixed(1)),
+                    color: "red",
+                    position: "top",
+                    // id: targetLocation,
+                    //draggable: true
+                }
+            ]);
+            console.log("SETTING markers are: ", markers);
+            setAddSignal(false);
+        }
+
+    }, [existingMarkers.length, anchors, deleteSignal, addSignal]);
+    //end generating markers 
 
 
     const removeLastMarker = useCallback(() => {
@@ -247,7 +300,7 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
             currentTime = wavesurferRef.current.getCurrentTime();
         }
         console.log("current --> ", currentTime);
-        return currentTime.toFixed(2);
+        return currentTime.toFixed(1);
     }, [wavesurferRef]);
 
 
@@ -261,6 +314,7 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
         console.log("f is: ", f);
         console.log("now markers are: ", markers);
         console.log("now existing are : ", existingMarkers);
+        console.log("now target location is: ", targetLocation);
     }
 
     useEffect(() => {
@@ -271,24 +325,7 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
     //end testing delete
 
 
-    //by alice
-    const [currentTime, setCurrentTime] = useState(originalTime);
-    const [event, setEvent] = useState(false);
 
-    const getReady = () => {
-        event === false ? setEvent(true) : setEvent(false);
-        // setEvent(true);
-    }
-
-    useEffect(() => {
-        if (wavesurferRef.current) {
-            const tmp = wavesurferRef.current.getCurrentTime();
-            setCurrentTime(`${tmp.toFixed(1)}s`);
-            updateCurrentTime(currentTime);
-        }
-        // console.log("ALICE currentTime is  : ", currentTime);
-    }, [currentTime, event])
-    //end by alice
 
 
     return (
@@ -305,23 +342,26 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
                             {/*<WaveForm id="waveform" cursorColor="#fff">*/}
                             {markers.map((marker, index) => {
                                 return (
-                                    <Marker
-                                        key={index}
-                                        {...marker}
-                                        onClick={(...args) => {
-                                            console.log("onClick", ...args);
-                                        }}
-                                        onDrag={(...args) => {
-                                            console.log("onDrag", ...args);
-                                        }}
-                                        onDrop={(...args) => {
-                                            console.log("onDrop", ...args);
-                                        }}
-                                    />
+                                    <span className={marker.timestamp} key={index}>
+                                        <Marker
+                                            key={index}
+                                            {...marker}
+                                            onClick={(...args) => {
+                                                console.log("onClick", ...args);
+                                            }}
+                                            onDrag={(...args) => {
+                                                console.log("onDrag", ...args);
+                                            }}
+                                            onDrop={(...args) => {
+                                                console.log("onDrop", ...args);
+                                            }}
+                                        />
+                                    </span>
+
                                 );
                             })}
                         </WaveForm>
-                        <div id="timeline"/>
+                        <div id="timeline" />
                     </WaveSurfer>
                     : console.log("no audio file yet")}
 
@@ -335,6 +375,9 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
                     {/*<Button onClick={removeLastMarker}>Remove last marker</Button>*/}
                     {/*<Button onClick={shuffleLastMarker}>Shuffle last marker</Button>*/}
                     {/*<Button onClick={toggleTimeline}>Toggle timeline</Button>*/}
+
+                  
+                    <div className="input-group">
                     {/*<Button onClick={testDelete}>TEST</Button>*/}
                 <OperationArea/>
                     <div className="input-group audio-upload">
@@ -371,6 +414,10 @@ const stpm = (state) => {
     return {
         originalTime: state.textareaReducer.currentTime,
         anchors: state.textareaReducer.anchors,
+        targetLocation: state.textareaReducer.currentLocation,
+        isDeletingAnchor: state.textareaReducer.isDeletingAnchor,
+        deleteSignal: state.textareaReducer.deleteSignal,
+        addSignal: state.textareaReducer.addSignal,
     };
 };
 
@@ -380,6 +427,17 @@ const dtpm = (dispatch) => {
             dispatch({
                 type: UPDATE_CURRENT_TIME,
                 currentTime: currentTime,
+            }),
+        setDeleteSignal: (deleteSignal) =>
+            dispatch({
+                type: SET_DELETE_SIGNAL,
+                deleteSignal: deleteSignal,
+
+            }),
+        setAddSignal: (addSignal) =>
+            dispatch({
+                type: SET_ADD_SIGNAL,
+                addSignal: addSignal,
             }),
 
     };
