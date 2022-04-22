@@ -57,6 +57,8 @@ export const setDeletingAnchorToTrue = (dispatch) => dispatch({type: DELETE_ANCH
 
 export const updateCurrentAnchorLocation = (dispatch, currentLocation) => dispatch({type: UPDATE_CURRENT_LOCATION, currentLocation: currentLocation})
 
+export const updateCurrentAnchorTime = (dispatch, currentTime) => dispatch({type: UPDATE_CURRENT_TIME, currentTime: currentTime})
+
 export const hitCancelButton = (dispatch) => dispatch({type: HIT_CANCEL_BUTTON})
 
 const actions = {
@@ -75,6 +77,7 @@ const actions = {
     setDeletingAnchorToFalse,
     setDeletingAnchorToTrue,
     updateCurrentAnchorLocation,
+    updateCurrentAnchorTime,
     hitCancelButton,
 }
 
