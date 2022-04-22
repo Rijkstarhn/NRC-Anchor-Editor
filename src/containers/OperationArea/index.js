@@ -162,7 +162,7 @@ function OperationArea({
     };
 
     return (
-        <div>
+        <div className="operation-area-style">
             {/*<h1>{currentLocation}</h1>*/}
             {/*<button*/}
             {/*    type="button"*/}
@@ -171,85 +171,64 @@ function OperationArea({
             {/*>*/}
             {/*    Post Anchors*/}
             {/*</button>*/}
-            <button
-                type="button"
-                className="btn btn-primary get-anchors-button"
-                onClick={() => getAnchorsFromServer()}
-            >
-                Get Anchors
-            </button>
-            {/*<button*/}
-            {/*    type="button"*/}
-            {/*    className="btn btn-primary update-anchor-button"*/}
-            {/*    onClick={() =>*/}
-            {/*        updateAnchorToServer(originalAnchor, destinationAnchor)*/}
-            {/*    }*/}
-            {/*>*/}
-            {/*    Update Anchor*/}
-            {/*</button>*/}
-            <button
-                type="button"
-                className="btn btn-primary get-text-button"
-                onClick={() => loadTextFromServer()}
-            >
-                Get Text
-            </button>
-            <button
-                type="button"
-                className="btn btn-primary upload-text-button"
-                onClick={() => uploadXMLFile()}
-            >
-                Upload Text
-            </button>
-            {/*<button*/}
-            {/*    type="button"*/}
-            {/*    className="btn btn-primary"*/}
-            {/*    onClick={() => getAnchorByTimestampFromServer(timestamp)}*/}
-            {/*>*/}
-            {/*    Get Anchor by Timestamp*/}
-            {/*</button>*/}
-            {/*<button*/}
-            {/*    type="button"*/}
-            {/*    className="btn btn-primary"*/}
-            {/*    onClick={() => getAnchorByLocationFromServer(location)}*/}
-            {/*>*/}
-            {/*    Get Anchor by Location*/}
-            {/*</button>*/}
-            <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => getXMLFileFromServer()}
-            >
-                Get XML File
-            </button>
-            <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => setAddingAnchorToTrueStatus()}
-            >
-                Add Anchor
-            </button>
-            <button
-                type="button"
-                className="btn btn-primary delete-anchor-button"
-                onClick={() => setDeletingAnchorToTrueStatus()}
-            >
-                Delete Anchor
-            </button>
-            <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => handleSave()}
-            >
-                Save
-            </button>
-            <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => handleCancel()}
-            >
-                Cancel
-            </button>
+            <div className="control-buttons-area">
+                <button
+                    type="button"
+                    className="btn btn-primary get-anchors-button btn-space"
+                    onClick={() => getAnchorsFromServer()}
+                >
+                    Get Anchors
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-primary get-text-button btn-space"
+                    onClick={() => loadTextFromServer()}
+                >
+                    Get Text
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-primary upload-text-button btn-space"
+                    onClick={() => uploadXMLFile()}
+                >
+                    Upload Text
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-primary btn-space"
+                    onClick={() => getXMLFileFromServer()}
+                >
+                    Get XML File
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-primary btn-space"
+                    onClick={() => setAddingAnchorToTrueStatus()}
+                >
+                    Add Anchor
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-primary delete-anchor-button btn-space"
+                    onClick={() => setDeletingAnchorToTrueStatus()}
+                >
+                    Delete Anchor
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-primary btn-space"
+                    onClick={() => handleSave()}
+                >
+                    Save
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-primary btn-space"
+                    onClick={() => handleCancel()}
+                >
+                    Cancel
+                </button>
+            </div>
             <div className="input-group">
                 <input
                     type="file"

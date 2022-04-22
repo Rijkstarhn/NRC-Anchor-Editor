@@ -2,12 +2,12 @@ import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react'
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { Marker, WaveForm, WaveSurfer } from "wavesurfer-react";
-import "./styles.css";
 import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions.min";
 import TimelinePlugin from "wavesurfer.js/dist/plugin/wavesurfer.timeline.min";
 import MarkersPlugin from "wavesurfer.js/src/plugin/markers";
 import FileSaver from 'file-saver';
 import { UPDATE_CURRENT_TIME } from "../OperationArea/actions";
+import OperationArea from "../OperationArea";
 
 const Buttons = styled.div`
   display: inline-block;
@@ -292,7 +292,7 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
 
 
     return (
-        <div>
+        <div className="audio-area-style">
             {/*<div className="progress">*/}
             {/*    <div className="progress-bar progress-bar-striped progress-bar-animated"*/}
             {/*         role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"*/}
@@ -325,15 +325,19 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
                     </WaveSurfer>
                     : console.log("no audio file yet")}
 
-                <div>
+                <div className = "audio-control-area">
                     {/*<Button onClick={getReady}>Get current time</Button>*/}
                     {/*<Button onClick={addMarker}>Add Marker</Button>*/}
-                    <Button className="btn btn-primary" onClick={play}>Play / Pause</Button>
+                    <Button className="btn btn-primary btn-space" onClick={play}>Play / Pause</Button>
+                    <Button className="btn btn-primary btn-space">2X Slower</Button>
+                    <Button className="btn btn-primary btn-space">Normal Speed</Button>
+                </div>
                     {/*<Button onClick={removeLastMarker}>Remove last marker</Button>*/}
                     {/*<Button onClick={shuffleLastMarker}>Shuffle last marker</Button>*/}
                     {/*<Button onClick={toggleTimeline}>Toggle timeline</Button>*/}
                     {/*<Button onClick={testDelete}>TEST</Button>*/}
-                    <div className="input-group">
+                <OperationArea/>
+                    <div className="input-group audio-upload">
                         <input
                             type="file"
                             className="form-control"
@@ -358,7 +362,6 @@ function AudioArea({ originalTime, updateCurrentTime, anchors }) {
                     {/*<div>*/}
                     {/*    <Button onClick={handleSubmission} >Upload Audio</Button>*/}
                     {/*</div>*/}
-                </div>
             </div>
         </div>
     );
