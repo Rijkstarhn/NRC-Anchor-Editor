@@ -208,7 +208,7 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
     }, [currentTime])
     //end by alice
 
-    //where we add new markers and delete markers 
+    //where we add new markers and delete markers
     useEffect(() => {
         console.log("AUDIO useEffect called!");
         console.log("delete signal is: ", deleteSignal);
@@ -254,7 +254,7 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
         }
 
     }, [existingMarkers.length, anchors, deleteSignal, addSignal]);
-    //end generating markers 
+    //end generating markers
 
 
     const removeLastMarker = useCallback(() => {
@@ -376,10 +376,10 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
                     {/*<Button onClick={shuffleLastMarker}>Shuffle last marker</Button>*/}
                     {/*<Button onClick={toggleTimeline}>Toggle timeline</Button>*/}
 
-                  
-                    <div className="input-group">
+
+                    {/*<div className="input-group">*/}
                     {/*<Button onClick={testDelete}>TEST</Button>*/}
-                <OperationArea/>
+                    <OperationArea/>
                     <div className="input-group audio-upload">
                         <input
                             type="file"

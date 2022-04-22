@@ -60,13 +60,13 @@ export const setDeletingAnchorToTrue = (dispatch) => dispatch({ type: DELETE_ANC
 
 export const updateCurrentAnchorLocation = (dispatch, currentLocation) => dispatch({ type: UPDATE_CURRENT_LOCATION, currentLocation: currentLocation })
 
-export const hitCancelButton = (dispatch) => dispatch({ type: HIT_CANCEL_BUTTON })
+// export const hitCancelButton = (dispatch) => dispatch({ type: HIT_CANCEL_BUTTON })
 
 export const setDeleteSignal = (dispatch) => dispatch({ type: SET_DELETE_SIGNAL })
 
 export const setAddSignal = (dispatch) => dispatch({ type: SET_ADD_SIGNAL })
 
-export const updateCurrentAnchorTime = (dispatch, currentTime) => dispatch({ type: UPDATE_CURRENT_TIME, currentTime: currentTime })
+// export const updateCurrentAnchorTime = (dispatch, currentTime) => dispatch({ type: UPDATE_CURRENT_TIME, currentTime: currentTime })
 
 export const updateCurrentAnchorTime = (dispatch, currentTime) => dispatch({type: UPDATE_CURRENT_TIME, currentTime: currentTime})
 
