@@ -146,24 +146,20 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
 
     //generating exisiting and new markers
     //by alice
-    const existingMarkers = anchors.map((anchor) => {
-        //console.log("anchor", anchor);
-        return {
-            time: parseFloat(anchor.timestamp.slice(0, -1)),
-            // label: anchor.timestamp,
-            color: "red",
-            position: "top",
-            // id: anchor.location,
-        }
-    })
+    // const existingMarkers = anchors.map((anchor) => {
+    //     //console.log("anchor", anchor);
+    //     return {
+    //         time: parseFloat(anchor.timestamp.slice(0, -1)),
+    //         // label: anchor.timestamp,
+    //         color: "red",
+    //         position: "top",
+    //         // id: anchor.location,
+    //     }
+    // })
 
-    const [markers, setMarkers] = useState([...existingMarkers]);
+    // const [markers, setMarkers] = useState([...existingMarkers]);
+    const [markers, setMarkers] = useState([]);
 
-    const [deletingModeTrue, setDeletingModeTrue] = useState(isDeletingAnchor && (targetLocation > -1));
-
-    useEffect(() => {
-        setDeletingModeTrue(isDeletingAnchor && (targetLocation > -1));
-    }, [isDeletingAnchor, targetLocation]);
 
     //temporarily we do not use this function
     const addMarker = useCallback(() => {
@@ -192,12 +188,6 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
 
     //by alice
     const [currentTime, setCurrentTime] = useState(originalTime);
-    const [event, setEvent] = useState(false);
-
-    const getReady = () => {
-        event === false ? setEvent(true) : setEvent(false);
-        // setEvent(true);
-    }
 
     useEffect(() => {
         if (wavesurferRef.current) {
@@ -209,52 +199,111 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
     //end by alice
 
     //where we add new markers and delete markers 
+    // useEffect(() => {
+    //     console.log("AUDIO useEffect called!");
+    //     console.log("delete signal is: ", deleteSignal);
+    //     console.log("addSignal is: ", addSignal);
+
+    //     if (!wavesurferRef.current) {
+    //         console.log("🐶 no wavesurfer", existingMarkers);
+    //         setMarkers([...existingMarkers]);
+    //         return;
+    //     }
+
+    //     if (deleteSignal) {
+    //         console.log("🐱AUDIO isDeletingAnchor is true!");
+    //         const targetNumber = parseInt(targetLocation);
+    //         const newMarkers = markers.filter((marker) => marker.time !== parseFloat(originalTime.slice(0, -1)));
+    //         console.log("originalTime: ", originalTime);
+
+    //         setMarkers([
+    //             ...newMarkers,
+    //         ]);
+    //         setDeleteSignal(false);
+    //         console.log("🐱AUDIO newMarkers: ", newMarkers);
+    //         console.log("🐱AUDIO existing markers: ", existingMarkers);
+    //         return;
+    //     }
+
+    //     if (addSignal) {
+    //         console.log("AUDIO isAddingAnchor is true!");
+    //         const currentTime = wavesurferRef.current.getCurrentTime()
+    //         setMarkers([
+    //             ...existingMarkers,
+    //             {
+    //                 // label: `@${currentTime.toFixed(1)}s`,
+    //                 time: parseFloat(currentTime.toFixed(1)),
+    //                 color: "red",
+    //                 position: "top",
+    //                 // id: targetLocation,
+    //                 //draggable: true
+    //             }
+    //         ]);
+    //         console.log("SETTING markers are: ", markers);
+    //         setAddSignal(false);
+    //     }
+
+    // }, [existingMarkers.length, anchors, deleteSignal, addSignal]);
+    //end generating markers 
+
+    //test
     useEffect(() => {
         console.log("AUDIO useEffect called!");
-        console.log("delete signal is: ", deleteSignal);
-        console.log("addSignal is: ", addSignal);
+        // console.log("delete signal is: ", deleteSignal);
+        // console.log("addSignal is: ", addSignal);
 
-        if (!wavesurferRef.current) {
-            console.log("🐶 no wavesurfer", existingMarkers);
-            setMarkers([...existingMarkers]);
-            return;
-        }
+        // if (!wavesurferRef.current) {
+        //     console.log("🐶 no wavesurfer", existingMarkers);
+        //     setMarkers([...existingMarkers]);
+        //     return;
+        // }
+        setMarkers(anchors.map((anchor) => {
+            //console.log("anchor", anchor);
+            return {
+                time: parseFloat(anchor.timestamp.slice(0, -1)),
+                // label: anchor.timestamp,
+                color: "red",
+                position: "top",
+                // id: anchor.location,
+            }
+        }))
 
-        if (deleteSignal) {
-            console.log("🐱AUDIO isDeletingAnchor is true!");
-            const targetNumber = parseInt(targetLocation);
-            const newMarkers = markers.filter((marker) => marker.time !== parseFloat(originalTime.slice(0, -1)));
-            console.log("originalTime: ", originalTime);
 
-            setMarkers([
-                ...newMarkers,
-            ]);
-            setDeleteSignal(false);
-            console.log("🐱AUDIO newMarkers: ", newMarkers);
-            console.log("🐱AUDIO existing marjers: ", existingMarkers);
-            return;
-        }
+        // if (deleteSignal) {
+        //     console.log("🐱AUDIO isDeletingAnchor is true!");
+        //     const targetNumber = parseInt(targetLocation);
+        //     const newMarkers = markers.filter((marker) => marker.time !== parseFloat(originalTime.slice(0, -1)));
+        //     console.log("originalTime: ", originalTime);
 
-        if (addSignal) {
-            console.log("AUDIO isAddingAnchor is true!");
-            const currentTime = wavesurferRef.current.getCurrentTime()
-            setMarkers([
-                ...existingMarkers,
-                {
-                    // label: `@${currentTime.toFixed(1)}s`,
-                    time: parseFloat(currentTime.toFixed(1)),
-                    color: "red",
-                    position: "top",
-                    // id: targetLocation,
-                    //draggable: true
-                }
-            ]);
-            console.log("SETTING markers are: ", markers);
-            setAddSignal(false);
-        }
+        //     setMarkers([
+        //         ...newMarkers,
+        //     ]);
+        //     setDeleteSignal(false);
+        //     console.log("🐱AUDIO newMarkers: ", newMarkers);
+        //     console.log("🐱AUDIO existing markers: ", existingMarkers);
+        //     return;
+        // }
 
-    }, [existingMarkers.length, anchors, deleteSignal, addSignal]);
-    //end generating markers 
+        // if (addSignal) {
+        // console.log("AUDIO isAddingAnchor is true!");
+        // const currentTime = wavesurferRef.current.getCurrentTime()
+        // setMarkers([
+        //     ...existingMarkers,
+        //     {
+        //         // label: `@${currentTime.toFixed(1)}s`,
+        //         time: parseFloat(currentTime.toFixed(1)),
+        //         color: "red",
+        //         position: "top",
+        //         // id: targetLocation,
+        //         //draggable: true
+        //     }
+        // ]);
+        // console.log("SETTING markers are: ", markers);
+        // setAddSignal(false);
+        //}
+
+    }, [anchors]);
+    //deleteSignal, addSignal
 
 
     const removeLastMarker = useCallback(() => {
@@ -304,29 +353,12 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
     }, [wavesurferRef]);
 
 
-    //testing delete
-    const [m, setM] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-    const [f, setF] = useState(false);
 
-    const testDelete = () => {
-        console.log("test delete");
-        setF(!f);
-        console.log("f is: ", f);
-        console.log("now markers are: ", markers);
-        console.log("now existing are : ", existingMarkers);
-        console.log("now target location is: ", targetLocation);
+    const test = () => {
+        console.log("🎈");
+        console.log("markers: ", markers);
+        console.log("anchors: ", anchors);
     }
-
-    useEffect(() => {
-        setM(m.filter(i => i !== 1));
-        // console.log("setting");
-        // console.log("m is: ", m);
-    }, [f])
-    //end testing delete
-
-
-
-
 
     return (
         <div className="audio-area-style">
@@ -342,7 +374,7 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
                             {/*<WaveForm id="waveform" cursorColor="#fff">*/}
                             {markers.map((marker, index) => {
                                 return (
-                                    <span className={marker.timestamp} key={index}>
+                                    <span className={marker.timestamp} key={index + 1}>
                                         <Marker
                                             key={index}
                                             {...marker}
@@ -363,49 +395,50 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
                         </WaveForm>
                         <div id="timeline" />
                     </WaveSurfer>
-                    : console.log("no audio file yet")}
+                    : console.log("no audio file yet")
+                }
 
-                <div className = "audio-control-area">
+                <div className="audio-control-area">
                     {/*<Button onClick={getReady}>Get current time</Button>*/}
                     {/*<Button onClick={addMarker}>Add Marker</Button>*/}
                     <Button className="btn btn-primary btn-space" onClick={play}>Play / Pause</Button>
                     <Button className="btn btn-primary btn-space">2X Slower</Button>
                     <Button className="btn btn-primary btn-space">Normal Speed</Button>
+                    <Button className="btn btn-primary btn-space" onClick={test}>test</Button>
                 </div>
-                    {/*<Button onClick={removeLastMarker}>Remove last marker</Button>*/}
-                    {/*<Button onClick={shuffleLastMarker}>Shuffle last marker</Button>*/}
-                    {/*<Button onClick={toggleTimeline}>Toggle timeline</Button>*/}
+                {/*<Button onClick={removeLastMarker}>Remove last marker</Button>*/}
+                {/*<Button onClick={shuffleLastMarker}>Shuffle last marker</Button>*/}
+                {/*<Button onClick={toggleTimeline}>Toggle timeline</Button>*/}
 
-                  
-                    <div className="input-group">
-                    {/*<Button onClick={testDelete}>TEST</Button>*/}
-                <OperationArea/>
-                    <div className="input-group audio-upload">
-                        <input
-                            type="file"
-                            className="form-control"
-                            id="audioInput"
-                            aria-describedby="audioInput"
-                            aria-label="Upload"
-                            ref={inputFile}
-                            accept='audio/*'
-                            onChange={changeHandler}
-                        />
-                        <button
-                            className="btn btn-outline-secondary upload-file-button"
-                            type="button"
-                            id="audioInput"
-                            onClick={() => handleSubmission()}
-                        >
-                            Upload Audio
-                        </button>
-                    </div>
-                    {/*<input type="file" name="file" ref={inputFile} style={{ display: 'none' }}*/}
-                    {/*    accept='audio/*' onChange={changeHandler} />*/}
-                    {/*<div>*/}
-                    {/*    <Button onClick={handleSubmission} >Upload Audio</Button>*/}
-                    {/*</div>*/}
+
+                <OperationArea />
+                <div className="input-group audio-upload">
+                    <input
+                        type="file"
+                        className="form-control"
+                        id="audioInput"
+                        aria-describedby="audioInput"
+                        aria-label="Upload"
+                        ref={inputFile}
+                        accept='audio/*'
+                        onChange={changeHandler}
+                    />
+                    <button
+                        className="btn btn-outline-secondary upload-file-button"
+                        type="button"
+                        id="audioInput"
+                        onClick={() => handleSubmission()}
+                    >
+                        Upload Audio
+                    </button>
+                </div>
+                {/*<input type="file" name="file" ref={inputFile} style={{ display: 'none' }}*/}
+                {/*    accept='audio/*' onChange={changeHandler} />*/}
+                {/*<div>*/}
+                {/*    <Button onClick={handleSubmission} >Upload Audio</Button>*/}
+                {/*</div>*/}
             </div>
+
         </div>
     );
 }
