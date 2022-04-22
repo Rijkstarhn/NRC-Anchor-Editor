@@ -152,7 +152,7 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
             // label: anchor.timestamp,
             color: "red",
             position: "top",
-            id: anchor.location,
+            // id: anchor.location,
         }
     })
 
@@ -199,21 +199,11 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
     }
 
     useEffect(() => {
-        // if (deleteSignal) {
-        //     const targetTime = markers.filter((marker) => marker.id === targetLocation).map((marker) => marker.time)[0];
-        //     //sending this info to textarea
-        //     setCurrentTime(`${targetTime}s`);
-        //     updateCurrentTime(targetTime);
-        //     console.log("🐱deleting updating currentTime is: ", targetTime);
-        //     return;
-        // }
-
         if (wavesurferRef.current) {
             const tmp = wavesurferRef.current.getCurrentTime();
             setCurrentTime(`${tmp.toFixed(1)}s`);
             updateCurrentTime(currentTime);
         }
-        // console.log("ALICE currentTime is  : ", currentTime);
     }, [currentTime])
     //end by alice
 
@@ -224,35 +214,23 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
         console.log("addSignal is: ", addSignal);
 
         if (!wavesurferRef.current) {
+            console.log("🐶 no wavesurfer", existingMarkers);
             setMarkers([...existingMarkers]);
             return;
         }
 
         if (deleteSignal) {
-            console.log("AUDIO isDeletingAnchor is true!");
+            console.log("🐱AUDIO isDeletingAnchor is true!");
             const targetNumber = parseInt(targetLocation);
-            //const newM = markers.filter((marker) => marker.time !== parseFloat(originalTime.slice(0, -1)));
-
-            //const targetTime = markers.filter((marker) => marker.id === targetLocation).map((marker) => marker.time)[0];
-
-            const newMarkers = markers.filter((marker) => marker.id !== targetLocation);
-
-            //sending this info to textarea
-            // setCurrentTime(`${targetTime}s`);
-            // updateCurrentTime(targetTime);
-            // console.log("🐱deleting updating currentTime is: ", targetTime);
-
-            // const targetMarker = document.getElementsByClassName(originalTime)[0];
-            // console.log(targetMarker);
+            const newMarkers = markers.filter((marker) => marker.time !== parseFloat(originalTime.slice(0, -1)));
             console.log("originalTime: ", originalTime);
-            // console.log("markers after deleting: ", newM);
-            console.log("target is: ", targetLocation);
-
 
             setMarkers([
                 ...newMarkers,
             ]);
             setDeleteSignal(false);
+            console.log("🐱AUDIO newMarkers: ", newMarkers);
+            console.log("🐱AUDIO existing marjers: ", existingMarkers);
             return;
         }
 
@@ -266,7 +244,7 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
                     time: parseFloat(currentTime.toFixed(1)),
                     color: "red",
                     position: "top",
-                    id: targetLocation,
+                    // id: targetLocation,
                     //draggable: true
                 }
             ]);

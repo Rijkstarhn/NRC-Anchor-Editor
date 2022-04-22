@@ -66,6 +66,9 @@ export const setDeleteSignal = (dispatch) => dispatch({ type: SET_DELETE_SIGNAL 
 
 export const setAddSignal = (dispatch) => dispatch({ type: SET_ADD_SIGNAL })
 
+export const updateCurrentAnchorTime = (dispatch, currentTime) => dispatch({ type: UPDATE_CURRENT_TIME, currentTime: currentTime })
+
+
 const actions = {
     loadText,
     uploadXML,
@@ -82,6 +85,7 @@ const actions = {
     setDeletingAnchorToFalse,
     setDeletingAnchorToTrue,
     updateCurrentAnchorLocation,
+    updateCurrentAnchorTime,
     hitCancelButton,
     setDeleteSignal,
     setAddSignal,

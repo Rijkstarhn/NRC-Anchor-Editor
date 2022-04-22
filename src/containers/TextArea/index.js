@@ -9,6 +9,7 @@ function TextArea({
     isDeletingAnchor,
     currentLocation,
     updateCurrentAnchorLocation,
+    updateCurrentAnchorTime,
     cancelButtonHits,
 }) {
     /* -------------------------------------------------------------------------- */
@@ -182,7 +183,10 @@ function TextArea({
             for (let spanElement of spanElements) {
                 spanElement.onclick = function () {
                     let thisLocation = this.classList[0].substring(9);
+                    let thisTime = this.classList[3].substring(10);
+                    console.log("this time ", thisTime);
                     updateCurrentAnchorLocation(thisLocation);
+                    updateCurrentAnchorTime(thisTime);
                     this.style.backgroundColor = 'green';
                 };
             }
@@ -257,6 +261,9 @@ const dtpm = (dispatch) => {
     return {
         updateCurrentAnchorLocation: (currentLocation) =>
             actions.updateCurrentAnchorLocation(dispatch, currentLocation),
+        updateCurrentAnchorTime: (currentTime) => {
+            actions.updateCurrentAnchorTime(dispatch, currentTime)
+        },
     };
 };
 
