@@ -1,5 +1,5 @@
 import react, { useEffect, useState } from "react";
-import actions, {hitCancelButton} from "./actions";
+import actions, { hitCancelButton, setDeleteSignal } from "./actions";
 import { connect } from "react-redux";
 
 function OperationArea({
@@ -22,6 +22,8 @@ function OperationArea({
     currentLocation,
     setAnchorLocationToDefault,
     hitCancelButton,
+    setDeleteSignal,
+    setAddSignal,
 }) {
     useEffect(() => {
         document
@@ -115,7 +117,7 @@ function OperationArea({
         setAddingAnchorToTrue();
     };
 
-    const setDeletingAnchorToTrueStatus= () => {
+    const setDeletingAnchorToTrueStatus = () => {
         setDeletingAnchorToTrue();
     };
 
@@ -129,6 +131,8 @@ function OperationArea({
             // set isAddingAnchor to false
             setAddingAnchorToFalse();
             setAnchorLocationToDefault();
+            setAddSignal();
+
         } else if (!isAddingAnchor && isDeletingAnchor) {
             console.log("delete called");
             console.log("currentTime", currentTime);
@@ -148,6 +152,7 @@ function OperationArea({
             // set isDeletingAnchor to false
             setDeletingAnchorToFalse();
             setAnchorLocationToDefault();
+            setDeleteSignal();
         } else if (!isAddingAnchor && !isDeletingAnchor) {
         } else {
         }
@@ -267,6 +272,8 @@ function OperationArea({
                     Upload File
                 </button>
             </div>
+            <p>Current TIime {currentTime}</p>
+            <p>Current Location {currentLocation}</p>
         </div>
     );
 }
@@ -305,6 +312,8 @@ const dtpm = (dispatch) => {
         setAnchorLocationToDefault: () =>
             actions.setAnchorLocationToDefault(dispatch),
         hitCancelButton: () => actions.hitCancelButton(dispatch),
+        setDeleteSignal: () => actions.setDeleteSignal(dispatch),
+        setAddSignal: () => actions.setAddSignal(dispatch),
     };
 };
 
