@@ -48,10 +48,6 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
 
     const plugins = useMemo(() => {
         return [
-            // {
-            //     plugin: RegionsPlugin,
-            //     options: { dragSelection: true }
-            // },
             timelineVis && {
                 plugin: TimelinePlugin,
                 options: {
@@ -165,29 +161,6 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
         setDeletingModeTrue(isDeletingAnchor && (targetLocation > -1));
     }, [isDeletingAnchor, targetLocation]);
 
-    //temporarily we do not use this function
-    const addMarker = useCallback(() => {
-        if (!wavesurferRef.current) {
-            return;
-        }
-        const r = generateNum(0, 255);
-        const g = generateNum(0, 255);
-        const b = generateNum(0, 255);
-        const currentTime = wavesurferRef.current.getCurrentTime()
-
-        setMarkers([
-            ...markers,
-            {
-                //label: `@${currentTime.toFixed(1)}s`,
-                time: currentTime,
-                color: `rgba(${r}, ${g}, ${b}, 0.5)`,
-                //draggable: true
-            }
-        ]);
-    }, [markers, wavesurferRef]);
-
-
-
 
 
     //by alice
@@ -259,34 +232,6 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
     //end generating markers 
 
 
-    const removeLastMarker = useCallback(() => {
-        let nextMarkers = [...markers];
-        nextMarkers.pop();
-        setMarkers(nextMarkers);
-    }, [markers]);
-
-    const shuffleLastMarker = useCallback(() => {
-        setMarkers((prev) => {
-            const next = [...prev];
-            let lastIndex = next.length - 1;
-
-            const minTimestampInSeconds = 0;
-            const maxTimestampInSeconds = wavesurferRef.current.getDuration();
-            const distance = generateNum(0, 10);
-            const [min] = generateTwoNumsWithDistance(
-                distance,
-                minTimestampInSeconds,
-                maxTimestampInSeconds
-            );
-
-            next[lastIndex] = {
-                ...next[lastIndex],
-                time: min
-            };
-
-            return next;
-        });
-    }, [markers]);
 
     const play = useCallback(() => {
         // switch the playing status
@@ -322,8 +267,6 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
 
     useEffect(() => {
         setM(m.filter(i => i !== 1));
-        // console.log("setting");
-        // console.log("m is: ", m);
     }, [f])
     //end testing delete
 
@@ -368,46 +311,46 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
                     </WaveSurfer>
                     : console.log("no audio file yet")}
 
-                <div className = "audio-control-area">
+                <div className="audio-control-area">
                     {/*<Button onClick={getReady}>Get current time</Button>*/}
                     {/*<Button onClick={addMarker}>Add Marker</Button>*/}
                     <Button className="btn btn-primary btn-space" onClick={play}>Play / Pause</Button>
                     <Button className="btn btn-primary btn-space">2X Slower</Button>
                     <Button className="btn btn-primary btn-space">Normal Speed</Button>
                 </div>
-                    {/*<Button onClick={removeLastMarker}>Remove last marker</Button>*/}
-                    {/*<Button onClick={shuffleLastMarker}>Shuffle last marker</Button>*/}
-                    {/*<Button onClick={toggleTimeline}>Toggle timeline</Button>*/}
+                {/*<Button onClick={removeLastMarker}>Remove last marker</Button>*/}
+                {/*<Button onClick={shuffleLastMarker}>Shuffle last marker</Button>*/}
+                {/*<Button onClick={toggleTimeline}>Toggle timeline</Button>*/}
 
-                  
-                    <div className="input-group">
-                    {/*<Button onClick={testDelete}>TEST</Button>*/}
-                <OperationArea/>
-                    <div className="input-group audio-upload">
-                        <input
-                            type="file"
-                            className="form-control"
-                            id="audioInput"
-                            aria-describedby="audioInput"
-                            aria-label="Upload"
-                            ref={inputFile}
-                            accept='audio/*'
-                            onChange={changeHandler}
-                        />
-                        <button
-                            className="btn btn-outline-secondary upload-file-button"
-                            type="button"
-                            id="audioInput"
-                            onClick={() => handleSubmission()}
-                        >
-                            Upload Audio
-                        </button>
-                    </div>
-                    {/*<input type="file" name="file" ref={inputFile} style={{ display: 'none' }}*/}
-                    {/*    accept='audio/*' onChange={changeHandler} />*/}
-                    {/*<div>*/}
-                    {/*    <Button onClick={handleSubmission} >Upload Audio</Button>*/}
-                    {/*</div>*/}
+
+                {/* <div className="input-group"> */}
+                {/*<Button onClick={testDelete}>TEST</Button>*/}
+                <OperationArea />
+                <div className="input-group audio-upload">
+                    <input
+                        type="file"
+                        className="form-control"
+                        id="audioInput"
+                        aria-describedby="audioInput"
+                        aria-label="Upload"
+                        ref={inputFile}
+                        accept='audio/*'
+                        onChange={changeHandler}
+                    />
+                    <button
+                        className="btn btn-outline-secondary upload-file-button"
+                        type="button"
+                        id="audioInput"
+                        onClick={() => handleSubmission()}
+                    >
+                        Upload Audio
+                    </button>
+                </div>
+                {/*<input type="file" name="file" ref={inputFile} style={{ display: 'none' }}*/}
+                {/*    accept='audio/*' onChange={changeHandler} />*/}
+                {/*<div>*/}
+                {/*    <Button onClick={handleSubmission} >Upload Audio</Button>*/}
+                {/*</div>*/}
             </div>
         </div>
     );

@@ -68,9 +68,7 @@ export const setAddSignal = (dispatch) => dispatch({ type: SET_ADD_SIGNAL })
 
 export const updateCurrentAnchorTime = (dispatch, currentTime) => dispatch({ type: UPDATE_CURRENT_TIME, currentTime: currentTime })
 
-export const updateCurrentAnchorTime = (dispatch, currentTime) => dispatch({type: UPDATE_CURRENT_TIME, currentTime: currentTime})
 
-export const hitCancelButton = (dispatch) => dispatch({type: HIT_CANCEL_BUTTON})
 
 const actions = {
     loadText,
