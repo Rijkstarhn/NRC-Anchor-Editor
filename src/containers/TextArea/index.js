@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import actions from "../OperationArea/actions";
+import usePrevious from "../../usePrevious";
 
 function TextArea({
     text,
@@ -130,14 +131,6 @@ function TextArea({
 
     const prevCurrentLocation = usePrevious(currentLocation);
 
-    function usePrevious(value) {
-        const ref = useRef();
-        useEffect(() => {
-            ref.current = value;
-        }, [value]);
-        return ref.current;
-    }
-
     // Change adding anchor color.
     useEffect(() => {
         if (isAddingAnchor) {
@@ -208,7 +201,12 @@ function TextArea({
                 `location-${prevCurrentLocation}`
             )[0];
             if (currentAnchor) {
-                currentAnchor.style.backgroundColor = null;
+                // if it's deleting anchor
+                if (currentAnchor.style.backgroundColor === 'green') {
+                    currentAnchor.style.backgroundColor = 'red';
+                } else if (currentAnchor.style.backgroundColor === 'red') { // if it's adding anchors
+                    currentAnchor.style.backgroundColor = null;
+                }
             }
         }
     }, [cancelButtonHits]);
@@ -256,7 +254,7 @@ const stpm = (state) => {
         isAddingAnchor: state.textareaReducer.isAddingAnchor,
         isDeletingAnchor: state.textareaReducer.isDeletingAnchor,
         currentLocation: state.textareaReducer.currentLocation,
-        cancelButtonHits: state.textareaReducer.cancelButtonHits,
+            cancelButtonHits: state.textareaReducer.cancelButtonHits,
     };
 };
 

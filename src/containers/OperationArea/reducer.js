@@ -9,8 +9,7 @@ import {
     SET_ANCHOR_LOCATION_DEFAULT,
     UPDATE_CURRENT_LOCATION,
     UPDATE_CURRENT_TIME,
-    SET_DELETE_SIGNAL,
-    SET_ADD_SIGNAL,
+    HIT_DELETE_SAVE,
 } from "./actions";
 
 const initialState = {
@@ -21,8 +20,7 @@ const initialState = {
     currentLocation: -1,
     currentTime: "-0.1s",
     cancelButtonHits: 0,
-    deleteSignal: false,
-    addSignal: false,
+    deleteConfirmHits: 0,
 };
 
 const textareaReducer = (state = initialState, action) => {
@@ -77,16 +75,11 @@ const textareaReducer = (state = initialState, action) => {
                 ...state,
                 cancelButtonHits: state.cancelButtonHits + 1,
             };
-        case SET_DELETE_SIGNAL:
+        case HIT_DELETE_SAVE:
             return {
                 ...state,
-                deleteSignal: state.deleteSignal ? false : true,
-            }
-        case SET_ADD_SIGNAL:
-            return {
-                ...state,
-                addSignal: state.addSignal ? false : true,
-            }
+                deleteConfirmHits: state.deleteConfirmHits + 1,
+            };
         default:
             return state;
     }
