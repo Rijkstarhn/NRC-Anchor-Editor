@@ -17,6 +17,8 @@ code {
   margin-top: 10px;
   width: 100vw;
   min-height: 300px;
+  max-height: 420px;
+  overflow: scroll;
 }
 
 .text-style {
