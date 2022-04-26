@@ -154,8 +154,20 @@ const AudioArea = (
         setIsPlaying(!isPlaying);
     }
 
-    const speedUpPlayback = () => {
+    const speedUpPlayback1 = () => {
+        waveSurfer.setPlaybackRate(0.5);
+    }
+
+    const speedUpPlayback2 = () => {
+        waveSurfer.setPlaybackRate(0.7);
+    }
+
+    const speedUpPlayback3 = () => {
         waveSurfer.setPlaybackRate(0.8);
+    }
+
+    const speedUpPlayback4 = () => {
+        waveSurfer.setPlaybackRate(0.9);
     }
 
     const normalPlayback = () => {
@@ -176,15 +188,33 @@ const AudioArea = (
                 </button>
                 <button
                     className="btn btn-primary btn-space"
-                    onClick={() => speedUpPlayback()}
-                >
-                    0.5X Speed
-                </button>
-                <button
-                    className="btn btn-primary btn-space"
                     onClick={() => normalPlayback()}
                 >
                     Normal Speed
+                </button>
+                <button
+                    className="btn btn-primary btn-space"
+                    onClick={() => speedUpPlayback1()}
+                >
+                    0.5X
+                </button>
+                <button
+                    className="btn btn-primary btn-space"
+                    onClick={() => speedUpPlayback2()}
+                >
+                    0.7X
+                </button>
+                <button
+                    className="btn btn-primary btn-space"
+                    onClick={() => speedUpPlayback3()}
+                >
+                    0.8X
+                </button>
+                <button
+                    className="btn btn-primary btn-space"
+                    onClick={() => speedUpPlayback4()}
+                >
+                    0.9X
                 </button>
             </div>
             <OperationArea />

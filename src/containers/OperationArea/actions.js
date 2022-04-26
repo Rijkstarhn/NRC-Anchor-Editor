@@ -39,6 +39,7 @@ export const postAnchor = (dispatch, postAnchor) => services.postAnchor(postAnch
         if (response) {
             dispatch({ type: GET_ANCHORS, anchors: response })
         } else {
+            document.getElementsByClassName(`location-${postAnchor.location}`)[0].style.backgroundColor = null;
             alert("anchor is illegal because time and location doesn't match");
         }
     }
