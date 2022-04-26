@@ -154,6 +154,14 @@ const AudioArea = (
         setIsPlaying(!isPlaying);
     }
 
+    const speedUpPlayback = () => {
+        waveSurfer.setPlaybackRate(0.8);
+    }
+
+    const normalPlayback = () => {
+        waveSurfer.setPlaybackRate(1);
+    }
+
     return (
         <div className="AudioArea">
             <div id="waveform">
@@ -164,6 +172,18 @@ const AudioArea = (
                 onClick={() => togglePlayPause()}
             >
                 Play/Pause
+            </button>
+            <button
+                className="btn btn-primary btn-space"
+                onClick={() => speedUpPlayback()}
+            >
+                0.5X Speed
+            </button>
+            <button
+                className="btn btn-primary btn-space"
+                onClick={() => normalPlayback()}
+            >
+                Normal Speed
             </button>
             <OperationArea/>
             <div className="input-group">
