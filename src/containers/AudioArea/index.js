@@ -77,7 +77,10 @@ const AudioArea = (
             for (let i = 0; i < anchors.length; i++) {
                 let timestamp = parseFloat(anchors[i].timestamp.slice(0, -1));
                 let location = anchors[i].location;
-                waveSurfer.addMarker({time: timestamp,  color: "red", position: "top"});
+                // to avoid duplicate markers with same time stamp
+                if (document.getElementsByClassName(`marker-timestamp-${timestamp}`).length === 0) {
+                    waveSurfer.addMarker({time: timestamp,  color: "red", position: "top"});
+                }
                 let addedMarkers = document.querySelectorAll('marker');
                 for (let i = 0; i < addedMarkers.length; i++) {
                     if (!addedMarkers[i].className.includes('timestamp')) {
@@ -92,11 +95,16 @@ const AudioArea = (
     const prevCurrentLocation = usePrevious(currentLocation);
 
     useEffect(() => {
-        // console.log("currentLocation", currentLocation);
-        // console.log("isDeletingAnchor", isDeletingAnchor);
         if (isDeletingAnchor) {
+            // let currentSelectedMarker = document.getElementsByClassName(`marker-location-${currentLocation}`)[0];
+            // if (currentSelectedMarker) {
+            //     currentSelectedMarker.style.fill = 'green';
+            // }
+            // let previousSelectedMarker = document.getElementsByClassName(`marker-location-${prevCurrentLocation}`)[0];
+            // if (previousSelectedMarker) {
+            //     previousSelectedMarker.style.fill = 'red';
+            // }
             let markers = document.querySelectorAll('marker');
-            // console.log(markers);
             for (let i = 0; i < markers.length; i++) {
                 if (markers[i].classList.contains(`marker-location-${currentLocation}`)) {
                     // console.log("found", markers[i]);
@@ -114,11 +122,8 @@ const AudioArea = (
 
     useEffect(() => {
         let markers = document.querySelectorAll('marker');
-        // console.log("prevCurrentTime", prevCurrentTime);
         for (let i = 0; i < markers.length; i++) {
-            // console.log("marker", markers[i].className);
             if (markers[i].className.includes(`marker-timestamp-${parseFloat(prevCurrentTime.slice(0, -1))}`)) {
-                // console.log("found", markers[i]);
                 markers[i].remove();
             }
         }
@@ -126,12 +131,20 @@ const AudioArea = (
 
     useEffect(() => {
         if (!isAddingAnchor && !isDeletingAnchor && cancelButtonHits > 0) {
+            console.log("prevCurrentTime", prevCurrentTime);
             // Cancel previous currentLocation span.
             let currentAnchor = document.getElementsByClassName(
                 `marker-timestamp-${parseFloat(prevCurrentTime.slice(0, -1))}`
             )[0];
             if (currentAnchor) {
-                currentAnchor.querySelector('polygon').style.fill = 'red';
+                // if it's deleting anchor
+                let currentPolygon = currentAnchor.querySelector('polygon')
+                console.log("currentAnchor", currentPolygon.style.fill);
+                if (currentPolygon.style.fill === 'green') {
+                    console.log("true");
+                    currentPolygon.removeAttribute('style');
+                    currentPolygon.style.fill = 'red';
+                }
             }
         }
     }, [cancelButtonHits]);
@@ -146,7 +159,6 @@ const AudioArea = (
             <div id="waveform">
                 <div id="wave-timeline"></div>
             </div>
-            <input type="file" id="fileinput" />
             <button
                 className="btn btn-primary btn-space"
                 onClick={() => togglePlayPause()}
@@ -154,6 +166,22 @@ const AudioArea = (
                 Play/Pause
             </button>
             <OperationArea/>
+            <div className="input-group">
+                <input
+                    type="file"
+                    className="form-control"
+                    id="fileinput"
+                    aria-describedby="inputGroupFileAddon04"
+                    aria-label="Upload"
+                />
+                <button
+                    className="btn btn-outline-secondary upload-file-button"
+                    type="button"
+                    id="inputGroupFileAddon04"
+                >
+                    Upload Audio
+                </button>
+            </div>
         </div>
     )
 }
