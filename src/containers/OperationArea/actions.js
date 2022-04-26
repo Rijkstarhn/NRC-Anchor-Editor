@@ -46,17 +46,17 @@ export const postAnchor = (dispatch, postAnchor) => services.postAnchor(postAnch
 
 export const getXMLFile = (dispatch) => services.getXMLFile()
 
-export const setAddingAnchorToTrue = (dispatch) => dispatch({type: ADD_ANCHOR_TRUE})
+export const setAddingAnchorToTrue = (dispatch) => dispatch({ type: ADD_ANCHOR_TRUE })
 
-export const setAddingAnchorToFalse = (dispatch) => dispatch({type: ADD_ANCHOR_FALSE})
+export const setAddingAnchorToFalse = (dispatch) => dispatch({ type: ADD_ANCHOR_FALSE })
 
-export const setAnchorLocationToDefault = (dispatch) => dispatch({type: SET_ANCHOR_LOCATION_DEFAULT})
+export const setAnchorLocationToDefault = (dispatch) => dispatch({ type: SET_ANCHOR_LOCATION_DEFAULT })
 
-export const setDeletingAnchorToFalse = (dispatch) => dispatch({type: DELETE_ANCHOR_FALSE})
+export const setDeletingAnchorToFalse = (dispatch) => dispatch({ type: DELETE_ANCHOR_FALSE })
 
-export const setDeletingAnchorToTrue = (dispatch) => dispatch({type: DELETE_ANCHOR_TRUE})
+export const setDeletingAnchorToTrue = (dispatch) => dispatch({ type: DELETE_ANCHOR_TRUE })
 
-export const updateCurrentAnchorLocation = (dispatch, currentLocation) => dispatch({type: UPDATE_CURRENT_LOCATION, currentLocation: currentLocation})
+export const updateCurrentAnchorLocation = (dispatch, currentLocation) => dispatch({ type: UPDATE_CURRENT_LOCATION, currentLocation: currentLocation })
 
 export const updateCurrentAnchorTime = (dispatch, currentTime) => dispatch({type: UPDATE_CURRENT_TIME, currentTime: currentTime})
 

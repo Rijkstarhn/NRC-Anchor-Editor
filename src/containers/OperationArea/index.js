@@ -147,7 +147,7 @@ function OperationArea({
         setAddingAnchorToTrue();
     };
 
-    const setDeletingAnchorToTrueStatus= () => {
+    const setDeletingAnchorToTrueStatus = () => {
         setDeletingAnchorToTrue();
     };
 
