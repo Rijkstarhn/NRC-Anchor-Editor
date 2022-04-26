@@ -1,5 +1,5 @@
 import react, { useEffect, useState } from "react";
-import actions, {hitCancelButton} from "./actions";
+import actions, {deleteConfirm, hitCancelButton} from "./actions";
 import { connect } from "react-redux";
 
 function OperationArea({
@@ -22,6 +22,7 @@ function OperationArea({
     currentLocation,
     setAnchorLocationToDefault,
     hitCancelButton,
+    deleteConfirm,
 }) {
 
     const [xmlFile, setXMLFile] = useState({});
@@ -165,7 +166,6 @@ function OperationArea({
             console.log("currentTime", currentTime);
             console.log("currentLocation", currentLocation);
             // delete anchor
-            // location-342 anchor-holder anchor timestamp--0.1s
             let toBeDeleteAnchor = document.getElementsByClassName(`location-${currentLocation} anchor-holder anchor timestamp-${currentTime}`)[0]
             console.log("toBeDeleteAnchor", toBeDeleteAnchor);
             toBeDeleteAnchor.classList.remove(`anchor`);
@@ -179,6 +179,7 @@ function OperationArea({
             // set isDeletingAnchor to false
             setDeletingAnchorToFalse();
             setAnchorLocationToDefault();
+            deleteConfirm();
         } else if (!isAddingAnchor && !isDeletingAnchor) {
         } else {
         }
@@ -316,6 +317,7 @@ const dtpm = (dispatch) => {
         setAnchorLocationToDefault: () =>
             actions.setAnchorLocationToDefault(dispatch),
         hitCancelButton: () => actions.hitCancelButton(dispatch),
+        deleteConfirm: () => actions.deleteConfirm(dispatch),
     };
 };
 

@@ -10,6 +10,7 @@ export const SET_ANCHOR_LOCATION_DEFAULT = 'SET_ANCHOR_LOCATION_DEFAULT';
 export const DELETE_ANCHOR_FALSE = 'DELETE_ANCHOR_FALSE';
 export const DELETE_ANCHOR_TRUE = 'DELETE_ANCHOR_TRUE';
 export const HIT_CANCEL_BUTTON = 'HIT_CANCEL_BUTTON';
+export const HIT_DELETE_SAVE = 'HIT_DELETE_SAVE';
 
 export const loadText = (dispatch) => services.loadPlainText().then(
     plainText => dispatch({ type: LOAD_TEXT, text: plainText })
@@ -61,6 +62,8 @@ export const updateCurrentAnchorTime = (dispatch, currentTime) => dispatch({type
 
 export const hitCancelButton = (dispatch) => dispatch({type: HIT_CANCEL_BUTTON})
 
+export const deleteConfirm = (dispatch) => dispatch({type: HIT_DELETE_SAVE})
+
 const actions = {
     loadText,
     uploadXML,
@@ -79,6 +82,7 @@ const actions = {
     updateCurrentAnchorLocation,
     updateCurrentAnchorTime,
     hitCancelButton,
+    deleteConfirm,
 }
 
 export default actions;

@@ -9,6 +9,7 @@ import {
     SET_ANCHOR_LOCATION_DEFAULT,
     UPDATE_CURRENT_LOCATION,
     UPDATE_CURRENT_TIME,
+    HIT_DELETE_SAVE,
 } from "./actions";
 
 const initialState = {
@@ -19,6 +20,7 @@ const initialState = {
     currentLocation: -1,
     currentTime: "-0.1s",
     cancelButtonHits: 0,
+    deleteConfirmHits: 0,
 };
 
 const textareaReducer = (state = initialState, action) => {
@@ -72,6 +74,11 @@ const textareaReducer = (state = initialState, action) => {
             return {
                 ...state,
                 cancelButtonHits: state.cancelButtonHits + 1,
+            };
+        case HIT_DELETE_SAVE:
+            return {
+                ...state,
+                deleteConfirmHits: state.deleteConfirmHits + 1,
             };
         default:
             return state;
