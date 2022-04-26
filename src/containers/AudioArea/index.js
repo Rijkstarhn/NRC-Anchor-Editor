@@ -105,12 +105,15 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
 
     // use wavesurfer ref to pass it inside useCallback
     // so it will use always the most fresh version of markers list
+    const [markers, setMarkers] = useState([]);
+
     const wavesurferRef = useRef();
     const handleWSMount = useCallback(
         (waveSurfer) => {
-            if (waveSurfer.markers) {
-                waveSurfer.clearMarkers();
-            }
+            // if (waveSurfer.markers) {
+            //     waveSurfer.clearMarkers();
+            //     console.log("🌸waveSurfer.markers: ", waveSurfer.markers);
+            // }
 
             wavesurferRef.current = waveSurfer;
 
@@ -144,6 +147,33 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
     );
 
 
+
+    //test no on mount
+    // useEffect(() => {
+    //     if (wavesurferRef.current && url) {
+    //         // once the waveform is ready
+
+
+    //         wavesurferRef.current.on("ready", () => {
+    //             console.log("🌸WaveSurfer is ready");
+    //         });
+    //         wavesurferRef.current = waveSurfer;
+
+
+
+    //         // // if multiple regions are created, then remove all the previous regions so that only 1 is present at any given time
+    //         // wavesurferObj.on('region-updated', (region) => {
+    //         // 	const regions = region.wavesurfer.regions.list;
+    //         // 	const keys = Object.keys(regions);
+    //         // 	if (keys.length > 1) {
+    //         // 		regions[keys[0]].remove();
+    //         // 	}
+    //         // });
+    //     }
+    // }, [url, isFilePicked]);
+
+
+
     //generating exisiting and new markers
     //by alice
     // const existingMarkers = anchors.map((anchor) => {
@@ -158,7 +188,7 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
     // })
 
     // const [markers, setMarkers] = useState([...existingMarkers]);
-    const [markers, setMarkers] = useState([]);
+    //where markers were created before
 
 
     //temporarily we do not use this function
@@ -368,7 +398,7 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
             {/*         style={{width: '75%'}}></div>*/}
             {/*</div>*/}
             <div className="AudioArea">
-                {url ?
+                {url ? //onMount={handleWSMount}
                     <WaveSurfer plugins={plugins} onMount={handleWSMount}>
                         <WaveForm id="waveform" cursorColor="transparent">
                             {/*<WaveForm id="waveform" cursorColor="#fff">*/}
