@@ -1,7 +1,9 @@
 import OperationArea from "../OperationArea";
 import WaveSurfer from "wavesurfer.js";
 import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
+import MarkersPlugin from "wavesurfer.js/src/plugin/markers";
 import {useEffect, useState} from "react";
+
 
 const AudioArea = () => {
 
@@ -15,6 +17,9 @@ const AudioArea = () => {
             plugins: [
                 TimelinePlugin.create({
                     container: '#wave-timeline'
+                }),
+                MarkersPlugin.create({
+                    container: '#wave-marker'
                 })
             ]
         }))
@@ -22,7 +27,6 @@ const AudioArea = () => {
 
     useEffect(() => {
         if(waveSurfer) {
-            console.log("useEffect of ws called!");
             document.getElementById("fileinput").addEventListener('change', function(e){
                 var file = this.files[0];
 
@@ -53,6 +57,10 @@ const AudioArea = () => {
         setIsPlaying(!isPlaying);
     }
 
+    const createMarker = () => {
+        waveSurfer.addMarker({time: 10,  color: "#ff990a", position: "top"});
+    }
+
     return (
         <div className="AudioArea">
             <div id="waveform">
@@ -64,6 +72,12 @@ const AudioArea = () => {
                 onClick={() => togglePlayPause()}
             >
                 Play/Pause
+            </button>
+            <button
+                className="btn btn-primary btn-space"
+                onClick={() => createMarker()}
+            >
+                create marker
             </button>
             <OperationArea/>
         </div>
