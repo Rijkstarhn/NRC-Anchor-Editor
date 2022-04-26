@@ -213,7 +213,9 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
         console.log("delete signal is: ", deleteSignal);
         console.log("addSignal is: ", addSignal);
 
-        if (!wavesurferRef.current) {
+        // !wavesurferRef.current for uploading text first
+        //markers.length === 0 for uploading audio first
+        if (!wavesurferRef.current || markers.length === 0) {
             console.log("🐶 no wavesurfer", existingMarkers);
             setMarkers([...existingMarkers]);
             return;
@@ -313,6 +315,7 @@ function AudioArea({ originalTime, targetLocation, updateCurrentTime,
         console.log("f is: ", f);
         console.log("now markers are: ", markers);
         console.log("now existing are : ", existingMarkers);
+        console.log("now ex length is: ", existingMarkers.length);
         console.log("now target location is: ", targetLocation);
     }
 

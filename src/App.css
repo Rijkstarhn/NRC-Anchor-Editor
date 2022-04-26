@@ -32,7 +32,13 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+.input-group {
+  margin-top: 10px;
+  margin-left: 20px;
 }
