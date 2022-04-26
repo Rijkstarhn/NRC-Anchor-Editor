@@ -1,5 +1,5 @@
 import react, { useEffect, useState } from "react";
-import actions, { hitCancelButton, setDeleteSignal } from "./actions";
+import actions, {deleteConfirm, hitCancelButton} from "./actions";
 import { connect } from "react-redux";
 
 function OperationArea({
@@ -22,8 +22,7 @@ function OperationArea({
     currentLocation,
     setAnchorLocationToDefault,
     hitCancelButton,
-    setDeleteSignal,
-    setAddSignal,
+    deleteConfirm,
 }) {
 
     const [xmlFile, setXMLFile] = useState({});
@@ -162,14 +161,11 @@ function OperationArea({
             // set isAddingAnchor to false
             setAddingAnchorToFalse();
             setAnchorLocationToDefault();
-            setAddSignal();
-
         } else if (!isAddingAnchor && isDeletingAnchor) {
             console.log("delete called");
             console.log("currentTime", currentTime);
             console.log("currentLocation", currentLocation);
             // delete anchor
-            // location-342 anchor-holder anchor timestamp--0.1s
             let toBeDeleteAnchor = document.getElementsByClassName(`location-${currentLocation} anchor-holder anchor timestamp-${currentTime}`)[0]
             console.log("toBeDeleteAnchor", toBeDeleteAnchor);
             toBeDeleteAnchor.classList.remove(`anchor`);
@@ -183,7 +179,7 @@ function OperationArea({
             // set isDeletingAnchor to false
             setDeletingAnchorToFalse();
             setAnchorLocationToDefault();
-            setDeleteSignal();
+            deleteConfirm();
         } else if (!isAddingAnchor && !isDeletingAnchor) {
         } else {
         }
@@ -231,25 +227,45 @@ function OperationArea({
                 {/*</button>*/}
                 <button
                     type="button"
-                    className="btn btn-primary btn-space"
+                    className="btn btn-success btn-space"
                     onClick={() => getXMLFileFromServer()}
                 >
                     Download
                 </button>
-                <button
+                {isDeletingAnchor?
+                    <button
+                        type="button"
+                        className="btn btn-secondary btn-space"
+                        onClick={() => {}}
+                    >
+                        Add Anchor
+                    </button>
+                    :
+                    <button
+                        type="button"
+                        className="btn btn-primary btn-space"
+                        onClick={() => setAddingAnchorToTrueStatus()}
+                    >
+                        Add Anchor
+                    </button>
+                }
+                {isAddingAnchor ?
+                    <button
                     type="button"
-                    className="btn btn-primary btn-space"
-                    onClick={() => setAddingAnchorToTrueStatus()}
-                >
-                    Add Anchor
-                </button>
-                <button
+                    className="btn btn-secondary delete-anchor-button btn-space"
+                    onClick={() => {}}
+                    >
+                        Delete Anchor
+                    </button>
+                    :
+                    <button
                     type="button"
                     className="btn btn-primary delete-anchor-button btn-space"
                     onClick={() => setDeletingAnchorToTrueStatus()}
-                >
-                    Delete Anchor
-                </button>
+                    >
+                        Delete Anchor
+                    </button>
+                }
                 <button
                     type="button"
                     className="btn btn-primary btn-space"
@@ -282,8 +298,6 @@ function OperationArea({
                     Upload File
                 </button>
             </div>
-            <p>Current TIime {currentTime}</p>
-            <p>Current Location {currentLocation}</p>
         </div>
     );
 }
@@ -323,8 +337,7 @@ const dtpm = (dispatch) => {
         setAnchorLocationToDefault: () =>
             actions.setAnchorLocationToDefault(dispatch),
         hitCancelButton: () => actions.hitCancelButton(dispatch),
-        setDeleteSignal: () => actions.setDeleteSignal(dispatch),
-        setAddSignal: () => actions.setAddSignal(dispatch),
+        deleteConfirm: () => actions.deleteConfirm(dispatch),
     };
 };
 
