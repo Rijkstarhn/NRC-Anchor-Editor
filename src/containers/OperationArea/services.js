@@ -63,13 +63,6 @@ export async function postAnchor(postAnchor) {
         return res.json();
     }
     return null;
-    // return fetch(
-    //     `${SERVER_URL}/Anchors?destinationTimestamp=${postAnchor.timestamp}&destinationLocation=${postAnchor.location}`,
-    //     {
-    //         method: "POST",
-    //         headers: { Accept: "application/json" },
-    //     }
-    // ).then((res) => res.json());
 };
 
 
