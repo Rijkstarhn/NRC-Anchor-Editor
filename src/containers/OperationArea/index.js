@@ -227,25 +227,45 @@ function OperationArea({
                 {/*</button>*/}
                 <button
                     type="button"
-                    className="btn btn-primary btn-space"
+                    className="btn btn-success btn-space"
                     onClick={() => getXMLFileFromServer()}
                 >
                     Download
                 </button>
-                <button
+                {isDeletingAnchor?
+                    <button
+                        type="button"
+                        className="btn btn-secondary btn-space"
+                        onClick={() => {}}
+                    >
+                        Add Anchor
+                    </button>
+                    :
+                    <button
+                        type="button"
+                        className="btn btn-primary btn-space"
+                        onClick={() => setAddingAnchorToTrueStatus()}
+                    >
+                        Add Anchor
+                    </button>
+                }
+                {isAddingAnchor ?
+                    <button
                     type="button"
-                    className="btn btn-primary btn-space"
-                    onClick={() => setAddingAnchorToTrueStatus()}
-                >
-                    Add Anchor
-                </button>
-                <button
+                    className="btn btn-secondary delete-anchor-button btn-space"
+                    onClick={() => {}}
+                    >
+                        Delete Anchor
+                    </button>
+                    :
+                    <button
                     type="button"
                     className="btn btn-primary delete-anchor-button btn-space"
                     onClick={() => setDeletingAnchorToTrueStatus()}
-                >
-                    Delete Anchor
-                </button>
+                    >
+                        Delete Anchor
+                    </button>
+                }
                 <button
                     type="button"
                     className="btn btn-primary btn-space"

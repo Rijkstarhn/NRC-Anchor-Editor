@@ -27,7 +27,7 @@ const AudioArea = (
     useEffect(() => {
         setWaveSurfer(WaveSurfer.create({
             container: '#waveform',
-            waveColor: 'violet',
+            waveColor: '#0275d8',
             plugins: [
                 TimelinePlugin.create({
                     container: '#wave-timeline'
@@ -165,28 +165,30 @@ const AudioArea = (
     return (
         <div className="AudioArea">
             <div id="waveform">
-                <div id="wave-timeline"></div>
+                <div id="wave-timeline" className="audio-control-area"></div>
             </div>
-            <button
-                className="btn btn-primary btn-space"
-                onClick={() => togglePlayPause()}
-            >
-                Play/Pause
-            </button>
-            <button
-                className="btn btn-primary btn-space"
-                onClick={() => speedUpPlayback()}
-            >
-                0.5X Speed
-            </button>
-            <button
-                className="btn btn-primary btn-space"
-                onClick={() => normalPlayback()}
-            >
-                Normal Speed
-            </button>
+            <div className="audio-operation-area">
+                <button
+                    className="btn btn-primary btn-space"
+                    onClick={() => togglePlayPause()}
+                >
+                    Play/Pause
+                </button>
+                <button
+                    className="btn btn-primary btn-space"
+                    onClick={() => speedUpPlayback()}
+                >
+                    0.5X Speed
+                </button>
+                <button
+                    className="btn btn-primary btn-space"
+                    onClick={() => normalPlayback()}
+                >
+                    Normal Speed
+                </button>
+            </div>
             <OperationArea/>
-            <div className="input-group">
+            <div className="input-group audio-upload">
                 <input
                     type="file"
                     className="form-control"
