@@ -1,5 +1,5 @@
 import react, { useEffect, useState } from "react";
-import actions, {hitCancelButton} from "./actions";
+import actions, {deleteConfirm, hitCancelButton} from "./actions";
 import { connect } from "react-redux";
 
 function OperationArea({
@@ -22,23 +22,50 @@ function OperationArea({
     currentLocation,
     setAnchorLocationToDefault,
     hitCancelButton,
+    deleteConfirm,
 }) {
+
+    const [xmlFile, setXMLFile] = useState({});
+    const [xmlData, setXMLData] = useState("");
+
     useEffect(() => {
         document
             .getElementById("inputGroupFile04")
             .addEventListener("change", handleFileSelect, false);
     }, []);
 
-    const [xmlFile, setXMLFile] = useState({});
-    const [xmlData, setXMLData] = useState("");
-    const [originalAnchor, setOriginalAnchor] = useState({
-        timestamp: "3.6s",
-        location: 55,
-    });
-    const [destinationAnchor, setDestinationAnchor] = useState({
-        timestamp: "7.2s",
-        location: 72,
-    });
+    useEffect(() => {
+        if (xmlData.length > 0) {
+            uploadThenGetXMLData(xmlData);
+        }
+    }, [xmlData]);
+
+    async function uploadThenGetXMLData(xmlData) {
+        const responseOfUploadXML = await uploadXML(xmlData);
+        if (responseOfUploadXML.ok) {
+            const responseOfLoadText = await loadText();
+            // console.log("responseOfLoadText", responseOfLoadText);
+            if (responseOfLoadText !== null) {
+                // console.log("responseOfLoadText ok");
+                const responseOfGetAnchors = await getAnchors();
+                // console.log("responseOfGetAnchors", responseOfGetAnchors);
+                if (responseOfGetAnchors === null) {
+                    alert("get anchors failed!");
+                }
+            }
+        } else {
+            alert("upload file failed!");
+        }
+    }
+
+    // const [originalAnchor, setOriginalAnchor] = useState({
+    //     timestamp: "3.6s",
+    //     location: 55,
+    // });
+    // const [destinationAnchor, setDestinationAnchor] = useState({
+    //     timestamp: "7.2s",
+    //     location: 72,
+    // });
     // const [deletedAnchor, setDeletedAnchor] = useState({
     //     timestamp: "7.2s",
     //     location: 72,
@@ -48,13 +75,13 @@ function OperationArea({
     //     location: 88,
     // });
 
-    const [timestamp, setTimestamp] = useState("1.62s");
+    // const [timestamp, setTimestamp] = useState("1.62s");
+    //
+    // const [location, setLocation] = useState(88);
 
-    const [location, setLocation] = useState(88);
-
-    const loadTextFromServer = () => {
-        loadText();
-    };
+    // const loadTextFromServer = () => {
+    //     loadText();
+    // };
 
     const handleFileSelect = (event) => {
         setXMLFile(event.target.files);
@@ -65,21 +92,26 @@ function OperationArea({
         const reader = new FileReader();
         reader.readAsText(xmlFile[0]);
         reader.onload = () => {
-            console.log("reader", reader.result);
-            console.log("reader type", typeof reader.result);
             setXMLData(reader.result);
         };
     };
 
-    const uploadXMLFile = () => {
-        console.log("upload file");
-        uploadXML(xmlData);
-    };
+    // async function uploadXMLFile() {
+    //     console.log("upload file");
+    //     const res = await uploadXML(xmlData);
+    //     console.log('res', res);
+    //     if (res.ok) {
+    //         console.log("ok");
+    //         loadText();
+    //     } else {
+    //         alert("upload file failed!");
+    //     }
+    // };
 
-    const getAnchorsFromServer = () => {
-        console.log("get anchors");
-        getAnchors();
-    };
+    // const getAnchorsFromServer = () => {
+    //     console.log("get anchors");
+    //     getAnchors();
+    // };
 
     const updateAnchorToServer = (originalAnchor, destinationAnchor) => {
         console.log("update anchor");
@@ -115,6 +147,10 @@ function OperationArea({
         setAddingAnchorToTrue();
     };
 
+    const setDeletingAnchorToTrueStatus = () => {
+        setDeletingAnchorToTrue();
+    };
+
     const handleSave = () => {
         if (isAddingAnchor && !isDeletingAnchor) {
             // post anchor
@@ -126,6 +162,24 @@ function OperationArea({
             setAddingAnchorToFalse();
             setAnchorLocationToDefault();
         } else if (!isAddingAnchor && isDeletingAnchor) {
+            console.log("delete called");
+            console.log("currentTime", currentTime);
+            console.log("currentLocation", currentLocation);
+            // delete anchor
+            let toBeDeleteAnchor = document.getElementsByClassName(`location-${currentLocation} anchor-holder anchor timestamp-${currentTime}`)[0]
+            console.log("toBeDeleteAnchor", toBeDeleteAnchor);
+            toBeDeleteAnchor.classList.remove(`anchor`);
+            toBeDeleteAnchor.classList.remove(`timestamp-${currentTime}`);
+            toBeDeleteAnchor.removeAttribute("style");
+            console.log("toBeDeleteAnchor", toBeDeleteAnchor);
+            deleteAnchor({
+                timestamp: currentTime,
+                location: currentLocation,
+            });
+            // set isDeletingAnchor to false
+            setDeletingAnchorToFalse();
+            setAnchorLocationToDefault();
+            deleteConfirm();
         } else if (!isAddingAnchor && !isDeletingAnchor) {
         } else {
         }
@@ -140,7 +194,7 @@ function OperationArea({
     };
 
     return (
-        <div>
+        <div className="operation-area-style">
             {/*<h1>{currentLocation}</h1>*/}
             {/*<button*/}
             {/*    type="button"*/}
@@ -149,85 +203,84 @@ function OperationArea({
             {/*>*/}
             {/*    Post Anchors*/}
             {/*</button>*/}
-            {/*<button*/}
-            {/*    type="button"*/}
-            {/*    className="btn btn-primary delete-anchor-button"*/}
-            {/*    onClick={() => deleteAnchorToServer(deletedAnchor)}*/}
-            {/*>*/}
-            {/*    Delete Anchors*/}
-            {/*</button>*/}
-            <button
-                type="button"
-                className="btn btn-primary get-anchors-button"
-                onClick={() => getAnchorsFromServer()}
-            >
-                Get Anchors
-            </button>
-            <button
-                type="button"
-                className="btn btn-primary update-anchor-button"
-                onClick={() =>
-                    updateAnchorToServer(originalAnchor, destinationAnchor)
+            <div className="control-buttons-area">
+                {/*<button*/}
+                {/*    type="button"*/}
+                {/*    className="btn btn-primary get-anchors-button btn-space"*/}
+                {/*    onClick={() => getAnchorsFromServer()}*/}
+                {/*>*/}
+                {/*    Get Anchors*/}
+                {/*</button>*/}
+                {/*<button*/}
+                {/*    type="button"*/}
+                {/*    className="btn btn-primary get-text-button btn-space"*/}
+                {/*    onClick={() => loadTextFromServer()}*/}
+                {/*>*/}
+                {/*    Get Text*/}
+                {/*</button>*/}
+                {/*<button*/}
+                {/*    type="button"*/}
+                {/*    className="btn btn-primary upload-text-button btn-space"*/}
+                {/*    onClick={() => uploadXMLFile()}*/}
+                {/*>*/}
+                {/*    Upload Text*/}
+                {/*</button>*/}
+                <button
+                    type="button"
+                    className="btn btn-success btn-space"
+                    onClick={() => getXMLFileFromServer()}
+                >
+                    Download
+                </button>
+                {isDeletingAnchor?
+                    <button
+                        type="button"
+                        className="btn btn-secondary btn-space"
+                        onClick={() => {}}
+                    >
+                        Add Anchor
+                    </button>
+                    :
+                    <button
+                        type="button"
+                        className="btn btn-primary btn-space"
+                        onClick={() => setAddingAnchorToTrueStatus()}
+                    >
+                        Add Anchor
+                    </button>
                 }
-            >
-                Update Anchor
-            </button>
-            <button
-                type="button"
-                className="btn btn-primary get-text-button"
-                onClick={() => loadTextFromServer()}
-            >
-                Get Text
-            </button>
-            <button
-                type="button"
-                className="btn btn-primary upload-text-button"
-                onClick={() => uploadXMLFile()}
-            >
-                Upload Text
-            </button>
-            {/*<button*/}
-            {/*    type="button"*/}
-            {/*    className="btn btn-primary"*/}
-            {/*    onClick={() => getAnchorByTimestampFromServer(timestamp)}*/}
-            {/*>*/}
-            {/*    Get Anchor by Timestamp*/}
-            {/*</button>*/}
-            {/*<button*/}
-            {/*    type="button"*/}
-            {/*    className="btn btn-primary"*/}
-            {/*    onClick={() => getAnchorByLocationFromServer(location)}*/}
-            {/*>*/}
-            {/*    Get Anchor by Location*/}
-            {/*</button>*/}
-            <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => getXMLFileFromServer()}
-            >
-                Get XML File
-            </button>
-            <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => setAddingAnchorToTrueStatus()}
-            >
-                Add Anchor
-            </button>
-            <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => handleSave()}
-            >
-                Save
-            </button>
-            <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => handleCancel()}
-            >
-                Cancel
-            </button>
+                {isAddingAnchor ?
+                    <button
+                    type="button"
+                    className="btn btn-secondary delete-anchor-button btn-space"
+                    onClick={() => {}}
+                    >
+                        Delete Anchor
+                    </button>
+                    :
+                    <button
+                    type="button"
+                    className="btn btn-primary delete-anchor-button btn-space"
+                    onClick={() => setDeletingAnchorToTrueStatus()}
+                    >
+                        Delete Anchor
+                    </button>
+                }
+                <button
+                    type="button"
+                    className="btn btn-primary btn-space"
+                    onClick={() => handleSave()}
+                >
+                    Save
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-primary btn-space"
+                    onClick={() => handleCancel()}
+                >
+                    Cancel
+                </button>
+            </div>
             <div className="input-group">
                 <input
                     type="file"
@@ -251,7 +304,9 @@ function OperationArea({
 
 const stpm = (state) => {
     return {
+        text: state.textareaReducer.text,
         isAddingAnchor: state.textareaReducer.isAddingAnchor,
+        isDeletingAnchor: state.textareaReducer.isDeletingAnchor,
         currentTime: state.textareaReducer.currentTime,
         currentLocation: state.textareaReducer.currentLocation,
     };
@@ -282,6 +337,7 @@ const dtpm = (dispatch) => {
         setAnchorLocationToDefault: () =>
             actions.setAnchorLocationToDefault(dispatch),
         hitCancelButton: () => actions.hitCancelButton(dispatch),
+        deleteConfirm: () => actions.deleteConfirm(dispatch),
     };
 };
 

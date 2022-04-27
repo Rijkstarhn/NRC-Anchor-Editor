@@ -11,3 +11,53 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.text-area-style {
+  border: 3px solid dimgray;
+  margin-top: 10px;
+  width: 100vw;
+  min-height: 300px;
+  max-height: 420px;
+  overflow: scroll;
+}
+
+.text-style {
+  padding-top: 1%;
+  padding-bottom: 1%;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.audio-area-style {
+  margin-top: 10px;
+}
+
+.AudioArea {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.audio-control-area {
+  margin-top: 10px;
+}
+
+.audio-upload {
+  margin-top: 10px;
+}
+
+.audio-operation-area {
+  margin-top: 10px;
+}
+
+.operation-area-style {
+  margin-top: 10px;
+}
+
+.control-buttons-area {
+  width: 100vw;
+  margin-bottom: 10px;
+}
+
+.btn-space {
+  margin-right: 20px;
+}

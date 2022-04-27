@@ -1,393 +1,264 @@
-import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
-import styled from "styled-components";
-import { connect } from "react-redux";
-import { Marker, WaveForm, WaveSurfer } from "wavesurfer-react";
-import "./styles.css";
-import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions.min";
-import TimelinePlugin from "wavesurfer.js/dist/plugin/wavesurfer.timeline.min";
+import OperationArea from "../OperationArea";
+import WaveSurfer from "wavesurfer.js";
+import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
 import MarkersPlugin from "wavesurfer.js/src/plugin/markers";
-import FileSaver from 'file-saver';
-import { UPDATE_CURRENT_TIME } from "../OperationArea/actions";
+import {useEffect, useRef, useState} from "react";
+import actions from "../OperationArea/actions";
+import {connect} from "react-redux";
+import usePrevious from "../../usePrevious";
 
-const Buttons = styled.div`
-  display: inline-block;
-`;
 
-const Button = styled.button``;
+const AudioArea = (
+    {
+        anchors,
+        currentTime,
+        updateCurrentAnchorTime,
+        currentLocation,
+        isAddingAnchor,
+        isDeletingAnchor,
+        deleteConfirmHits,
+        cancelButtonHits,
+    }) => {
 
-/**
- * @param min
- * @param max
- * @returns {*}
- */
-function generateNum(min, max) {
-    return Math.random() * (max - min + 1) + min;
-}
+    const [waveSurfer, setWaveSurfer] = useState(null)
+    const [isPlaying, setIsPlaying] = useState(false)
 
-/**
- * @param distance
- * @param min
- * @param max
- * @returns {([*, *]|[*, *])|*[]}
- */
-function generateTwoNumsWithDistance(distance, min, max) {
-    const num1 = generateNum(min, max);
-    const num2 = generateNum(min, max);
-    // if num2 - num1 < 10
-    if (num2 - num1 >= 10) {
-        return [num1, num2];
-    }
-    return generateTwoNumsWithDistance(distance, min, max);
-}
+    // initialize wave surfer
+    useEffect(() => {
+        setWaveSurfer(WaveSurfer.create({
+            container: '#waveform',
+            waveColor: '#0275d8',
+            plugins: [
+                TimelinePlugin.create({
+                    container: '#wave-timeline'
+                }),
+                MarkersPlugin.create({
+                    container: '#wave-marker'
+                })
+            ]
+        }))
+    }, [])
 
-function AudioArea({ originalTime, updateCurrentTime, anchors }) {
+    // subscribe events to wave surfer
+    useEffect(() => {
+        if(waveSurfer) {
+            document.getElementById("fileinput").addEventListener('change', function(e){
+                var file = this.files[0];
 
-    const [timelineVis, setTimelineVis] = useState(true);
+                if (file) {
+                    var reader = new FileReader();
 
-    const plugins = useMemo(() => {
-        return [
-            // {
-            //     plugin: RegionsPlugin,
-            //     options: { dragSelection: true }
-            // },
-            timelineVis && {
-                plugin: TimelinePlugin,
-                options: {
-                    container: "#timeline"
+                    reader.onload = function (evt) {
+                        // Create a Blob providing as first argument a typed array with the file buffer
+                        var blob = new window.Blob([new Uint8Array(evt.target.result)]);
+
+                        // Load the blob into Wavesurfer
+                        waveSurfer.loadBlob(blob);
+                    };
+
+                    reader.onerror = function (evt) {
+                        console.error("An error ocurred reading the file: ", evt);
+                    };
+
+                    // Read File as an ArrayBuffer
+                    reader.readAsArrayBuffer(file);
                 }
-            },
-            {
-                plugin: MarkersPlugin,
-                options: {
-                    markers: [{ draggable: true }]
-                }
-            }
-        ].filter(Boolean);
-    }, [timelineVis]);
-
-    const toggleTimeline = useCallback(() => {
-        setTimelineVis(!timelineVis);
-    }, [timelineVis]);
-
-    // playing status flag
-    const [playing, setPlay] = useState(false);
-
-    //uploading audio
-    //by alice
-    const inputFile = useRef(null);
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [isFilePicked, setIsFilePicked] = useState(false);
-    const [url, setUrl] = useState('');
+            }, false);
+            waveSurfer.on('seek', function () {
+                console.log(waveSurfer.getCurrentTime());
+                let currentTime = waveSurfer.getCurrentTime().toFixed(2);
+                updateCurrentAnchorTime(`${currentTime}s`);
+            });
+        }
+    }, [waveSurfer])
 
     useEffect(() => {
-        if (selectedFile) {
-            setUrl(selectedFile);
-        }
-    }, [url, selectedFile]);
-
-    const handleSubmission = () => {
-        // console.log("handling submitting");
-        inputFile.current.click();
-    }
-
-    const changeHandler = (event) => {
-        setSelectedFile(URL.createObjectURL(event.target.files[0]));
-        // console.log("THIS IS URL: ", URL.createObjectURL(event.target.files[0]));
-        setIsFilePicked(true);
-        console.log(event.target.files[0].name);
-        // console.log("now selected file is: ", selectedFile);
-        // console.log("now isFilePicked is: ", isFilePicked);
-    };
-    //end by alice
-
-
-
-
-
-    // use wavesurfer ref to pass it inside useCallback
-    // so it will use always the most fresh version of markers list
-    const wavesurferRef = useRef();
-    const handleWSMount = useCallback(
-        (waveSurfer) => {
-            if (waveSurfer.markers) {
-                waveSurfer.clearMarkers();
-            }
-
-            wavesurferRef.current = waveSurfer;
-
-            if (wavesurferRef.current && url) {
-                setPlay(false);
-                wavesurferRef.current.load(url);
-
-                console.log(wavesurferRef.current)
-                console.log("now url is: ", url);
-
-                wavesurferRef.current.on("ready", () => {
-                    console.log("WaveSurfer is ready");
-                });
-
-                wavesurferRef.current.on("loading", (data) => {
-                    console.log("loading --> ", data);
-                });
-
-                // When you use wavesurfer.on('seek') and
-                // calling getCurrentTime() you get the time AFTER it seeked due to mouse clicking.
-                wavesurferRef.current.on('seek', () => {
-                    updateCurrentTime(`${getCurrentTime()}s`);
-                });
-
-                if (window) {
-                    window.surferidze = wavesurferRef.current;
+        if (waveSurfer) {
+            for (let i = 0; i < anchors.length; i++) {
+                let timestamp = parseFloat(anchors[i].timestamp.slice(0, -1));
+                let location = anchors[i].location;
+                // to avoid duplicate markers with same time stamp
+                if (document.getElementsByClassName(`marker-timestamp-${timestamp}`).length === 0) {
+                    waveSurfer.addMarker({time: timestamp,  color: "red", position: "top"});
+                }
+                let addedMarkers = document.querySelectorAll('marker');
+                for (let i = 0; i < addedMarkers.length; i++) {
+                    if (!addedMarkers[i].className.includes('timestamp')) {
+                        addedMarkers[i].classList.add(`marker-timestamp-${timestamp}`);
+                        addedMarkers[i].classList.add(`marker-location-${location}`);
+                    }
                 }
             }
-        },
-        [url, isFilePicked]
-    );
-
-
-    //generating exisiting and new markers
-    //by alice
-    const existingMarkers = anchors.map((anchor) => {
-        console.log("anchor", anchor);
-        return {
-            time: parseFloat(anchor.timestamp.slice(0, -1)),
-            // label: anchor.timestamp,
-            color: "#ff990a",
-            position: "top"
         }
-    })
+    }, [anchors])
 
-    const [markers, setMarkers] = useState([...existingMarkers]);
-
-    //temporarily we do not use this function
-    const addMarker = useCallback(() => {
-        if (!wavesurferRef.current) {
-            return;
-        }
-        const r = generateNum(0, 255);
-        const g = generateNum(0, 255);
-        const b = generateNum(0, 255);
-        const currentTime = wavesurferRef.current.getCurrentTime()
-
-        setMarkers([
-            ...markers,
-            {
-                //label: `@${currentTime.toFixed(1)}s`,
-                time: currentTime,
-                color: `rgba(${r}, ${g}, ${b}, 0.5)`,
-                //draggable: true
-            }
-        ]);
-    }, [markers, wavesurferRef]);
+    const prevCurrentLocation = usePrevious(currentLocation);
 
     useEffect(() => {
-        // setMarkers([...existingMarkers]);
-        console.log("useEffect called!");
-        if (!wavesurferRef.current) {
-            setMarkers([...existingMarkers]);
-            return;
-        }
-        // const r = generateNum(0, 255);
-        // const g = generateNum(0, 255);
-        // const b = generateNum(0, 255);
-        const currentTime = wavesurferRef.current.getCurrentTime()
-        setMarkers([
-            ...existingMarkers,
-            {
-                //label: `@${currentTime.toFixed(1)}s`,
-                time: currentTime,
-                color: "#ff990a",
-                position: "top",
-                //draggable: true
+        if (isDeletingAnchor) {
+            // let currentSelectedMarker = document.getElementsByClassName(`marker-location-${currentLocation}`)[0];
+            // if (currentSelectedMarker) {
+            //     currentSelectedMarker.style.fill = 'green';
+            // }
+            // let previousSelectedMarker = document.getElementsByClassName(`marker-location-${prevCurrentLocation}`)[0];
+            // if (previousSelectedMarker) {
+            //     previousSelectedMarker.style.fill = 'red';
+            // }
+            let markers = document.querySelectorAll('marker');
+            for (let i = 0; i < markers.length; i++) {
+                if (markers[i].classList.contains(`marker-location-${currentLocation}`)) {
+                    // console.log("found", markers[i]);
+                    markers[i].querySelector('polygon').style.fill = 'green';
+                }
+                if (markers[i].classList.contains(`marker-location-${prevCurrentLocation}`)) {
+                    // console.log("found", markers[i]);
+                    markers[i].querySelector('polygon').style.fill = 'red';
+                }
             }
-        ]);
-        console.log("SETTING markers are: ", markers);
-
-    }, [existingMarkers.length, anchors]);
-    //end generating markers
-
-
-
-
-
-    const removeLastMarker = useCallback(() => {
-        let nextMarkers = [...markers];
-        nextMarkers.pop();
-        setMarkers(nextMarkers);
-    }, [markers]);
-
-    const shuffleLastMarker = useCallback(() => {
-        setMarkers((prev) => {
-            const next = [...prev];
-            let lastIndex = next.length - 1;
-
-            const minTimestampInSeconds = 0;
-            const maxTimestampInSeconds = wavesurferRef.current.getDuration();
-            const distance = generateNum(0, 10);
-            const [min] = generateTwoNumsWithDistance(
-                distance,
-                minTimestampInSeconds,
-                maxTimestampInSeconds
-            );
-
-            next[lastIndex] = {
-                ...next[lastIndex],
-                time: min
-            };
-
-            return next;
-        });
-    }, [markers]);
-
-    const play = useCallback(() => {
-        // switch the playing status
-        setPlay(!playing);
-        wavesurferRef.current.playPause();
-        updateCurrentTime(`${getCurrentTime()}s`);
-        console.log("playing status --> ", playing);
-    }, [playing]);
-
-    const getCurrentTime = useCallback(() => {
-        let currentTime = 0;
-        if (wavesurferRef.current) {
-            currentTime = wavesurferRef.current.getCurrentTime();
         }
-        console.log("current --> ", currentTime);
-        return currentTime.toFixed(2);
-    }, [wavesurferRef]);
+    }, [currentLocation])
 
+    const prevCurrentTime = usePrevious(currentTime);
 
-    //testing delete
-    const [m, setM] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-    const [f, setF] = useState(false);
+    useEffect(() => {
+        let markers = document.querySelectorAll('marker');
+        for (let i = 0; i < markers.length; i++) {
+            if (markers[i].className.includes(`marker-timestamp-${parseFloat(prevCurrentTime.slice(0, -1))}`)) {
+                markers[i].remove();
+            }
+        }
+    }, [deleteConfirmHits])
 
-    const testDelete = () => {
-        console.log("test delete");
-        setF(!f);
-        console.log("f is: ", f);
-        console.log("now markers are: ", markers);
-        console.log("now existing are : ", existingMarkers);
+    useEffect(() => {
+        if (!isAddingAnchor && !isDeletingAnchor && cancelButtonHits > 0) {
+            console.log("prevCurrentTime", prevCurrentTime);
+            // Cancel previous currentLocation span.
+            let currentAnchor = document.getElementsByClassName(
+                `marker-timestamp-${parseFloat(prevCurrentTime.slice(0, -1))}`
+            )[0];
+            if (currentAnchor) {
+                // if it's deleting anchor
+                let currentPolygon = currentAnchor.querySelector('polygon')
+                console.log("currentAnchor", currentPolygon.style.fill);
+                if (currentPolygon.style.fill === 'green') {
+                    console.log("true");
+                    currentPolygon.removeAttribute('style');
+                    currentPolygon.style.fill = 'red';
+                }
+            }
+        }
+    }, [cancelButtonHits]);
+
+    const togglePlayPause = () => {
+        waveSurfer.playPause();
+        setIsPlaying(!isPlaying);
     }
 
-    useEffect(() => {
-        setM(m.filter(i => i !== 1));
-        // console.log("setting");
-        // console.log("m is: ", m);
-    }, [f])
-    //end testing delete
-
-
-
-    //by alice
-    const [currentTime, setCurrentTime] = useState(originalTime);
-    const [event, setEvent] = useState(false);
-
-    const getReady = () => {
-        event === false ? setEvent(true) : setEvent(false);
-        // setEvent(true);
+    const speedUpPlayback1 = () => {
+        waveSurfer.setPlaybackRate(0.5);
     }
 
-    useEffect(() => {
-        if (wavesurferRef.current) {
-            const tmp = wavesurferRef.current.getCurrentTime();
-            setCurrentTime(`${tmp.toFixed(1)}s`);
-            updateCurrentTime(currentTime);
-        }
-        // console.log("ALICE currentTime is  : ", currentTime);
-    }, [currentTime, event])
-    //end by alice
+    const speedUpPlayback2 = () => {
+        waveSurfer.setPlaybackRate(0.7);
+    }
 
+    const speedUpPlayback3 = () => {
+        waveSurfer.setPlaybackRate(0.8);
+    }
+
+    const speedUpPlayback4 = () => {
+        waveSurfer.setPlaybackRate(0.9);
+    }
+
+    const normalPlayback = () => {
+        waveSurfer.setPlaybackRate(1);
+    }
 
     return (
-        <div>
-            {/*<div className="progress">*/}
-            {/*    <div className="progress-bar progress-bar-striped progress-bar-animated"*/}
-            {/*         role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"*/}
-            {/*         style={{width: '75%'}}></div>*/}
-            {/*</div>*/}
-            <div className="AudioArea">
-                {url ?
-                    <WaveSurfer plugins={plugins} onMount={handleWSMount}>
-                        <WaveForm id="waveform" cursorColor="transparent">
-                            {/*<WaveForm id="waveform" cursorColor="#fff">*/}
-                            {markers.map((marker, index) => {
-                                return (
-                                    <Marker
-                                        key={index}
-                                        {...marker}
-                                        onClick={(...args) => {
-                                            console.log("onClick", ...args);
-                                        }}
-                                        onDrag={(...args) => {
-                                            console.log("onDrag", ...args);
-                                        }}
-                                        onDrop={(...args) => {
-                                            console.log("onDrop", ...args);
-                                        }}
-                                    />
-                                );
-                            })}
-                        </WaveForm>
-                        <div id="timeline" />
-                    </WaveSurfer>
-                    : console.log("no audio file yet")}
-
-                <div>
-                    {/*<Button onClick={getReady}>Get current time</Button>*/}
-                    {/*<Button onClick={addMarker}>Add Marker</Button>*/}
-                    <Button className="btn btn-primary" onClick={play}>Play / Pause</Button>
-                    {/*<Button onClick={removeLastMarker}>Remove last marker</Button>*/}
-                    {/*<Button onClick={shuffleLastMarker}>Shuffle last marker</Button>*/}
-                    {/*<Button onClick={toggleTimeline}>Toggle timeline</Button>*/}
-                    {/*<Button onClick={testDelete}>TEST</Button>*/}
-                    <div className="input-group">
-                        <input
-                            type="file"
-                            className="form-control"
-                            id="audioInput"
-                            aria-describedby="audioInput"
-                            aria-label="Upload"
-                            ref={inputFile}
-                            accept='audio/*'
-                            onChange={changeHandler}
-                        />
-                        <button
-                            className="btn btn-outline-secondary upload-file-button"
-                            type="button"
-                            id="audioInput"
-                            onClick={() => handleSubmission()}
-                        >
-                            Upload Audio
-                        </button>
-                    </div>
-                    {/*<input type="file" name="file" ref={inputFile} style={{ display: 'none' }}*/}
-                    {/*    accept='audio/*' onChange={changeHandler} />*/}
-                    {/*<div>*/}
-                    {/*    <Button onClick={handleSubmission} >Upload Audio</Button>*/}
-                    {/*</div>*/}
-                </div>
+        <div className="AudioArea">
+            <div id="waveform">
+                <div id="wave-timeline" className="audio-control-area"></div>
+            </div>
+            <div className="audio-operation-area">
+                <button
+                    className="btn btn-primary btn-space"
+                    onClick={() => togglePlayPause()}
+                >
+                    Play/Pause
+                </button>
+                <button
+                    className="btn btn-primary btn-space"
+                    onClick={() => normalPlayback()}
+                >
+                    Normal Speed
+                </button>
+                <button
+                    className="btn btn-primary btn-space"
+                    onClick={() => speedUpPlayback1()}
+                >
+                    0.5X
+                </button>
+                <button
+                    className="btn btn-primary btn-space"
+                    onClick={() => speedUpPlayback2()}
+                >
+                    0.7X
+                </button>
+                <button
+                    className="btn btn-primary btn-space"
+                    onClick={() => speedUpPlayback3()}
+                >
+                    0.8X
+                </button>
+                <button
+                    className="btn btn-primary btn-space"
+                    onClick={() => speedUpPlayback4()}
+                >
+                    0.9X
+                </button>
+            </div>
+            <OperationArea/>
+            <div className="input-group audio-upload">
+                <input
+                    type="file"
+                    className="form-control"
+                    id="fileinput"
+                    aria-describedby="inputGroupFileAddon04"
+                    aria-label="Upload"
+                />
+                <button
+                    className="btn btn-outline-secondary upload-file-button"
+                    type="button"
+                    id="inputGroupFileAddon04"
+                >
+                    Upload Audio
+                </button>
             </div>
         </div>
-    );
+    )
 }
 
 const stpm = (state) => {
     return {
-        originalTime: state.textareaReducer.currentTime,
+        text: state.textareaReducer.text,
         anchors: state.textareaReducer.anchors,
+        currentTime: state.textareaReducer.currentTime,
+        currentLocation: state.textareaReducer.currentLocation,
+        isAddingAnchor: state.textareaReducer.isAddingAnchor,
+        isDeletingAnchor: state.textareaReducer.isDeletingAnchor,
+        cancelButtonHits: state.textareaReducer.cancelButtonHits,
+        deleteConfirmHits: state.textareaReducer.deleteConfirmHits,
     };
 };
 
 const dtpm = (dispatch) => {
     return {
-        updateCurrentTime: (currentTime) =>
-            dispatch({
-                type: UPDATE_CURRENT_TIME,
-                currentTime: currentTime,
-            }),
-
+        updateCurrentAnchorLocation: (currentLocation) =>
+            actions.updateCurrentAnchorLocation(dispatch, currentLocation),
+        updateCurrentAnchorTime: (currentTime) => {
+            actions.updateCurrentAnchorTime(dispatch, currentTime)
+        },
     };
 };
 
 export default connect(stpm, dtpm)(AudioArea);
-

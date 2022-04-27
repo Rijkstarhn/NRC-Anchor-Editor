@@ -21,7 +21,6 @@ function App() {
             <NavBar/>
             <TextArea/>
             <AudioArea/>
-            <OperationArea/>
         </div>
     </Provider>
   );

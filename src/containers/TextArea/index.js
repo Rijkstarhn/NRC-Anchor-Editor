@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import actions from "../OperationArea/actions";
+import usePrevious from "../../usePrevious";
 
 function TextArea({
     text,
@@ -9,6 +10,7 @@ function TextArea({
     isDeletingAnchor,
     currentLocation,
     updateCurrentAnchorLocation,
+    updateCurrentAnchorTime,
     cancelButtonHits,
 }) {
     /* -------------------------------------------------------------------------- */
@@ -129,14 +131,6 @@ function TextArea({
 
     const prevCurrentLocation = usePrevious(currentLocation);
 
-    function usePrevious(value) {
-        const ref = useRef();
-        useEffect(() => {
-            ref.current = value;
-        }, [value]);
-        return ref.current;
-    }
-
     // Change adding anchor color.
     useEffect(() => {
         if (isAddingAnchor) {
@@ -155,12 +149,46 @@ function TextArea({
                 spanElement.style.backgroundColor = "red";
             }
         }
+        if (isDeletingAnchor) {
+            if (currentLocation >= 0) {
+                // Cancel previous currentLocation span.
+                if (prevCurrentLocation >= 0) {
+                    let prevElement = document.getElementsByClassName(
+                        `location-${prevCurrentLocation}`
+                    )[0];
+                    prevElement.style.backgroundColor = "red";
+                }
+                // Change new current span color
+                let spanElement = document.getElementsByClassName(
+                    `location-${currentLocation}`
+                )[0];
+                spanElement.style.backgroundColor = "green";
+            }
+        }
     }, [currentLocation, prevCurrentLocation]);
 
     /* -------------------------------------------------------------------------- */
     /*                                Deleting Mode                               */
     /* -------------------------------------------------------------------------- */
-
+    useEffect(() => {
+        let spanElements = document.getElementsByClassName("anchor");
+        if (isDeletingAnchor) {
+            for (let spanElement of spanElements) {
+                spanElement.onclick = function () {
+                    let thisLocation = this.classList[0].substring(9);
+                    let thisTime = this.classList[3].substring(10);
+                    console.log("this time ", thisTime);
+                    updateCurrentAnchorLocation(thisLocation);
+                    updateCurrentAnchorTime(thisTime);
+                    this.style.backgroundColor = 'green';
+                };
+            }
+        } else {
+            for (let spanElement of spanElements) {
+                spanElement.onclick = null;
+            }
+        }
+    }, [isDeletingAnchor]);
     /* -------------------------------------------------------------------------- */
     /*                            Cancel / Default Mode                           */
     /* -------------------------------------------------------------------------- */
@@ -173,7 +201,12 @@ function TextArea({
                 `location-${prevCurrentLocation}`
             )[0];
             if (currentAnchor) {
-                currentAnchor.style.backgroundColor = null;
+                // if it's deleting anchor
+                if (currentAnchor.style.backgroundColor === 'green') {
+                    currentAnchor.style.backgroundColor = 'red';
+                } else if (currentAnchor.style.backgroundColor === 'red') { // if it's adding anchors
+                    currentAnchor.style.backgroundColor = null;
+                }
             }
         }
     }, [cancelButtonHits]);
@@ -187,26 +220,29 @@ function TextArea({
             {/*          defaultValue = { anchors[0].timestamp }*/}
             {/*>*/}
             {/*</textarea>*/}
-            <ol className="list-group list-group-numbered anchors-list">
-                {anchors.map((anchor, index) => (
-                    <li
-                        className="list-group-item d-flex justify-content-between align-items-start"
-                        key={index}
-                    >
-                        <div className="ms-2 me-auto">
-                            <div className="fw-bold anchor-timestamp-info">
-                                {anchor.timestamp}
-                            </div>
-                        </div>
-                        <span className="badge bg-primary rounded-pill anchor-location-info">
-                            {anchor.location}
-                        </span>
-                    </li>
-                ))}
-            </ol>
-            <h1 className="text-content" id="text-content">
-                {" "}
-            </h1>
+            {/*<ol className="list-group list-group-numbered anchors-list">*/}
+            {/*    {anchors.map((anchor, index) => (*/}
+            {/*        <li*/}
+            {/*            className="list-group-item d-flex justify-content-between align-items-start"*/}
+            {/*            key={index}*/}
+            {/*        >*/}
+            {/*            <div className="ms-2 me-auto">*/}
+            {/*                <div className="fw-bold anchor-timestamp-info">*/}
+            {/*                    {anchor.timestamp}*/}
+            {/*                </div>*/}
+            {/*            </div>*/}
+            {/*            <span className="badge bg-primary rounded-pill anchor-location-info">*/}
+            {/*                {anchor.location}*/}
+            {/*            </span>*/}
+            {/*        </li>*/}
+            {/*    ))}*/}
+            {/*</ol>*/}
+            <div className = "text-area-style">
+                <h5 className="text-content text-style" id="text-content">
+                    {" "}
+                </h5>
+            </div>
+
         </div>
     );
 }
@@ -218,7 +254,7 @@ const stpm = (state) => {
         isAddingAnchor: state.textareaReducer.isAddingAnchor,
         isDeletingAnchor: state.textareaReducer.isDeletingAnchor,
         currentLocation: state.textareaReducer.currentLocation,
-        cancelButtonHits: state.textareaReducer.cancelButtonHits,
+            cancelButtonHits: state.textareaReducer.cancelButtonHits,
     };
 };
 
@@ -226,6 +262,9 @@ const dtpm = (dispatch) => {
     return {
         updateCurrentAnchorLocation: (currentLocation) =>
             actions.updateCurrentAnchorLocation(dispatch, currentLocation),
+        updateCurrentAnchorTime: (currentTime) => {
+            actions.updateCurrentAnchorTime(dispatch, currentTime)
+        },
     };
 };
 
