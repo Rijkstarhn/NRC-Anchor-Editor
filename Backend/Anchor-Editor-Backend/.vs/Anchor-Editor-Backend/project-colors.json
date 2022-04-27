@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "83ff62e3-4357-4a9b-92d4-ca0e7feadf40": {
+      "ProjectGuid": "83ff62e3-4357-4a9b-92d4-ca0e7feadf40",
+      "DisplayName": "Anchor-Editor-Backend",
+      "ColorIndex": 0
+    },
+    "8848f37e-5911-428d-8650-99343b3f4720": {
+      "ProjectGuid": "8848f37e-5911-428d-8650-99343b3f4720",
+      "DisplayName": "Anchor-Editor-Backend-UnitTest",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}
