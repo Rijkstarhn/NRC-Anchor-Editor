@@ -8,9 +8,7 @@ describe('Navbar Text Test', () => {
 describe('Upload File Test', () => {
     it('upload file', () => {
         cy.get("input[type=file]").attachFile('123.xml')
-
         cy.get('.upload-file-button').click()
-
         cy.get('.upload-text-button').click()
     })
 })
