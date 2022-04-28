@@ -4,7 +4,7 @@ CD to the project folder "Anchor-Editor-Backend/Anchor-Editor-Backend"
 
 Run Command "dotnet run"
 
-The backend will be hosted in 5000 by default
+The backend will be hosted in 5001 by default
 
 
 # API Instruction**
