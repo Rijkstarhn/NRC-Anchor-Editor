@@ -2,6 +2,7 @@
 Ensure to install .Net 5.0 SDK (https://dotnet.microsoft.com/en-us/download/dotnet/5.0?msclkid=380b26eebb9f11ec9cedc23a82540107)
 
 MAC: https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-5.0.407-macos-x64-installer
+
 WINDOWS: https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-5.0.407-windows-x86-installer
 
 CD to the project folder "Anchor-Editor-Backend/Anchor-Editor-Backend"
