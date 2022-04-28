@@ -1,11 +1,11 @@
-**RUN THE BACKEND**
+# RUN THE BACKEND
 Ensure to install .Net 5.0 (https://dotnet.microsoft.com/en-us/download/dotnet/5.0?msclkid=380b26eebb9f11ec9cedc23a82540107)
 CD to the project folder "Anchor-Editor-Backend/Anchor-Editor-Backend"
 Run Command "dotnet run"
 The backend will be hosted in 5000 by default
 
 
-**API Instruction**
+# API Instruction**
 In Backend.postman_collection, import to postman
 
 1. Ensure you have upload the xml file first at "https://localhost:5001/api/XMLFiles"
