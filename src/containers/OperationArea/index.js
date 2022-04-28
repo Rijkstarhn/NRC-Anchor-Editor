@@ -281,7 +281,8 @@ function OperationArea({
                     Cancel
                 </button>
             </div>
-            <div className="input-group">
+            <div className="input-group custom-file-button">
+                <label className="input-group-text" htmlFor="inputGroupFile04">Choose XML Text File</label>
                 <input
                     type="file"
                     className="form-control"
@@ -289,13 +290,14 @@ function OperationArea({
                     aria-describedby="inputGroupFileAddon04"
                     aria-label="Upload"
                 />
+                {/*<label className="input-group-text" htmlFor="inputGroupFileAddon04">Your Custom Text</label>*/}
                 <button
                     className="btn btn-outline-secondary upload-file-button"
                     type="button"
                     id="inputGroupFileAddon04"
                     onClick={() => getXMLFileText()}
                 >
-                    Upload File
+                    Upload
                 </button>
             </div>
         </div>
