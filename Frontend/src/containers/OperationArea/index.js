@@ -1,5 +1,5 @@
 import react, { useEffect, useState } from "react";
-import actions, {deleteConfirm, hitCancelButton} from "./actions";
+import actions, { deleteConfirm, hitCancelButton } from "./actions";
 import { connect } from "react-redux";
 
 function OperationArea({
@@ -227,16 +227,16 @@ function OperationArea({
                 {/*</button>*/}
                 <button
                     type="button"
-                    className="btn btn-success btn-space"
+                    className="btn btn-success btn-space download-button"
                     onClick={() => getXMLFileFromServer()}
                 >
                     Download
                 </button>
-                {isDeletingAnchor?
+                {isDeletingAnchor ?
                     <button
                         type="button"
                         className="btn btn-secondary btn-space"
-                        onClick={() => {}}
+                        onClick={() => { }}
                     >
                         Add Anchor
                     </button>
@@ -251,17 +251,17 @@ function OperationArea({
                 }
                 {isAddingAnchor ?
                     <button
-                    type="button"
-                    className="btn btn-secondary delete-anchor-button btn-space"
-                    onClick={() => {}}
+                        type="button"
+                        className="btn btn-secondary delete-anchor-button btn-space"
+                        onClick={() => { }}
                     >
                         Delete Anchor
                     </button>
                     :
                     <button
-                    type="button"
-                    className="btn btn-primary delete-anchor-button btn-space"
-                    onClick={() => setDeletingAnchorToTrueStatus()}
+                        type="button"
+                        className="btn btn-primary delete-anchor-button btn-space"
+                        onClick={() => setDeletingAnchorToTrueStatus()}
                     >
                         Delete Anchor
                     </button>

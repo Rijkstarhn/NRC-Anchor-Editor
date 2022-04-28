@@ -47,6 +47,7 @@
     ]
   },
   "devDependencies": {
+    "cy-verify-downloads": "^0.1.5",
     "cypress": "^9.6.0",
     "cypress-file-upload": "^5.0.8"
   }
