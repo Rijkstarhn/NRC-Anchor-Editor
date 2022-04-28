@@ -5,7 +5,7 @@ MAC: https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-5.0.407-ma
 
 WINDOWS: https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-5.0.407-windows-x86-installer
 
-CD to the project folder "Anchor-Editor-Backend/Anchor-Editor-Backend"
+CD to the project folder "Backend/Anchor-Editor-Backend/Anchor-Editor-Backend"
 
 Run Command "dotnet run"
 
