@@ -42,7 +42,7 @@ const AudioArea = (
     // subscribe events to wave surfer
     useEffect(() => {
         if(waveSurfer) {
-            document.getElementById("file-input").addEventListener('change', function(e){
+            document.getElementById("file-input-audio").addEventListener('change', function(e){
                 var file = this.files[0];
 
                 if (file) {
@@ -219,11 +219,11 @@ const AudioArea = (
             </div>
             <OperationArea/>
             <div className="input-group audio-upload custom-file-button">
-                <label className="input-group-text" htmlFor="file-input">Choose Audio File</label>
+                <label className="input-group-text" htmlFor="file-input-audio">Choose Audio File</label>
                 <input
                     type="file"
                     className="form-control"
-                    id="file-input"
+                    id="file-input-audio"
                     aria-describedby="inputGroupFileAddon04"
                     aria-label="Upload"
                 />
