@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import actions from "../OperationArea/actions";
 import usePrevious from "../../usePrevious";
@@ -131,7 +131,10 @@ function TextArea({
                     spanElement.onclick = function () {
                         let thisLocation = this.classList[0].substring(9);
                         let thisRealLocation = this.classList[1].substring(14);
-                        updateCurrentAnchorLocation(thisLocation, thisRealLocation);
+                        updateCurrentAnchorLocation(
+                            thisLocation,
+                            thisRealLocation
+                        );
                     };
                 }
             }
@@ -143,6 +146,30 @@ function TextArea({
             }
         }
     }, [isAddingAnchor]);
+
+    const prevCurrentTime = usePrevious(currentTime);
+    // Change adding anchor color.
+    useEffect(() => {
+        if (isDeletingAnchor) {
+            if (currentTime.charAt(0) !== "-") {
+                console.log("currentLocation", currentLocation);
+                console.log("prevCurrentTime", prevCurrentTime);
+                console.log("currentTime", currentTime);
+                // Cancel previous prevCurrentTime span.
+                if (prevCurrentTime.charAt(0) !== "-") {
+                    let prevElement = document.getElementsByClassName(
+                        `timestamp-${prevCurrentTime}`
+                    )[0];
+                    prevElement.style.backgroundColor = "red";
+                }
+                // Change new current span color
+                let spanElement = document.getElementsByClassName(
+                    `timestamp-${currentTime}`
+                )[0];
+                spanElement.style.backgroundColor = "green";
+            }
+        }
+    }, [currentTime, prevCurrentTime]);
 
     const prevRealCurrentLocation = usePrevious(currentRealLocation);
 
@@ -179,7 +206,7 @@ function TextArea({
                     let thisTime = this.classList[4].substring(10);
                     updateCurrentAnchorLocation(thisLocation, thisRealLocation);
                     updateCurrentAnchorTime(thisTime);
-                    this.style.backgroundColor = 'green';
+                    this.style.backgroundColor = "green";
                 };
             }
         } else {
@@ -222,9 +249,10 @@ function TextArea({
             )[0];
             if (currentAnchor) {
                 // if it's deleting anchor
-                if (currentAnchor.style.backgroundColor === 'green') {
-                    currentAnchor.style.backgroundColor = 'red';
-                } else if (currentAnchor.style.backgroundColor === 'red') { // if it's adding anchors
+                if (currentAnchor.style.backgroundColor === "green") {
+                    currentAnchor.style.backgroundColor = "red";
+                } else if (currentAnchor.style.backgroundColor === "red") {
+                    // if it's adding anchors
                     currentAnchor.style.backgroundColor = null;
                 }
             }
@@ -238,7 +266,6 @@ function TextArea({
                     {" "}
                 </h5>
             </div>
-
         </div>
     );
 }
@@ -259,9 +286,13 @@ const stpm = (state) => {
 const dtpm = (dispatch) => {
     return {
         updateCurrentAnchorLocation: (currentLocation, currentRealLocation) =>
-            actions.updateCurrentAnchorLocation(dispatch, currentLocation, currentRealLocation),
+            actions.updateCurrentAnchorLocation(
+                dispatch,
+                currentLocation,
+                currentRealLocation
+            ),
         updateCurrentAnchorTime: (currentTime) => {
-            actions.updateCurrentAnchorTime(dispatch, currentTime)
+            actions.updateCurrentAnchorTime(dispatch, currentTime);
         },
     };
 };

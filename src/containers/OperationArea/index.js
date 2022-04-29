@@ -1,5 +1,5 @@
 import react, { useEffect, useState } from "react";
-import actions, {deleteConfirm, hitCancelButton} from "./actions";
+import actions, { deleteConfirm, hitCancelButton } from "./actions";
 import { connect } from "react-redux";
 
 function OperationArea({
@@ -25,7 +25,6 @@ function OperationArea({
     hitCancelButton,
     deleteConfirm,
 }) {
-
     const [xmlFile, setXMLFile] = useState({});
     const [xmlData, setXMLData] = useState("");
 
@@ -92,6 +91,7 @@ function OperationArea({
             // set isAddingAnchor to false
             setAddingAnchorToFalse();
             setAnchorLocationToDefault();
+            setAnchorTimeToDefault();
         } else if (!isAddingAnchor && isDeletingAnchor) {
             // delete anchor
             let toBeDeleteAnchor = document.getElementsByClassName(`location-${currentLocation} anchor-holder anchor timestamp-${currentTime}`)[0]
@@ -130,7 +130,7 @@ function OperationArea({
                 >
                     Download
                 </button>
-                {isDeletingAnchor?
+                {isDeletingAnchor ? (
                     <button
                         type="button"
                         className="btn btn-secondary btn-space"
@@ -138,35 +138,37 @@ function OperationArea({
                     >
                         Add Anchor
                     </button>
-                    :
+                ) : (
                     <button
                         type="button"
                         className="btn btn-primary btn-space"
+                        id="add_anchor_button"
                         onClick={() => setAddingAnchorToTrueStatus()}
                     >
                         Add Anchor
                     </button>
-                }
-                {isAddingAnchor ?
+                )}
+                {isAddingAnchor ? (
                     <button
-                    type="button"
-                    className="btn btn-secondary delete-anchor-button btn-space"
-                    onClick={() => {}}
+                        type="button"
+                        className="btn btn-secondary delete-anchor-button btn-space"
+                        onClick={() => {}}
                     >
                         Delete Anchor
                     </button>
-                    :
+                ) : (
                     <button
-                    type="button"
-                    className="btn btn-primary delete-anchor-button btn-space"
-                    onClick={() => setDeletingAnchorToTrueStatus()}
+                        type="button"
+                        className="btn btn-primary delete-anchor-button btn-space"
+                        onClick={() => setDeletingAnchorToTrueStatus()}
                     >
                         Delete Anchor
                     </button>
-                }
+                )}
                 <button
                     type="button"
                     className="btn btn-primary btn-space"
+                    id="save-button"
                     onClick={() => handleSave()}
                 >
                     Save
@@ -180,7 +182,9 @@ function OperationArea({
                 </button>
             </div>
             <div className="input-group custom-file-button">
-                <label className="input-group-text" htmlFor="inputGroupFile04">Choose XML Text File</label>
+                <label className="input-group-text" htmlFor="inputGroupFile04">
+                    Choose XML Text File
+                </label>
                 <input
                     type="file"
                     className="form-control"
@@ -235,8 +239,7 @@ const dtpm = (dispatch) => {
             actions.setDeletingAnchorToFalse(dispatch),
         setAnchorLocationToDefault: () =>
             actions.setAnchorLocationToDefault(dispatch),
-        setAnchorTimeToDefault: () =>
-            actions.setAnchorTimeToDefault(dispatch),
+        setAnchorTimeToDefault: () => actions.setAnchorTimeToDefault(dispatch),
         hitCancelButton: () => actions.hitCancelButton(dispatch),
         deleteConfirm: () => actions.deleteConfirm(dispatch),
     };
