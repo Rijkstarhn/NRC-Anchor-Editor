@@ -21,9 +21,7 @@ function TextArea({
 
     // Convert plain text to html elements, and add them in text content.
     useEffect(() => {
-        console.log("TextArea Set Up");
         let textContent = document.getElementById("text-content");
-        console.log(text);
         textContent.innerHTML = "";
         // Iterate the plain text and create element in text content
         let position = 0;
@@ -32,23 +30,23 @@ function TextArea({
             if (text[i] === " ") {
                 // Space -> Anchor Holder
                 position++;
-                if (i > 0 && text[i - 1] === " ") {
-                    // previous space is an anchor holder.
-                    let prevElement = document.getElementsByClassName(
-                        `real-position-${position - 1}`
-                    )[0];
+                if (i > 0 && text[i - 1] === " ") { // previous space is an anchor holder.
+                    // use "real-position" class name to identify prevElement
+                    let prevElement = document.getElementsByClassName(`real-position-${position - 1}`)[0];
                     let tag = document.createElement("span");
                     // Set anchor id and class
-                    tag.classList.add(`${prevElement.classList[0]}`);
+                    tag.classList.add(`${prevElement.classList[0]}`); // use prevElement's location to keep continuous space spans with same location id
                     tag.classList.add(`real-position-${position}`);
                     tag.classList.add("anchor-holder");
-                    // let content = document.createTextNode(" ");
                     tag.innerHTML = "\u00A0";
                     textContent.appendChild(tag);
                 } else {
                     let tag = document.createElement("span");
                     // Set anchor id and class
-                    tag.classList.add(`location-${position}`);
+                    tag.classList.add(`location-${position}`); // location aligns with the definition in back-end
+                    // real position aligns with the position of the char in front-end
+                    // for example, we can have 3 continuous space spans with same location id 55,
+                    // but their real position id should be 55, 56, and 57.
                     tag.classList.add(`real-position-${position}`);
                     tag.classList.add("anchor-holder");
                     let content = document.createTextNode(" ");
@@ -93,20 +91,16 @@ function TextArea({
         textContent.appendChild(tag);
     }, [text]);
 
-    // const [isInitial, setIsInitial] = useState(true);
-
     // Change existing anchor color. Add 'anchor' and 'timestamp' class to anchor element.
     useEffect(() => {
-        console.log("Change existing anchor color. Add 'anch");
         console.log(anchors);
         for (let anchor of anchors) {
             let anchorElements = document.getElementsByClassName(
                 `location-${anchor.location}`
             );
-            if (
-                document.getElementsByClassName(`timestamp-${anchor.timestamp}`)
-                    .length === 0
-            ) {
+            // this if statement can make sure the continuous space spans will not all be red when adding anchor
+            // by filtering it with their unique id: time stamp, instead of location
+            if (document.getElementsByClassName(`timestamp-${anchor.timestamp}`).length === 0) {
                 for (let anchorElement of anchorElements) {
                     if (!anchorElement.classList.contains("anchor")) {
                         anchorElement.style.backgroundColor = "red";
@@ -125,16 +119,16 @@ function TextArea({
     /*                                 Adding Mode                                */
     /* -------------------------------------------------------------------------- */
 
+    // For adding mode, we should use real position to distinguish each span
+
     // Set up onclick attribute for span in adding mode
-    //once clicked, default currentLocaten will change from -1 to selected location
+    //once clicked, default current location will change from -1 to selected location
     useEffect(() => {
-        console.log("isAddingAnchor called!", isAddingAnchor);
         let spanElements = document.getElementsByClassName("anchor-holder");
         if (isAddingAnchor) {
             for (let spanElement of spanElements) {
                 if (!spanElement.classList.contains("anchor")) {
                     spanElement.onclick = function () {
-                        // console.log("executed");
                         let thisLocation = this.classList[0].substring(9);
                         let thisRealLocation = this.classList[1].substring(14);
                         updateCurrentAnchorLocation(
@@ -153,28 +147,9 @@ function TextArea({
         }
     }, [isAddingAnchor]);
 
-    // const prevCurrentLocation = usePrevious(currentLocation);
     const prevCurrentTime = usePrevious(currentTime);
     // Change adding anchor color.
     useEffect(() => {
-        console.log("Change adding anchor color");
-        // if (isAddingAnchor) {
-        //     if (currentTime.charAt(0) !== '-') { // judge if it's minus string
-        //         // Cancel previous currentTime span.
-        //         console.log("prevCurrentTime", prevCurrentTime);
-        //         if (prevCurrentTime.charAt(0) !== '-') {
-        //             let prevElement = document.getElementsByClassName(
-        //                 `timestamp-${prevCurrentTime}`
-        //             )[0];
-        //             prevElement.style.backgroundColor = null;
-        //         }
-        //         // Change new current span color
-        //         let spanElement = document.getElementsByClassName(
-        //             `timestamp-${currentTime}`
-        //         )[0];
-        //         spanElement.style.backgroundColor = "red";
-        //     }
-        // }
         if (isDeletingAnchor) {
             if (currentTime.charAt(0) !== "-") {
                 console.log("currentLocation", currentLocation);
@@ -192,11 +167,6 @@ function TextArea({
                     `timestamp-${currentTime}`
                 )[0];
                 spanElement.style.backgroundColor = "green";
-                // for (let i = 0; i < spanElements; i++) {
-                //     if (!spanElements[i].className.includes(`timestamp-${currentTime}`)) {
-                //         spanElements[i].style.backgroundColor = "green";
-                //     }
-                // }
             }
         }
     }, [currentTime, prevCurrentTime]);
@@ -225,8 +195,8 @@ function TextArea({
     /* -------------------------------------------------------------------------- */
     /*                                Deleting Mode                               */
     /* -------------------------------------------------------------------------- */
+    // For deleting mode, we should use time stamp to distinguish each span
     useEffect(() => {
-        console.log("Deleting Mode");
         let spanElements = document.getElementsByClassName("anchor");
         if (isDeletingAnchor) {
             for (let spanElement of spanElements) {
@@ -245,15 +215,33 @@ function TextArea({
             }
         }
     }, [isDeletingAnchor]);
+
+    const prevCurrentTime = usePrevious(currentTime);
+
+    useEffect(() => {
+        if (isDeletingAnchor) {
+            if (currentTime.charAt(0) !== '-') {
+                // Cancel previous span color
+                if (prevCurrentTime.charAt(0) !== '-') {
+                    let prevElement = document.getElementsByClassName(
+                        `timestamp-${prevCurrentTime}`
+                    )[0];
+                    prevElement.style.backgroundColor = "red";
+                }
+                // Change new current span color
+                let spanElement = document.getElementsByClassName(
+                    `timestamp-${currentTime}`
+                )[0];
+                spanElement.style.backgroundColor = "green";
+            }
+        }
+    }, [currentTime, prevCurrentTime]);
     /* -------------------------------------------------------------------------- */
     /*                            Cancel / Default Mode                           */
     /* -------------------------------------------------------------------------- */
 
     // Change the background color of current selected anchor to white after clicking cancel
     useEffect(() => {
-        console.log(
-            "Change the background color of current selected anchor to white after clicking cancel"
-        );
         if (!isAddingAnchor && !isDeletingAnchor) {
             // Cancel previous currentTime span.
             let currentAnchor = document.getElementsByClassName(
@@ -273,31 +261,7 @@ function TextArea({
 
     return (
         <div className="input-group">
-            {/*<div>{isAddingAnchor && <h3>Adding Anchor</h3>}</div>*/}
-            {/*<textarea className="form-control"*/}
-            {/*          aria-label="With textarea"*/}
-            {/*          style={ text_area_style }*/}
-            {/*          defaultValue = { anchors[0].timestamp }*/}
-            {/*>*/}
-            {/*</textarea>*/}
-            {/*<ol className="list-group list-group-numbered anchors-list">*/}
-            {/*    {anchors.map((anchor, index) => (*/}
-            {/*        <li*/}
-            {/*            className="list-group-item d-flex justify-content-between align-items-start"*/}
-            {/*            key={index}*/}
-            {/*        >*/}
-            {/*            <div className="ms-2 me-auto">*/}
-            {/*                <div className="fw-bold anchor-timestamp-info">*/}
-            {/*                    {anchor.timestamp}*/}
-            {/*                </div>*/}
-            {/*            </div>*/}
-            {/*            <span className="badge bg-primary rounded-pill anchor-location-info">*/}
-            {/*                {anchor.location}*/}
-            {/*            </span>*/}
-            {/*        </li>*/}
-            {/*    ))}*/}
-            {/*</ol>*/}
-            <div className="text-area-style">
+            <div className = "text-area-style">
                 <h5 className="text-content text-style" id="text-content">
                     {" "}
                 </h5>
