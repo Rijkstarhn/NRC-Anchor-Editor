@@ -1,5 +1,5 @@
 import react, { useEffect, useState } from "react";
-import actions, {deleteConfirm, hitCancelButton} from "./actions";
+import actions, { deleteConfirm, hitCancelButton } from "./actions";
 import { connect } from "react-redux";
 
 function OperationArea({
@@ -24,7 +24,6 @@ function OperationArea({
     hitCancelButton,
     deleteConfirm,
 }) {
-
     const [xmlFile, setXMLFile] = useState({});
     const [xmlData, setXMLData] = useState("");
 
@@ -166,7 +165,9 @@ function OperationArea({
             console.log("currentTime", currentTime);
             console.log("currentLocation", currentLocation);
             // delete anchor
-            let toBeDeleteAnchor = document.getElementsByClassName(`location-${currentLocation} anchor-holder anchor timestamp-${currentTime}`)[0]
+            let toBeDeleteAnchor = document.getElementsByClassName(
+                `location-${currentLocation} anchor-holder anchor timestamp-${currentTime}`
+            )[0];
             console.log("toBeDeleteAnchor", toBeDeleteAnchor);
             toBeDeleteAnchor.classList.remove(`anchor`);
             toBeDeleteAnchor.classList.remove(`timestamp-${currentTime}`);
@@ -232,7 +233,7 @@ function OperationArea({
                 >
                     Download
                 </button>
-                {isDeletingAnchor?
+                {isDeletingAnchor ? (
                     <button
                         type="button"
                         className="btn btn-secondary btn-space"
@@ -240,32 +241,33 @@ function OperationArea({
                     >
                         Add Anchor
                     </button>
-                    :
+                ) : (
                     <button
                         type="button"
                         className="btn btn-primary btn-space"
+                        id="add_anchor_button"
                         onClick={() => setAddingAnchorToTrueStatus()}
                     >
                         Add Anchor
                     </button>
-                }
-                {isAddingAnchor ?
+                )}
+                {isAddingAnchor ? (
                     <button
-                    type="button"
-                    className="btn btn-secondary delete-anchor-button btn-space"
-                    onClick={() => {}}
+                        type="button"
+                        className="btn btn-secondary delete-anchor-button btn-space"
+                        onClick={() => {}}
                     >
                         Delete Anchor
                     </button>
-                    :
+                ) : (
                     <button
-                    type="button"
-                    className="btn btn-primary delete-anchor-button btn-space"
-                    onClick={() => setDeletingAnchorToTrueStatus()}
+                        type="button"
+                        className="btn btn-primary delete-anchor-button btn-space"
+                        onClick={() => setDeletingAnchorToTrueStatus()}
                     >
                         Delete Anchor
                     </button>
-                }
+                )}
                 <button
                     type="button"
                     className="btn btn-primary btn-space"
@@ -282,7 +284,9 @@ function OperationArea({
                 </button>
             </div>
             <div className="input-group custom-file-button">
-                <label className="input-group-text" htmlFor="inputGroupFile04">Choose XML Text File</label>
+                <label className="input-group-text" htmlFor="inputGroupFile04">
+                    Choose XML Text File
+                </label>
                 <input
                     type="file"
                     className="form-control"
