@@ -30,74 +30,18 @@ Then you can do the following operations:
 7. Get most updated xml file at "https://localhost:5001/api/XMLFiles"
 
 
-**RUN THE FRONTEND**
-# Getting Started with Create React App
+# RUN THE FRONTEND
+Just `npm install`, then `npm start`
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# HOW TO USE
+1. Upload your valid xml file and audio via the two inputs.
+2. After loading, you will see text and audio wave in the web page, plus some buttons for various operation.
+3. You will see red anchors and markers in text and audio area if your xml file contains anchor.
+4. The first row of buttons are for audio control, you can play and pause, change the play speed, resume to normal speed.
+5. The second row of buttons are for anchor control and file download. 
+6. If you enter add anchor mode, you will not be able to switch to delete anchor mode unless you click cancel button. Actually you will see the delete anchor button become grey after you click add anchor button. This rule also applied to delete mode.
+7. For add anchor mode, after you click add anchor button, you can click on any space in the text, and you will see a red bar denoting your current choice. After that you can click on the audio wave to choose the corresponding audio location. Once you're satisfied with your choice, click save button. You will see the red bar in text area and red polygon marker in audio area fixed.
+8. For delete anchor mode, after you click delete anchor button, you can click on red bar in the text, and you will see it becomes green denoting your current choice, the corresponding marker in audio area will also becomes green. Once you make your choice, click save button.
+9. When you satisfied with your edit, click download button. The updated xml file will be downloaded.
 
-## Available Scripts
 
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
