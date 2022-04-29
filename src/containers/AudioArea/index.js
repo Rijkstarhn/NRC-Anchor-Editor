@@ -92,7 +92,8 @@ const AudioArea = (
         }
     }, [anchors])
 
-    const prevCurrentLocation = usePrevious(currentLocation);
+    const prevCurrentTime = usePrevious(currentTime);
+    // const prevCurrentLocation = usePrevious(currentLocation);
 
     useEffect(() => {
         if (isDeletingAnchor) {
@@ -106,19 +107,17 @@ const AudioArea = (
             // }
             let markers = document.querySelectorAll('marker');
             for (let i = 0; i < markers.length; i++) {
-                if (markers[i].classList.contains(`marker-location-${currentLocation}`)) {
+                if (markers[i].classList.contains(`marker-timestamp-${parseFloat(currentTime.slice(0, -1))}`)) {
                     // console.log("found", markers[i]);
                     markers[i].querySelector('polygon').style.fill = 'green';
                 }
-                if (markers[i].classList.contains(`marker-location-${prevCurrentLocation}`)) {
+                if (markers[i].classList.contains(`marker-timestamp-${parseFloat(prevCurrentTime.slice(0, -1))}`)) {
                     // console.log("found", markers[i]);
                     markers[i].querySelector('polygon').style.fill = 'red';
                 }
             }
         }
-    }, [currentLocation])
-
-    const prevCurrentTime = usePrevious(currentTime);
+    }, [currentTime])
 
     useEffect(() => {
         let markers = document.querySelectorAll('marker');
