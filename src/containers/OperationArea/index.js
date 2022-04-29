@@ -21,6 +21,7 @@ function OperationArea({
     currentTime,
     currentLocation,
     setAnchorLocationToDefault,
+    setAnchorTimeToDefault,
     hitCancelButton,
     deleteConfirm,
 }) {
@@ -180,6 +181,7 @@ function OperationArea({
             // set isDeletingAnchor to false
             setDeletingAnchorToFalse();
             setAnchorLocationToDefault();
+            setAnchorTimeToDefault();
             deleteConfirm();
         } else if (!isAddingAnchor && !isDeletingAnchor) {
         } else {
@@ -342,6 +344,8 @@ const dtpm = (dispatch) => {
             actions.setDeletingAnchorToFalse(dispatch),
         setAnchorLocationToDefault: () =>
             actions.setAnchorLocationToDefault(dispatch),
+        setAnchorTimeToDefault: () =>
+            actions.setAnchorTimeToDefault(dispatch),
         hitCancelButton: () => actions.hitCancelButton(dispatch),
         deleteConfirm: () => actions.deleteConfirm(dispatch),
     };
