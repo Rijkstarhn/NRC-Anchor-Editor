@@ -21,13 +21,23 @@ describe("Upload File", () => {
 });
 
 describe("Add Anchor", () => {
-    it("spans are not clickable in default mode", () => {
+    it("click span in default mode, and it should not change color", () => {
+        cy.get(".location-12").should(
+            "have.css",
+            "background-color",
+            "rgba(0, 0, 0, 0)"
+        );
+
         cy.get(".location-12").click();
 
-        cy.get(".location-12").should("have.css");
+        cy.get(".location-12").should(
+            "have.css",
+            "background-color",
+            "rgba(0, 0, 0, 0)"
+        );
     });
 
-    it("click add anchor button and the spans in text area turns clickable", () => {
+    it("click add anchor button and the spans in text area turns clickable to red", () => {
         cy.get("[id=add_anchor_button]").click();
 
         cy.get(".location-12").click();
@@ -37,5 +47,17 @@ describe("Add Anchor", () => {
             "background-color",
             "rgb(255, 0, 0)"
         );
+    });
+
+    it("click save button and save the anchor", () => {
+        cy.get("[id=save-button]").click();
+
+        cy.get(".location-12").should(
+            "have.css",
+            "background-color",
+            "rgb(255, 0, 0)"
+        );
+
+        cy.get(".location-12").should("have.class", "anchor");
     });
 });

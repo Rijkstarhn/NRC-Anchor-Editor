@@ -161,6 +161,7 @@ function OperationArea({
             // set isAddingAnchor to false
             setAddingAnchorToFalse();
             setAnchorLocationToDefault();
+            setAnchorTimeToDefault();
         } else if (!isAddingAnchor && isDeletingAnchor) {
             console.log("delete called");
             console.log("currentTime", currentTime);
@@ -273,6 +274,7 @@ function OperationArea({
                 <button
                     type="button"
                     className="btn btn-primary btn-space"
+                    id="save-button"
                     onClick={() => handleSave()}
                 >
                     Save
@@ -344,8 +346,7 @@ const dtpm = (dispatch) => {
             actions.setDeletingAnchorToFalse(dispatch),
         setAnchorLocationToDefault: () =>
             actions.setAnchorLocationToDefault(dispatch),
-        setAnchorTimeToDefault: () =>
-            actions.setAnchorTimeToDefault(dispatch),
+        setAnchorTimeToDefault: () => actions.setAnchorTimeToDefault(dispatch),
         hitCancelButton: () => actions.hitCancelButton(dispatch),
         deleteConfirm: () => actions.deleteConfirm(dispatch),
     };

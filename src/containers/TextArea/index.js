@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import actions from "../OperationArea/actions";
 import usePrevious from "../../usePrevious";
@@ -34,7 +34,9 @@ function TextArea({
                 position++;
                 if (i > 0 && text[i - 1] === " ") {
                     // previous space is an anchor holder.
-                    let prevElement = document.getElementsByClassName(`real-position-${position - 1}`)[0];
+                    let prevElement = document.getElementsByClassName(
+                        `real-position-${position - 1}`
+                    )[0];
                     let tag = document.createElement("span");
                     // Set anchor id and class
                     tag.classList.add(`${prevElement.classList[0]}`);
@@ -101,7 +103,10 @@ function TextArea({
             let anchorElements = document.getElementsByClassName(
                 `location-${anchor.location}`
             );
-            if (document.getElementsByClassName(`timestamp-${anchor.timestamp}`).length === 0) {
+            if (
+                document.getElementsByClassName(`timestamp-${anchor.timestamp}`)
+                    .length === 0
+            ) {
                 for (let anchorElement of anchorElements) {
                     if (!anchorElement.classList.contains("anchor")) {
                         anchorElement.style.backgroundColor = "red";
@@ -125,23 +130,21 @@ function TextArea({
     useEffect(() => {
         console.log("isAddingAnchor called!", isAddingAnchor);
         let spanElements = document.getElementsByClassName("anchor-holder");
-        console.log("spanElements", spanElements);
         if (isAddingAnchor) {
             for (let spanElement of spanElements) {
                 if (!spanElement.classList.contains("anchor")) {
-                    console.log("spanElement", spanElement);
                     spanElement.onclick = function () {
                         // console.log("executed");
                         let thisLocation = this.classList[0].substring(9);
                         let thisRealLocation = this.classList[1].substring(14);
-                        updateCurrentAnchorLocation(thisLocation, thisRealLocation);
+                        updateCurrentAnchorLocation(
+                            thisLocation,
+                            thisRealLocation
+                        );
                     };
-                    console.log("onclick");
                 }
             }
-            console.log("xxxxx", document.getElementsByClassName("anchor-holder"));
         } else {
-            console.log("onclick2");
             for (let spanElement of spanElements) {
                 if (!spanElement.classList.contains("anchor")) {
                     spanElement.onclick = null;
@@ -173,13 +176,12 @@ function TextArea({
         //     }
         // }
         if (isDeletingAnchor) {
-            if (currentTime.charAt(0) !== '-') {
+            if (currentTime.charAt(0) !== "-") {
                 console.log("currentLocation", currentLocation);
                 console.log("prevCurrentTime", prevCurrentTime);
                 console.log("currentTime", currentTime);
                 // Cancel previous prevCurrentTime span.
-                if (prevCurrentTime.charAt(0) !== '-') {
-
+                if (prevCurrentTime.charAt(0) !== "-") {
                     let prevElement = document.getElementsByClassName(
                         `timestamp-${prevCurrentTime}`
                     )[0];
@@ -232,10 +234,9 @@ function TextArea({
                     let thisLocation = this.classList[0].substring(9);
                     let thisRealLocation = this.classList[1].substring(14);
                     let thisTime = this.classList[4].substring(10);
-                    console.log("this time ", thisTime);
                     updateCurrentAnchorLocation(thisLocation, thisRealLocation);
                     updateCurrentAnchorTime(thisTime);
-                    this.style.backgroundColor = 'green';
+                    this.style.backgroundColor = "green";
                 };
             }
         } else {
@@ -250,7 +251,9 @@ function TextArea({
 
     // Change the background color of current selected anchor to white after clicking cancel
     useEffect(() => {
-        console.log("Change the background color of current selected anchor to white after clicking cancel");
+        console.log(
+            "Change the background color of current selected anchor to white after clicking cancel"
+        );
         if (!isAddingAnchor && !isDeletingAnchor) {
             // Cancel previous currentTime span.
             let currentAnchor = document.getElementsByClassName(
@@ -258,9 +261,10 @@ function TextArea({
             )[0];
             if (currentAnchor) {
                 // if it's deleting anchor
-                if (currentAnchor.style.backgroundColor === 'green') {
-                    currentAnchor.style.backgroundColor = 'red';
-                } else if (currentAnchor.style.backgroundColor === 'red') { // if it's adding anchors
+                if (currentAnchor.style.backgroundColor === "green") {
+                    currentAnchor.style.backgroundColor = "red";
+                } else if (currentAnchor.style.backgroundColor === "red") {
+                    // if it's adding anchors
                     currentAnchor.style.backgroundColor = null;
                 }
             }
@@ -293,12 +297,11 @@ function TextArea({
             {/*        </li>*/}
             {/*    ))}*/}
             {/*</ol>*/}
-            <div className = "text-area-style">
+            <div className="text-area-style">
                 <h5 className="text-content text-style" id="text-content">
                     {" "}
                 </h5>
             </div>
-
         </div>
     );
 }
@@ -319,9 +322,13 @@ const stpm = (state) => {
 const dtpm = (dispatch) => {
     return {
         updateCurrentAnchorLocation: (currentLocation, currentRealLocation) =>
-            actions.updateCurrentAnchorLocation(dispatch, currentLocation, currentRealLocation),
+            actions.updateCurrentAnchorLocation(
+                dispatch,
+                currentLocation,
+                currentRealLocation
+            ),
         updateCurrentAnchorTime: (currentTime) => {
-            actions.updateCurrentAnchorTime(dispatch, currentTime)
+            actions.updateCurrentAnchorTime(dispatch, currentTime);
         },
     };
 };
