@@ -2,7 +2,7 @@ import OperationArea from "../OperationArea";
 import WaveSurfer from "wavesurfer.js";
 import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
 import MarkersPlugin from "wavesurfer.js/src/plugin/markers";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import actions from "../OperationArea/actions";
 import {connect} from "react-redux";
 import usePrevious from "../../usePrevious";
@@ -64,8 +64,8 @@ const AudioArea = (
                     reader.readAsArrayBuffer(file);
                 }
             }, false);
+            // register onSeek event to get the 'real' current time, this can be referred from official doc
             waveSurfer.on('seek', function () {
-                console.log(waveSurfer.getCurrentTime());
                 let currentTime = waveSurfer.getCurrentTime().toFixed(2);
                 updateCurrentAnchorTime(`${currentTime}s`);
             });
@@ -93,26 +93,15 @@ const AudioArea = (
     }, [anchors])
 
     const prevCurrentTime = usePrevious(currentTime);
-    // const prevCurrentLocation = usePrevious(currentLocation);
 
     useEffect(() => {
         if (isDeletingAnchor) {
-            // let currentSelectedMarker = document.getElementsByClassName(`marker-location-${currentLocation}`)[0];
-            // if (currentSelectedMarker) {
-            //     currentSelectedMarker.style.fill = 'green';
-            // }
-            // let previousSelectedMarker = document.getElementsByClassName(`marker-location-${prevCurrentLocation}`)[0];
-            // if (previousSelectedMarker) {
-            //     previousSelectedMarker.style.fill = 'red';
-            // }
             let markers = document.querySelectorAll('marker');
             for (let i = 0; i < markers.length; i++) {
                 if (markers[i].classList.contains(`marker-timestamp-${parseFloat(currentTime.slice(0, -1))}`)) {
-                    // console.log("found", markers[i]);
                     markers[i].querySelector('polygon').style.fill = 'green';
                 }
                 if (markers[i].classList.contains(`marker-timestamp-${parseFloat(prevCurrentTime.slice(0, -1))}`)) {
-                    // console.log("found", markers[i]);
                     markers[i].querySelector('polygon').style.fill = 'red';
                 }
             }
@@ -130,7 +119,6 @@ const AudioArea = (
 
     useEffect(() => {
         if (!isAddingAnchor && !isDeletingAnchor && cancelButtonHits > 0) {
-            console.log("prevCurrentTime", prevCurrentTime);
             // Cancel previous currentLocation span.
             let currentAnchor = document.getElementsByClassName(
                 `marker-timestamp-${parseFloat(prevCurrentTime.slice(0, -1))}`

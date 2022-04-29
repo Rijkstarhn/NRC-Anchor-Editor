@@ -45,11 +45,8 @@ function OperationArea({
         const responseOfUploadXML = await uploadXML(xmlData);
         if (responseOfUploadXML.ok) {
             const responseOfLoadText = await loadText();
-            // console.log("responseOfLoadText", responseOfLoadText);
             if (responseOfLoadText !== null) {
-                // console.log("responseOfLoadText ok");
                 const responseOfGetAnchors = await getAnchors();
-                // console.log("responseOfGetAnchors", responseOfGetAnchors);
                 if (responseOfGetAnchors === null) {
                     alert("get anchors failed!");
                 }
@@ -58,31 +55,6 @@ function OperationArea({
             alert("upload file failed!");
         }
     }
-
-    // const [originalAnchor, setOriginalAnchor] = useState({
-    //     timestamp: "3.6s",
-    //     location: 55,
-    // });
-    // const [destinationAnchor, setDestinationAnchor] = useState({
-    //     timestamp: "7.2s",
-    //     location: 72,
-    // });
-    // const [deletedAnchor, setDeletedAnchor] = useState({
-    //     timestamp: "7.2s",
-    //     location: 72,
-    // });
-    // const [postedAnchor, setPostedAnchor] = useState({
-    //     timestamp: "8.8s",
-    //     location: 88,
-    // });
-
-    // const [timestamp, setTimestamp] = useState("1.62s");
-    //
-    // const [location, setLocation] = useState(88);
-
-    // const loadTextFromServer = () => {
-    //     loadText();
-    // };
 
     const handleFileSelect = (event) => {
         setXMLFile(event.target.files);
@@ -95,48 +67,6 @@ function OperationArea({
         reader.onload = () => {
             setXMLData(reader.result);
         };
-    };
-
-    // async function uploadXMLFile() {
-    //     console.log("upload file");
-    //     const res = await uploadXML(xmlData);
-    //     console.log('res', res);
-    //     if (res.ok) {
-    //         console.log("ok");
-    //         loadText();
-    //     } else {
-    //         alert("upload file failed!");
-    //     }
-    // };
-
-    // const getAnchorsFromServer = () => {
-    //     console.log("get anchors");
-    //     getAnchors();
-    // };
-
-    const updateAnchorToServer = (originalAnchor, destinationAnchor) => {
-        console.log("update anchor");
-        updateAnchor(originalAnchor, destinationAnchor);
-    };
-
-    const deleteAnchorToServer = (deletedAnchor) => {
-        console.log("delete anchor");
-        deleteAnchor(deletedAnchor);
-    };
-
-    const postAnchorToServer = (postedAnchor) => {
-        console.log("post anchor");
-        postAnchor(postedAnchor);
-    };
-
-    const getAnchorByTimestampFromServer = (timestamp) => {
-        console.log("Get anchor by timestamp");
-        getAnchorByTimestamp(timestamp);
-    };
-
-    const getAnchorByLocationFromServer = (location) => {
-        console.log("Get Anchor By Location");
-        getAnchorByLocation(location);
     };
 
     const getXMLFileFromServer = () => {
@@ -163,16 +93,11 @@ function OperationArea({
             setAddingAnchorToFalse();
             setAnchorLocationToDefault();
         } else if (!isAddingAnchor && isDeletingAnchor) {
-            console.log("delete called");
-            console.log("currentTime", currentTime);
-            console.log("currentLocation", currentLocation);
             // delete anchor
             let toBeDeleteAnchor = document.getElementsByClassName(`location-${currentLocation} anchor-holder anchor timestamp-${currentTime}`)[0]
-            console.log("toBeDeleteAnchor", toBeDeleteAnchor);
             toBeDeleteAnchor.classList.remove(`anchor`);
             toBeDeleteAnchor.classList.remove(`timestamp-${currentTime}`);
             toBeDeleteAnchor.removeAttribute("style");
-            console.log("toBeDeleteAnchor", toBeDeleteAnchor);
             deleteAnchor({
                 timestamp: currentTime,
                 location: currentLocation,
@@ -197,36 +122,7 @@ function OperationArea({
 
     return (
         <div className="operation-area-style">
-            {/*<h1>{currentLocation}</h1>*/}
-            {/*<button*/}
-            {/*    type="button"*/}
-            {/*    className="btn btn-primary post-anchor-button"*/}
-            {/*    onClick={() => postAnchorToServer(postedAnchor)}*/}
-            {/*>*/}
-            {/*    Post Anchors*/}
-            {/*</button>*/}
             <div className="control-buttons-area">
-                {/*<button*/}
-                {/*    type="button"*/}
-                {/*    className="btn btn-primary get-anchors-button btn-space"*/}
-                {/*    onClick={() => getAnchorsFromServer()}*/}
-                {/*>*/}
-                {/*    Get Anchors*/}
-                {/*</button>*/}
-                {/*<button*/}
-                {/*    type="button"*/}
-                {/*    className="btn btn-primary get-text-button btn-space"*/}
-                {/*    onClick={() => loadTextFromServer()}*/}
-                {/*>*/}
-                {/*    Get Text*/}
-                {/*</button>*/}
-                {/*<button*/}
-                {/*    type="button"*/}
-                {/*    className="btn btn-primary upload-text-button btn-space"*/}
-                {/*    onClick={() => uploadXMLFile()}*/}
-                {/*>*/}
-                {/*    Upload Text*/}
-                {/*</button>*/}
                 <button
                     type="button"
                     className="btn btn-success btn-space"
@@ -292,7 +188,6 @@ function OperationArea({
                     aria-describedby="inputGroupFileAddon04"
                     aria-label="Upload"
                 />
-                {/*<label className="input-group-text" htmlFor="inputGroupFileAddon04">Your Custom Text</label>*/}
                 <button
                     className="btn btn-outline-secondary upload-file-button"
                     type="button"
