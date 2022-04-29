@@ -147,30 +147,6 @@ function TextArea({
         }
     }, [isAddingAnchor]);
 
-    const prevCurrentTime = usePrevious(currentTime);
-    // Change adding anchor color.
-    useEffect(() => {
-        if (isDeletingAnchor) {
-            if (currentTime.charAt(0) !== "-") {
-                console.log("currentLocation", currentLocation);
-                console.log("prevCurrentTime", prevCurrentTime);
-                console.log("currentTime", currentTime);
-                // Cancel previous prevCurrentTime span.
-                if (prevCurrentTime.charAt(0) !== "-") {
-                    let prevElement = document.getElementsByClassName(
-                        `timestamp-${prevCurrentTime}`
-                    )[0];
-                    prevElement.style.backgroundColor = "red";
-                }
-                // Change new current span color
-                let spanElement = document.getElementsByClassName(
-                    `timestamp-${currentTime}`
-                )[0];
-                spanElement.style.backgroundColor = "green";
-            }
-        }
-    }, [currentTime, prevCurrentTime]);
-
     const prevRealCurrentLocation = usePrevious(currentRealLocation);
 
     useEffect(() => {
