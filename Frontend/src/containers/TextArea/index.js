@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import actions from "../OperationArea/actions";
 import usePrevious from "../../usePrevious";
@@ -9,6 +9,8 @@ function TextArea({
     isAddingAnchor,
     isDeletingAnchor,
     currentLocation,
+    currentRealLocation,
+    currentTime,
     updateCurrentAnchorLocation,
     updateCurrentAnchorTime,
     cancelButtonHits,
@@ -20,7 +22,6 @@ function TextArea({
     // Convert plain text to html elements, and add them in text content.
     useEffect(() => {
         let textContent = document.getElementById("text-content");
-        console.log(text);
         textContent.innerHTML = "";
         // Iterate the plain text and create element in text content
         let position = 0;
@@ -29,19 +30,24 @@ function TextArea({
             if (text[i] === " ") {
                 // Space -> Anchor Holder
                 position++;
-                if (i > 0 && text[i - 1] === " ") {
-                    // previous space is an anchor holder.
+                if (i > 0 && text[i - 1] === " ") { // previous space is an anchor holder.
+                    // use "real-position" class name to identify prevElement
+                    let prevElement = document.getElementsByClassName(`real-position-${position - 1}`)[0];
                     let tag = document.createElement("span");
                     // Set anchor id and class
-                    tag.classList.add(`location-${position - 1}`);
+                    tag.classList.add(`${prevElement.classList[0]}`); // use prevElement's location to keep continuous space spans with same location id
+                    tag.classList.add(`real-position-${position}`);
                     tag.classList.add("anchor-holder");
-                    // let content = document.createTextNode(" ");
                     tag.innerHTML = "\u00A0";
                     textContent.appendChild(tag);
                 } else {
                     let tag = document.createElement("span");
                     // Set anchor id and class
-                    tag.classList.add(`location-${position}`);
+                    tag.classList.add(`location-${position}`); // location aligns with the definition in back-end
+                    // real position aligns with the position of the char in front-end
+                    // for example, we can have 3 continuous space spans with same location id 55,
+                    // but their real position id should be 55, 56, and 57.
+                    tag.classList.add(`real-position-${position}`);
                     tag.classList.add("anchor-holder");
                     let content = document.createTextNode(" ");
                     tag.appendChild(content);
@@ -60,6 +66,7 @@ function TextArea({
                 if (position === 0 || text[i - 1] === "\n") {
                     let tag = document.createElement("span");
                     tag.classList.add(`location-${position}`);
+                    tag.classList.add(`real-position-${position}`);
                     tag.classList.add("anchor-holder");
                     let content = document.createTextNode("\u00A0");
                     tag.appendChild(content);
@@ -77,6 +84,7 @@ function TextArea({
         position++;
         let tag = document.createElement("span");
         tag.classList.add(`location-${position}`);
+        tag.classList.add(`real-position-${position}`);
         tag.classList.add("anchor-holder");
         let content = document.createTextNode("\u00A0");
         tag.appendChild(content);
@@ -90,14 +98,18 @@ function TextArea({
             let anchorElements = document.getElementsByClassName(
                 `location-${anchor.location}`
             );
-            for (let anchorElement of anchorElements) {
-                if (!anchorElement.classList.contains("anchor")) {
-                    anchorElement.style.backgroundColor = "red";
-                    anchorElement.classList.add("anchor");
-                    anchorElement.classList.add(
-                        `timestamp-${anchor.timestamp}`
-                    );
-                    break;
+            // this if statement can make sure the continuous space spans will not all be red when adding anchor
+            // by filtering it with their unique id: time stamp, instead of location
+            if (document.getElementsByClassName(`timestamp-${anchor.timestamp}`).length === 0) {
+                for (let anchorElement of anchorElements) {
+                    if (!anchorElement.classList.contains("anchor")) {
+                        anchorElement.style.backgroundColor = "red";
+                        anchorElement.classList.add("anchor");
+                        anchorElement.classList.add(
+                            `timestamp-${anchor.timestamp}`
+                        );
+                        break;
+                    }
                 }
             }
         }
@@ -107,8 +119,10 @@ function TextArea({
     /*                                 Adding Mode                                */
     /* -------------------------------------------------------------------------- */
 
+    // For adding mode, we should use real position to distinguish each span
+
     // Set up onclick attribute for span in adding mode
-    //once clicked, default currentLocaten will change from -1 to selected location
+    //once clicked, default current location will change from -1 to selected location
     useEffect(() => {
         let spanElements = document.getElementsByClassName("anchor-holder");
         if (isAddingAnchor) {
@@ -116,7 +130,11 @@ function TextArea({
                 if (!spanElement.classList.contains("anchor")) {
                     spanElement.onclick = function () {
                         let thisLocation = this.classList[0].substring(9);
-                        updateCurrentAnchorLocation(thisLocation);
+                        let thisRealLocation = this.classList[1].substring(14);
+                        updateCurrentAnchorLocation(
+                            thisLocation,
+                            thisRealLocation
+                        );
                     };
                 }
             }
@@ -129,58 +147,42 @@ function TextArea({
         }
     }, [isAddingAnchor]);
 
-    const prevCurrentLocation = usePrevious(currentLocation);
+    const prevRealCurrentLocation = usePrevious(currentRealLocation);
 
-    // Change adding anchor color.
     useEffect(() => {
         if (isAddingAnchor) {
-            if (currentLocation >= 0) {
+            if (currentRealLocation >= 0) {
                 // Cancel previous currentLocation span.
-                if (prevCurrentLocation >= 0) {
+                if (prevRealCurrentLocation >= 0) {
                     let prevElement = document.getElementsByClassName(
-                        `location-${prevCurrentLocation}`
+                        `real-position-${prevRealCurrentLocation}`
                     )[0];
                     prevElement.style.backgroundColor = null;
                 }
                 // Change new current span color
                 let spanElement = document.getElementsByClassName(
-                    `location-${currentLocation}`
+                    `real-position-${currentRealLocation}`
                 )[0];
                 spanElement.style.backgroundColor = "red";
             }
         }
-        if (isDeletingAnchor) {
-            if (currentLocation >= 0) {
-                // Cancel previous currentLocation span.
-                if (prevCurrentLocation >= 0) {
-                    let prevElement = document.getElementsByClassName(
-                        `location-${prevCurrentLocation}`
-                    )[0];
-                    prevElement.style.backgroundColor = "red";
-                }
-                // Change new current span color
-                let spanElement = document.getElementsByClassName(
-                    `location-${currentLocation}`
-                )[0];
-                spanElement.style.backgroundColor = "green";
-            }
-        }
-    }, [currentLocation, prevCurrentLocation]);
+    }, [currentRealLocation]);
 
     /* -------------------------------------------------------------------------- */
     /*                                Deleting Mode                               */
     /* -------------------------------------------------------------------------- */
+    // For deleting mode, we should use time stamp to distinguish each span
     useEffect(() => {
         let spanElements = document.getElementsByClassName("anchor");
         if (isDeletingAnchor) {
             for (let spanElement of spanElements) {
                 spanElement.onclick = function () {
                     let thisLocation = this.classList[0].substring(9);
-                    let thisTime = this.classList[3].substring(10);
-                    console.log("this time ", thisTime);
-                    updateCurrentAnchorLocation(thisLocation);
+                    let thisRealLocation = this.classList[1].substring(14);
+                    let thisTime = this.classList[4].substring(10);
+                    updateCurrentAnchorLocation(thisLocation, thisRealLocation);
                     updateCurrentAnchorTime(thisTime);
-                    this.style.backgroundColor = 'green';
+                    this.style.backgroundColor = "green";
                 };
             }
         } else {
@@ -189,6 +191,31 @@ function TextArea({
             }
         }
     }, [isDeletingAnchor]);
+
+    const prevCurrentTime = usePrevious(currentTime);
+
+    useEffect(() => {
+        if (isDeletingAnchor) {
+            if (currentTime.charAt(0) !== '-') {
+                // Cancel previous span color
+                if (prevCurrentTime && prevCurrentTime.charAt(0) !== '-') {
+                    let prevElement = document.getElementsByClassName(
+                        `timestamp-${prevCurrentTime}`
+                    )[0];
+                    if (prevElement) {
+                        prevElement.style.backgroundColor = "red";
+                    }
+                }
+                // Change new current span color
+                let spanElement = document.getElementsByClassName(
+                    `timestamp-${currentTime}`
+                )[0];
+                if (spanElement) {
+                    spanElement.style.backgroundColor = "green";
+                }
+            }
+        }
+    }, [currentTime, prevCurrentTime]);
     /* -------------------------------------------------------------------------- */
     /*                            Cancel / Default Mode                           */
     /* -------------------------------------------------------------------------- */
@@ -196,15 +223,16 @@ function TextArea({
     // Change the background color of current selected anchor to white after clicking cancel
     useEffect(() => {
         if (!isAddingAnchor && !isDeletingAnchor) {
-            // Cancel previous currentLocation span.
+            // Cancel previous currentTime span.
             let currentAnchor = document.getElementsByClassName(
-                `location-${prevCurrentLocation}`
+                `timestamp-${prevCurrentTime}`
             )[0];
             if (currentAnchor) {
                 // if it's deleting anchor
-                if (currentAnchor.style.backgroundColor === 'green') {
-                    currentAnchor.style.backgroundColor = 'red';
-                } else if (currentAnchor.style.backgroundColor === 'red') { // if it's adding anchors
+                if (currentAnchor.style.backgroundColor === "green") {
+                    currentAnchor.style.backgroundColor = "red";
+                } else if (currentAnchor.style.backgroundColor === "red") {
+                    // if it's adding anchors
                     currentAnchor.style.backgroundColor = null;
                 }
             }
@@ -213,36 +241,11 @@ function TextArea({
 
     return (
         <div className="input-group">
-            {/*<div>{isAddingAnchor && <h3>Adding Anchor</h3>}</div>*/}
-            {/*<textarea className="form-control"*/}
-            {/*          aria-label="With textarea"*/}
-            {/*          style={ text_area_style }*/}
-            {/*          defaultValue = { anchors[0].timestamp }*/}
-            {/*>*/}
-            {/*</textarea>*/}
-            {/*<ol className="list-group list-group-numbered anchors-list">*/}
-            {/*    {anchors.map((anchor, index) => (*/}
-            {/*        <li*/}
-            {/*            className="list-group-item d-flex justify-content-between align-items-start"*/}
-            {/*            key={index}*/}
-            {/*        >*/}
-            {/*            <div className="ms-2 me-auto">*/}
-            {/*                <div className="fw-bold anchor-timestamp-info">*/}
-            {/*                    {anchor.timestamp}*/}
-            {/*                </div>*/}
-            {/*            </div>*/}
-            {/*            <span className="badge bg-primary rounded-pill anchor-location-info">*/}
-            {/*                {anchor.location}*/}
-            {/*            </span>*/}
-            {/*        </li>*/}
-            {/*    ))}*/}
-            {/*</ol>*/}
             <div className = "text-area-style">
                 <h5 className="text-content text-style" id="text-content">
                     {" "}
                 </h5>
             </div>
-
         </div>
     );
 }
@@ -254,16 +257,22 @@ const stpm = (state) => {
         isAddingAnchor: state.textareaReducer.isAddingAnchor,
         isDeletingAnchor: state.textareaReducer.isDeletingAnchor,
         currentLocation: state.textareaReducer.currentLocation,
-            cancelButtonHits: state.textareaReducer.cancelButtonHits,
+        currentRealLocation: state.textareaReducer.currentRealLocation,
+        currentTime: state.textareaReducer.currentTime,
+        cancelButtonHits: state.textareaReducer.cancelButtonHits,
     };
 };
 
 const dtpm = (dispatch) => {
     return {
-        updateCurrentAnchorLocation: (currentLocation) =>
-            actions.updateCurrentAnchorLocation(dispatch, currentLocation),
+        updateCurrentAnchorLocation: (currentLocation, currentRealLocation) =>
+            actions.updateCurrentAnchorLocation(
+                dispatch,
+                currentLocation,
+                currentRealLocation
+            ),
         updateCurrentAnchorTime: (currentTime) => {
-            actions.updateCurrentAnchorTime(dispatch, currentTime)
+            actions.updateCurrentAnchorTime(dispatch, currentTime);
         },
     };
 };
