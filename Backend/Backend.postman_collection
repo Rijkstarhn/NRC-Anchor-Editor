@@ -1,0 +1,265 @@
+{
+	"info": {
+		"_postman_id": "4bdc1813-8d14-4825-9c24-bf4b51301a2c",
+		"name": "NRC Group2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET /api/Anchors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/Anchors",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"Anchors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /api/Anchors",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/Anchors?destinationTimestamp=3s&destinationLocation=0",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"Anchors"
+					],
+					"query": [
+						{
+							"key": "destinationTimestamp",
+							"value": "3s"
+						},
+						{
+							"key": "destinationLocation",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT /api/Anchors",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/Anchors?originalTimestamp=0.00s&originalLocation=0&destinationTimestamp=0.5s&destinationLocation=5",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"Anchors"
+					],
+					"query": [
+						{
+							"key": "originalTimestamp",
+							"value": "0.00s"
+						},
+						{
+							"key": "originalLocation",
+							"value": "0"
+						},
+						{
+							"key": "destinationTimestamp",
+							"value": "0.5s"
+						},
+						{
+							"key": "destinationLocation",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /api/Anchors/{timestamp}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/Anchors/8.74s",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"Anchors",
+						"8.74s"
+					],
+					"query": [
+						{
+							"key": "timestamp",
+							"value": "5.0012s",
+							"disabled": true
+						},
+						{
+							"key": "location",
+							"value": "10",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE /api/Anchors/{timestamp}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/Anchors/0.5s",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"Anchors",
+						"0.5s"
+					],
+					"query": [
+						{
+							"key": "timestamp",
+							"value": "5.0012s",
+							"disabled": true
+						},
+						{
+							"key": "location",
+							"value": "10",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /api/Anchors/{location}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/Anchors/548",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"Anchors",
+						"548"
+					],
+					"query": [
+						{
+							"key": "timestamp",
+							"value": "5.0012s",
+							"disabled": true
+						},
+						{
+							"key": "location",
+							"value": "10",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /api/PlainText",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/PlainText",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"PlainText"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create /api/XMLFiles",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version='1.0' encoding='utf-8'?>\n<TEI>\n    <!-- To exclude any element from alignment, add the do-not-align=\"true\" attribute to\n         it, e.g., <p do-not-align=\"true\">...</p>, or\n         <s>Some text <foo do-not-align=\"true\">do not align this</foo> more text</s> -->\n    <text xml:lang=\"fra\">\n        <body>\n            <anchor time=\"0.00s\"/>\n            <div type=\"page\">\n                <p>\n                    <s>Bonjour.</s>\n                    <anchor time=\"1.62s\"/>\n                    <s>Je m&#x27;appelle Éric Joanis.</s>\n                    <s>Je suis programmeur <anchor time=\"3.81s\"/> <anchor time=\"3.82s\"/> au sein de l&#x27;équipe des technologies pour les langues autochtones au CNRC.</s>\n                </p>\n            <anchor time=\"5.74s\"/>\n            </div>\n            <anchor time=\"5.75s\"/>\n            <div type=\"page\">\n            <anchor time=\"5.76s\"/>\n                <p>\n                    <s><anchor time=\"5.78s\"/>J&#x27;ai fait une bonne partie de ma carrière en traduction automatique statistique, mais maintenant cette approche est déclassée par l&#x27;apprentissage profond.</s>\n                    <s>En<anchor time=\"6.745\"/> ce moment je travaille à l&#x27;alignement du hansard du Nunavut pour produire un corpus bilingue anglais-inuktitut.</s>\n                    <s>Ce corpus permettra d&#x27;entraîner l<anchor time=\"6.94s\"/>a TA, neuronale ou statistique, ainsi que d&#x27;autres applications de traitement du langage naturel.</s>\n                </p>\n                <p>\n                    <s>En parallèle, <anchor time=\"8.74s\"/>j&#x27;aide à <anchor time=\"9.74s\"/>écrire des tests pour rendre le ReadAlong-Studio plus robuste.</s>\n                </p>\n            </div>\n        </body>\n    </text>\n</TEI>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/XMLFiles",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"XMLFiles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /api/XMLFiles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/XMLFiles",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"XMLFiles"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
