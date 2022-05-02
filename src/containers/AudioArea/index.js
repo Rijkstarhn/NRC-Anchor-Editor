@@ -163,6 +163,8 @@ const AudioArea = ({
     const togglePlayPause = () => {
         waveSurfer.playPause();
         setIsPlaying(!isPlaying);
+        let currentTime = waveSurfer.getCurrentTime().toFixed(2);
+        updateCurrentAnchorTime(`${currentTime}s`);
     };
 
     const speedUpPlayback1 = () => {

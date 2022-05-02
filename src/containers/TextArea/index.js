@@ -198,17 +198,21 @@ function TextArea({
         if (isDeletingAnchor) {
             if (currentTime.charAt(0) !== '-') {
                 // Cancel previous span color
-                if (prevCurrentTime.charAt(0) !== '-') {
+                if (prevCurrentTime && prevCurrentTime.charAt(0) !== '-') {
                     let prevElement = document.getElementsByClassName(
                         `timestamp-${prevCurrentTime}`
                     )[0];
-                    prevElement.style.backgroundColor = "red";
+                    if (prevElement) {
+                        prevElement.style.backgroundColor = "red";
+                    }
                 }
                 // Change new current span color
                 let spanElement = document.getElementsByClassName(
                     `timestamp-${currentTime}`
                 )[0];
-                spanElement.style.backgroundColor = "green";
+                if (spanElement) {
+                    spanElement.style.backgroundColor = "green";
+                }
             }
         }
     }, [currentTime, prevCurrentTime]);

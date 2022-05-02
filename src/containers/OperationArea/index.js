@@ -95,9 +95,11 @@ function OperationArea({
         } else if (!isAddingAnchor && isDeletingAnchor) {
             // delete anchor
             let toBeDeleteAnchor = document.getElementsByClassName(`location-${currentLocation} anchor-holder anchor timestamp-${currentTime}`)[0]
-            toBeDeleteAnchor.classList.remove(`anchor`);
-            toBeDeleteAnchor.classList.remove(`timestamp-${currentTime}`);
-            toBeDeleteAnchor.removeAttribute("style");
+            if (toBeDeleteAnchor) {
+                toBeDeleteAnchor.classList.remove(`anchor`);
+                toBeDeleteAnchor.classList.remove(`timestamp-${currentTime}`);
+                toBeDeleteAnchor.removeAttribute("style");
+            }
             deleteAnchor({
                 timestamp: currentTime,
                 location: currentLocation,
