@@ -162,6 +162,7 @@ function OperationArea({
                     <button
                         type="button"
                         className="btn btn-primary delete-anchor-button btn-space"
+                        id="delete_anchor_button"
                         onClick={() => setDeletingAnchorToTrueStatus()}
                     >
                         Delete Anchor
